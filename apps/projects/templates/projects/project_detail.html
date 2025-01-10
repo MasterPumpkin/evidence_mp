@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ project.title }}</h1>
+<p>{{ project.description }}</p>
+<p>Stav: {{ project.get_status_display }}</p>
+<p>Student: {{ project.student }}</p>
+<p>Vedoucí: {{ project.leader }}</p>
+
+<!-- Tlačítko pro schválení zobrazíme jen pokud je user teacher a projekt je pending_approval. -->
+{% if user.is_authenticated and is_teacher and project.status == 'pending_approval' %}
+  <a href="{% url 'projects:approve' project.pk %}" class="btn btn-primary">
+    Schválit projekt a převzít vedení
+  </a>
+{% endif %}
+
+{% if user.is_authenticated and project.leader == user %}
+  <a href="{% url 'projects:resign' project.pk %}" class="btn btn-warning">
+    Vzdát se vedení
+  </a>
+{% endif %}
+
+{% if user.is_authenticated and can_edit %}
+  <a href="{% url 'projects:edit' project.pk %}" class="btn btn-warning">
+    Upravit projekt
+  </a>
+{% endif %}
+
+
+{% endblock %}

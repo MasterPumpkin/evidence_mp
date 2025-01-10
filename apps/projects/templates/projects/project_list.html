@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Seznam projektů{% endblock %}
+
+{% block content %}
+<h1>Seznam projektů</h1>
+
+<a href="{% url 'projects:create' %}" class="btn btn-primary mb-3">Založit nový projekt</a>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Název</th>
+      <th>Status</th>
+      <th>Student</th>
+      <th>Vedoucí</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for proj in projects %}
+      <tr>
+        <td>
+          <a href="{% url 'projects:detail' proj.pk %}">{{ proj.title }}</a>
+        </td>
+        <td>{{ proj.get_status_display }}</td>
+        <td>{{ proj.student }}</td>
+        <td>{{ proj.leader }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
