@@ -93,3 +93,15 @@ class ProjectOpponentForm(forms.ModelForm):
         # Omezíme výběr pro opponent jen na učitele
         self.fields['opponent'].queryset = User.objects.filter(groups__name='Teacher')
         self.fields['opponent'].required = False
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.get('instance', None)
+        super().__init__(*args, **kwargs)
+        # Skupiny a třídu nepovolíme editovat, ty jsou v adminu.
+        # Nic speciálního nepotřebujeme tady, jen fields = ...

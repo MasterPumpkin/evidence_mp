@@ -1,140 +1,175 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{{ project.title }}</h1>
-<p>{{ project.description }}</p>
-<p>Stav: {{ project.get_status_display }}</p>
-<p>Student: {{ project.student }}</p>
-<p>Vedoucí: {{ project.leader }}</p>
-<p>Oponent: {{ project.opponent }}</p>
 
-<!-- Seznam milníků -->
-<h3>Milníky</h3>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Název</th>
-      <th>Termín</th>
-      <th>Stav</th>
-      <th>Poznámka</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for ms in project.milestones.all %}
-      <tr>
-        <td>{{ ms.title }}</td>
-        <td>{{ ms.deadline|date:"j.n.Y" }}</td>
-        <td>{{ ms.get_status_display }}</td>
-        <td>{{ ms.note }}</td>
-        <td>
-          <!-- Tlačítko na úpravu milníku -->
-          {% if user.is_authenticated and is_teacher %}
-            <a href="{% url 'projects:milestone_edit' ms.id %}" class="btn btn-sm btn-warning">Upravit</a>
-            <a href="{% url 'projects:milestone_delete' ms.id %}" class="btn btn-sm btn-danger">Odstranit</a>
-          {% endif %}
-        </td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<!-- Hlavní informace o projektu 
+<div class="row">
+  <div class="col-md-12 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">{{ project.title }}</h1>
+        <p class="card-text">{{ project.description }}</p>
+        <p><strong>Stav:</strong> {{ project.get_status_display }}</p>
+        <p><strong>Student:</strong> {{ project.student }}</p>
+        <p><strong>Vedoucí:</strong> {{ project.leader }}</p>
+        <p><strong>Oponent:</strong> {{ project.opponent }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+-->
 
-<!-- Tlačítko pro přidání nového milníku -->
-{% if user.is_authenticated and project.leader == user %}
-  <a href="{% url 'projects:milestone_add' project.id %}" class="btn btn-sm btn-primary">Přidat milník</a>
-{% endif %}
+<!-- Hlavní informace o projektu -->
+<div class="row">
+  <div class="col-md-12 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <!-- Název projektu -->
+        <h1 class="card-title">{{ project.title }}</h1>
+        
+        <!-- Accordion pro zobrazení zadání -->
+        <div class="accordion" id="projectDescriptionAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingDescription">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="false" aria-controls="collapseDescription">
+                Zobrazit zadání
+              </button>
+            </h2>
+            <div id="collapseDescription" class="accordion-collapse collapse" aria-labelledby="headingDescription" data-bs-parent="#projectDescriptionAccordion">
+              <div class="accordion-body">
+                {{ project.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Informace v jednom řádku -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <p><strong>Student:</strong> <span class="badge bg-primary">
+            {{ project.student }}
+            ({{ project.student.userprofile.class_name|default:"-" }})
+          </span></p>
+          <p><strong>Vedoucí:</strong> {{ project.leader }}</p>
+          <p><strong>Oponent:</strong> {{ project.opponent }}</p>
+          <p><strong>Stav:</strong> {{ project.get_status_display }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<!-- Tlačítko pro přidání CSV milníků -->
-{% if user.is_authenticated and project.leader == user %}
-  <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-sm btn-primary">Importovat milníky z CSV</a>
-{% endif %}
 
-<!-- Tlačítko pro schválení zobrazíme jen pokud je user teacher a projekt je pending_approval. -->
-{% if user.is_authenticated and is_teacher and project.status == 'pending_approval' %}
-  <a href="{% url 'projects:approve' project.pk %}" class="btn btn-sm btn-primary">
-    Schválit projekt a převzít vedení
-  </a>
-{% endif %}
+<!-- Sekce milníků -->
+<div class="row">
+  <div class="col-md-12 mb-4">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h3>Milníky</h3>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Název</th>
+              <th>Termín</th>
+              <th>Stav</th>
+              <th>Poznámka</th>
+              <th>Akce</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ms in project.milestones.all %}
+            <tr>
+              <td>{{ ms.title }}</td>
+              <td>{{ ms.deadline|date:"j.n.Y" }}</td>
+              <td>{{ ms.get_status_display }}</td>
+              <td>{{ ms.note }}</td>
+              <td>
+                {% if user.is_authenticated and is_teacher %}
+                <a href="{% url 'projects:milestone_edit' ms.id %}" class="btn btn-sm btn-warning">Upravit</a>
+                <a href="{% url 'projects:milestone_delete' ms.id %}" class="btn btn-sm btn-danger">Odstranit</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% if user.is_authenticated and project.leader == user %}
+        <a href="{% url 'projects:milestone_add' project.id %}" class="btn btn-sm btn-primary">Přidat milník</a>
+        <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-sm btn-primary">Importovat CSV</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 
-{% if user.is_authenticated and project.leader == user %}
-  <a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-warning">
-    Vzdát se vedení
-  </a>
-{% endif %}
-
-{% if user.is_authenticated and is_teacher and project.leader != user %}
-  <!-- Pokud projekt nemá oponenta -->
-  {% if not project.opponent %}
-    <a href="{% url 'projects:take_opponent' project.pk %}" class="btn btn-sm btn-info">
-      Převzít oponenturu
-    </a>
-  {% endif %}
-{% endif %}
-
+<!-- Sekce kontrol -->
 {% if user == project.leader or user.is_superuser %}
-  <a href="{% url 'projects:opponent_update' project.pk %}" class="btn btn-sm btn-secondary">
-    Vybrat oponenta
-  </a>
+<div class="row">
+  <div class="col-md-12 mb-4">
+    <div class="card">
+      <div class="card-header bg-secondary text-white">
+        <h3>Kontroly</h3>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Datum</th>
+              <th>Obsah</th>
+              <th>Hodnocení</th>
+              <th>Akce</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for check in project.controls.all %}
+            <tr>
+              <td>{{ check.date|date:"j.n.Y" }}</td>
+              <td>{{ check.content }}</td>
+              <td>{{ check.evaluation }}</td>
+              <td>
+                <a href="{% url 'projects:check_edit' check.pk %}" class="btn btn-sm btn-warning">Upravit</a>
+                <a href="{% url 'projects:controlcheck_delete' check.pk %}" class="btn btn-sm btn-danger">Odstranit</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a href="{% url 'projects:check_create' project.pk %}" class="btn btn-sm btn-success">Přidat kontrolu</a>
+      </div>
+    </div>
+  </div>
+</div>
 {% endif %}
 
-{% if user.is_authenticated and can_edit %}
-  <a href="{% url 'projects:edit' project.pk %}" class="btn btn-sm btn-warning">
-    Upravit projekt
-  </a>
-{% endif %}
-
-<!-- templates/projects/project_detail.html -->
-{% if user == project.leader or user.is_superuser %}
-  <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-warning">
-    Upravit interní poznámky
-  </a>
-{% endif %}
-
-{% if user == project.leader or user.is_superuser %}
-  <!-- Přidání nové kontroly -->
-  <a href="{% url 'projects:check_create' project.pk %}" class="btn btn-sm btn-success">
-    Přidat kontrolu
-  </a>
-{% endif %}
-
-<!-- Seznam kontrol (jen pro vedoucího) -->
-{% if user == project.leader or user.is_superuser %}
-  <h3>Kontroly</h3>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Datum</th>
-        <th>Obsah</th>
-        <th>Hodnocení</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for check in project.controls.all %}
-        <tr>
-          <td>{{ check.date|date:"j.n.Y" }}</td>
-          <td>{{ check.content }}</td>
-          <td>{{ check.evaluation }}</td>
-          <td>
-            <a href="{% url 'projects:check_edit' check.pk %}" class="btn btn-sm btn-warning">Upravit</a>
-            <a href="{% url 'projects:controlcheck_delete' check.pk %}" class="btn btn-sm btn-danger">Odstranit</a>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% endif %}
-
-{% if user == project.leader or user.is_superuser %}
-  <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-info">
-    Vedoucí posudek
-  </a>
-{% endif %}
-
-{% if user == project.opponent or user.is_superuser %}
-  <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-info">
-    Oponentský posudek
-  </a>
-{% endif %}
-
+<!-- Sekce akcí -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header bg-light">
+        <h3>Akce</h3>
+      </div>
+      <div class="card-body">
+        {% if user.is_authenticated and is_teacher and project.status == 'pending_approval' %}
+        <a href="{% url 'projects:approve' project.pk %}" class="btn btn-sm btn-primary">Schválit a převzít vedení</a>
+        {% endif %}
+        {% if user.is_authenticated and project.leader == user %}
+        <a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-warning">Vzdát se vedení</a>
+        {% if not project.opponent %}
+          <a href="{% url 'projects:take_opponent' project.pk %}" class="btn btn-sm btn-info">Převzít oponenturu</a>
+        {% endif %}
+        <a href="{% url 'projects:opponent_update' project.pk %}" class="btn btn-sm btn-secondary">Vybrat oponenta</a>
+        <a href="{% url 'projects:edit' project.pk %}" class="btn btn-sm btn-warning">Upravit projekt</a>
+        <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-warning">Upravit poznámky</a>
+        {% endif %}
+        {% if user.is_authenticated and project.leader == user %}
+        <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-info">Posudek vedoucího</a>
+        {% endif %}
+        {% if user.is_authenticated and project.opponent == user %}
+        <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-info">Posudek oponenta</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

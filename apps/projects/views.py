@@ -13,7 +13,8 @@ from django.utils.decorators import method_decorator
 from .forms import (
     MilestoneForm,ProjectForm, ControlCheckForm,
     LeaderEvaluationForm, OpponentEvaluationForm,
-    ProjectNotesForm, ProjectOpponentForm
+    ProjectNotesForm, ProjectOpponentForm,
+    UserUpdateForm
 )
 import csv
 from django.http import HttpResponse, HttpResponseForbidden
@@ -543,3 +544,20 @@ def import_users_csv(request):
         return redirect('projects:list')
 
     return render(request, 'users/import_users.html')
+
+
+class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UserUpdateForm
+    template_name = 'users/user_profile_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Uživatel může editovat jen sám sebe
+        if request.user.pk != int(kwargs['pk']) and not request.user.is_superuser:
+            messages.error(request, "Nemůžete měnit údaje jiného uživatele.")
+            return redirect('projects:list')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        messages.success(self.request, "Údaje úspěšně aktualizovány.")
+        return reverse('projects:list')  # nebo detail uživatele
