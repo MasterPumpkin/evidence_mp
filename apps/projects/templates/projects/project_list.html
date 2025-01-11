@@ -1,31 +1,94 @@
 {% extends "base.html" %}
-{% block title %}Seznam projektů{% endblock %}
-
 {% block content %}
 <h1>Seznam projektů</h1>
 
-<a href="{% url 'projects:create' %}" class="btn btn-primary mb-3">Založit nový projekt</a>
+<form method="get" class="row g-3 mb-4">
+  <div class="col-auto">
+    <label for="class" class="form-label">Třída</label>
+    <input type="text" name="class" id="class" value="{{ request.GET.class }}" class="form-control">
+  </div>
+
+  <div class="col-auto">
+    <label for="status" class="form-label">Status</label>
+    <select name="status" id="status" class="form-select">
+      <option value="">-- Vše --</option>
+      <option value="pending_approval" {% if request.GET.status == "pending_approval" %}selected{% endif %}>Čeká na schválení</option>
+      <option value="approved" {% if request.GET.status == "approved" %}selected{% endif %}>Schváleno</option>
+      <option value="finished" {% if request.GET.status == "finished" %}selected{% endif %}>Dokončeno</option>
+    </select>
+  </div>
+
+  <div class="col-auto">
+    <label for="leader" class="form-label">Vedoucí</label>
+    <select name="leader" id="leader" class="form-select">
+      <option value="">-- Všichni --</option>
+      {% for teacher in all_teachers %}
+        <option value="{{ teacher.id }}"
+          {% if request.GET.leader == teacher.id|stringformat:"s" %}selected{% endif %}>
+          {{ teacher.get_full_name|default:teacher.username }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-auto">
+    <label for="opponent" class="form-label">Oponent</label>
+    <select name="opponent" id="opponent" class="form-select">
+      <option value="">-- Všichni --</option>
+      {% for teacher in all_teachers %}
+        <option value="{{ teacher.id }}"
+          {% if request.GET.opponent == teacher.id|stringformat:"s" %}selected{% endif %}>
+          {{ teacher.get_full_name|default:teacher.username }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-auto">
+    <label for="ordering" class="form-label">Řadit dle</label>
+    <select name="ordering" id="ordering" class="form-select">
+      <option value="">-- žádné --</option>
+      <option value="title" {% if request.GET.ordering == "title" %}selected{% endif %}>Název (A-Z)</option>
+      <option value="-title" {% if request.GET.ordering == "-title" %}selected{% endif %}>Název (Z-A)</option>
+      <option value="created_at" {% if request.GET.ordering == "created_at" %}selected{% endif %}>Datum vzniku (staré nahoře)</option>
+      <option value="-created_at" {% if request.GET.ordering == "-created_at" %}selected{% endif %}>Datum vzniku (nové nahoře)</option>
+    </select>
+  </div>
+
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary mt-4">Filtrovat</button>
+  </div>
+</form>
 
 <table class="table table-striped">
   <thead>
     <tr>
       <th>Název</th>
+      <th>Student (třída)</th>
       <th>Status</th>
-      <th>Student</th>
       <th>Vedoucí</th>
+      <th>Oponent</th>
+      <th>Akce</th>
     </tr>
   </thead>
   <tbody>
-    {% for proj in projects %}
-      <tr>
-        <td>
-          <a href="{% url 'projects:detail' proj.pk %}">{{ proj.title }}</a>
-        </td>
-        <td>{{ proj.get_status_display }}</td>
-        <td>{{ proj.student }}</td>
-        <td>{{ proj.leader }}</td>
-      </tr>
-    {% endfor %}
+  {% for proj in projects %}
+    <tr>
+      <td>{{ proj.title }}</td>
+      <td>
+        {{ proj.student.username }} 
+        ({{ proj.student.userprofile.class_name|default:"-" }})
+      </td>
+      <td>{{ proj.get_status_display }}</td>
+      <td>{{ proj.leader }}</td>
+      <td>{{ proj.opponent }}</td>
+      <td>
+        <a href="{% url 'projects:detail' proj.pk %}" class="btn btn-sm btn-secondary">Detail</a>
+      </td>
+    </tr>
+  {% endfor %}
   </tbody>
 </table>
+
 {% endblock %}
+

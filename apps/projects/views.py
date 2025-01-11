@@ -1,10 +1,21 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Project
+from .models import Project, Milestone, ControlCheck, LeaderEvaluation, OpponentEvaluation
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from .forms import (
+    MilestoneForm,ProjectForm, ControlCheckForm,
+    LeaderEvaluationForm, OpponentEvaluationForm,
+    ProjectNotesForm
+)
+import csv
+from django.http import HttpResponse, HttpResponseForbidden
+from datetime import datetime
+from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 def user_in_group(user, group_name):
@@ -48,15 +59,51 @@ class ProjectListView(LoginRequiredMixin, ListView):
     model = Project
     template_name = 'projects/project_list.html'
     context_object_name = 'projects'
-
+    
     def get_queryset(self):
         qs = super().get_queryset()
+
         # Pokud je user ve skupině 'Student', zobrazí jen své projekty
         if user_in_group(self.request.user, 'Student'):
             qs = qs.filter(student=self.request.user)
         # Pokud je user ve skupině 'Teacher', zobrazí všechny (např.)
-        # Nebo můžeš filtr přidat i pro "Teacher"
+
+        # -- Filtrování podle třídy:
+        class_name = self.request.GET.get('class')
+        if class_name:
+            # student__userprofile__class_name = "3.A" například
+            qs = qs.filter(student__userprofile__class_name=class_name)
+
+        # -- Filtrování podle stavu projektu:
+        status = self.request.GET.get('status')
+        if status:
+            qs = qs.filter(status=status)
+
+        # -- Filtrování podle vedoucího:
+        leader_id = self.request.GET.get('leader')
+        if leader_id:
+            qs = qs.filter(leader_id=leader_id)
+
+        # -- Filtrování podle oponenta:
+        opponent_id = self.request.GET.get('opponent')
+        if opponent_id:
+            qs = qs.filter(opponent_id=opponent_id)
+
+        # -- Řazení:
+        # v parametru ?ordering=title nebo ?ordering=-created_at atd.
+        ordering = self.request.GET.get('ordering')
+        valid_order_fields = ['title', '-title', 'created_at', '-created_at', 'status', '-status']
+        if ordering in valid_order_fields:
+            qs = qs.order_by(ordering)
+
         return qs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Seznam učitelů – budeme je zobrazovat v dropdownu
+        context['all_teachers'] = User.objects.filter(groups__name='Teacher')
+        return context
+
 
 class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
@@ -137,3 +184,248 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return '/projects/'
 
+
+class MilestoneCreateView(CreateView):
+    model = Milestone
+    form_class = MilestoneForm  # Použití vlastního formuláře
+    # fields = ['title', 'deadline', 'status', 'note']
+    template_name = 'projects/milestone_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Ověřit, že user je Teacher (vedoucí) atp. 
+        if not (request.user.is_authenticated and request.user.groups.filter(name='Teacher').exists()):
+            messages.error(request, "Nemáte oprávnění přidávat milníky.")
+            return redirect('projects:list')
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        project_id = self.kwargs['project_id']
+        project = get_object_or_404(Project, id=project_id)
+        # Můžeme ověřit, zda je request.user leader, atp.
+        form.instance.project = project
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        milestone = self.object
+        # Po vytvoření se vrátíme na detail projektu
+        # return redirect('projects:detail', pk=self.kwargs['project_id'])
+        return reverse('projects:detail', kwargs={'pk': milestone.project.id})
+
+class MilestoneUpdateView(UpdateView):
+    model = Milestone
+    form_class = MilestoneForm  # Použití vlastního formuláře
+    # fields = ['title', 'deadline', 'status', 'note']
+    template_name = 'projects/milestone_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_authenticated and request.user.groups.filter(name='Teacher').exists()):
+            messages.error(request, "Nemáte oprávnění upravovat milníky.")
+            milestone = self.get_object()
+            return redirect('projects:detail', pk=milestone.project.id)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        milestone = self.object
+        # return redirect('projects:detail', pk=milestone.project.id)
+        return reverse('projects:detail', kwargs={'pk': milestone.project.id})
+    
+
+
+
+@login_required
+def import_milestones_csv(request, project_id):
+    """
+    Např. ve formuláři 'upload file' -> POST -> 
+    python parse -> create Milestone pro kazdy radek
+    """
+    project = get_object_or_404(Project, pk=project_id)
+    if not request.user.groups.filter(name='Teacher').exists():
+        messages.error(request, "Jen učitel může importovat milníky.")
+        return redirect('projects:detail', pk=project_id)
+    
+    if request.method == 'POST':
+        csv_file = request.FILES.get('file')
+        if csv_file is None:
+            messages.error(request, "Nebylo vybráno žádné CSV.")
+            return redirect('projects:detail', pk=project_id)
+
+        decoded_file = csv_file.read().decode('utf-8').splitlines()
+        reader = csv.reader(decoded_file, delimiter=';')  # nebo ',' atd.
+        # Očekáváš např. sloupce: title;deadline;status;note
+
+        for row in reader:
+            if len(row) < 1:
+                continue
+
+            title = row[0]
+            deadline_str = row[1] if len(row) > 1 else None
+            status = row[2] if len(row) > 2 else 'not_started'
+            note = row[3] if len(row) > 3 else ''
+
+            # Ošetření parsování data
+            deadline = None
+            if deadline_str:
+                try:
+                    deadline = datetime.strptime(deadline_str, '%Y-%m-%d').date()
+                except ValueError:
+                    messages.error(request, f"Neplatný formát datumu: {deadline_str}. Řádek přeskočen.")
+                    continue  # Přeskočí špatně formátované řádky
+
+            Milestone.objects.create(
+                project=project,
+                title=title,
+                deadline=deadline,
+                status=status,
+                note=note
+            )
+
+        messages.success(request, "Milníky naimportovány.")
+        return redirect('projects:detail', pk=project_id)
+    
+    # GET: zobrazit formulář
+    return render(request, 'projects/milestone_import.html', {'project': project})
+
+
+
+
+@login_required
+def delete_milestone(request, milestone_id):
+    """
+    Odstraní milník, pokud má uživatel oprávnění (je vedoucí projektu).
+    """
+    milestone = get_object_or_404(Milestone, id=milestone_id)
+    
+    # Kontrola oprávnění: uživatel musí být vedoucí projektu
+    if milestone.project.leader != request.user:
+        return HttpResponseForbidden("Nemáte oprávnění odstranit tento milník.")
+
+    milestone.delete()
+    messages.success(request, "Milník byl úspěšně odstraněn.")
+    return redirect('projects:detail', pk=milestone.project.id)
+
+
+@login_required
+def delete_controlcheck(request, controlcheck_id):
+    """
+    Odstraní kontrolu, pokud má uživatel oprávnění (je vedoucí projektu).
+    """
+    controlcheck = get_object_or_404(ControlCheck, id=controlcheck_id)
+    
+    # Kontrola oprávnění: uživatel musí být vedoucí projektu
+    if controlcheck.project.leader != request.user:
+        return HttpResponseForbidden("Nemáte oprávnění odstranit tuto kontrolu.")
+
+    controlcheck.delete()
+    messages.success(request, "Kontrola byla úspěšně odstraněna.")
+    return redirect('projects:detail', pk=controlcheck.project.id)
+
+
+class ControlCheckCreateView(LoginRequiredMixin, CreateView):
+    model = ControlCheck
+    form_class = ControlCheckForm
+    template_name = 'projects/controlcheck_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Ověříme, že user je vedoucí
+        project_id = self.kwargs['project_id']
+        project = get_object_or_404(Project, id=project_id)
+        if not (request.user == project.leader or request.user.is_superuser):
+            messages.error(request, "Nemáte oprávnění přidávat kontroly.")
+            return redirect('projects:detail', pk=project_id)
+        self.project = project
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.project = self.project
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # return redirect('projects:detail', pk=self.project.pk)
+        return reverse('projects:detail', kwargs={'pk': self.project.pk})
+
+
+class ControlCheckUpdateView(LoginRequiredMixin, UpdateView):
+    model = ControlCheck
+    form_class = ControlCheckForm
+    template_name = 'projects/controlcheck_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        check = self.get_object()
+        project = check.project
+        if not (request.user == project.leader or request.user.is_superuser):
+            messages.error(request, "Nemáte oprávnění upravovat tuto kontrolu.")
+            return redirect('projects:detail', pk=project.pk)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        # Vrátíme se do detailu projektu
+        check = self.object
+        # return redirect('projects:detail', pk=check.project.pk)
+        return reverse('projects:detail', kwargs={'pk': check.project.pk})
+
+
+class LeaderEvalUpdateView(LoginRequiredMixin, UpdateView):
+    model = LeaderEvaluation
+    form_class = LeaderEvaluationForm
+    template_name = 'projects/leader_eval_form.html'
+
+    def get_object(self, queryset=None):
+        project_id = self.kwargs['project_id']
+        project = get_object_or_404(Project, id=project_id)
+        # Zkusíme najít LeaderEvaluation, pokud neexistuje, vytvoříme v paměti
+        obj, created = LeaderEvaluation.objects.get_or_create(project=project)
+        return obj
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        project = obj.project
+        if not (request.user == project.leader or request.user.is_superuser):
+            messages.error(request, "Nemáte oprávnění vyplňovat hodnocení vedoucího.")
+            return redirect('projects:detail', pk=project.pk)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        # return redirect('projects:detail', pk=self.object.project.pk)
+        return reverse('projects:detail', kwargs={'pk': self.object.project.pk})
+
+
+class OpponentEvalUpdateView(LoginRequiredMixin, UpdateView):
+    model = OpponentEvaluation
+    form_class = OpponentEvaluationForm
+    template_name = 'projects/opponent_eval_form.html'
+
+    def get_object(self, queryset=None):
+        project_id = self.kwargs['project_id']
+        project = get_object_or_404(Project, id=project_id)
+        obj, created = OpponentEvaluation.objects.get_or_create(project=project)
+        return obj
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        project = obj.project
+        # Jen oponent nebo superuser
+        if not (request.user == project.opponent or request.user.is_superuser):
+            messages.error(request, "Nemáte oprávnění vyplňovat hodnocení oponenta.")
+            return redirect('projects:detail', pk=project.pk)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        # return redirect('projects:detail', pk=self.object.project.pk)
+        return reverse('projects:detail', kwargs={'pk': self.object.project.pk})
+
+
+class ProjectNotesUpdateView(LoginRequiredMixin, UpdateView):
+    model = Project
+    form_class = ProjectNotesForm
+    template_name = 'projects/project_notes_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        project = self.get_object()
+        # Přístup jen pro vedoucího nebo superusera
+        if not (request.user == project.leader or request.user.is_superuser):
+            messages.error(request, "Nemáte oprávnění upravovat interní poznámky.")
+            return redirect('projects:detail', pk=project.pk)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('projects:detail', args=[self.object.pk])

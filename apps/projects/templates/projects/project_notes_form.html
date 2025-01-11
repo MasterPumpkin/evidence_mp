@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<h2>Interní poznámky (pouze pro vedoucího)</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+  <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+  <button type="submit" class="btn btn-primary">Uložit</button>
+</form>
+{% endblock %}
+
+
+
