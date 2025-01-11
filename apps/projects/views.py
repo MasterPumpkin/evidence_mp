@@ -1,8 +1,12 @@
+import csv
+import io
+from django.contrib.auth.models import User, Group
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from apps.profiles.models import UserProfile
 from .models import Project, Milestone, ControlCheck, LeaderEvaluation, OpponentEvaluation
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -466,3 +470,76 @@ class ProjectOpponentUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('projects:detail', args=[self.object.pk])
+
+
+@login_required
+def import_users_csv(request):
+    """
+    Očekává CSV s řádky:
+    username;first_name;last_name;email;role;class_name
+    kde role je 'student' nebo 'teacher'.
+    """
+    if request.method == 'POST':
+        csv_file = request.FILES.get('file')
+        if not csv_file:
+            messages.error(request, "Není vybrán žádný CSV soubor.")
+            return redirect('import_users_csv')
+
+        data = csv_file.read().decode('utf-8')
+        reader = csv.reader(io.StringIO(data), delimiter=';')
+
+        student_group = Group.objects.get(name='Student')
+        teacher_group = Group.objects.get(name='Teacher')
+
+        count_created = 0
+        for row in reader:
+            if len(row) < 5:
+                continue
+
+            username = row[0].strip()
+            fname = row[1].strip()
+            lname = row[2].strip()
+            email = row[3].strip()
+            role = row[4].strip().lower()  # 'student' / 'teacher'
+            class_name = row[5].strip() if len(row) > 5 else ''
+
+            # Kontrola, zda user už existuje
+            user, created = User.objects.get_or_create(username=username, defaults={
+                'first_name': fname,
+                'last_name': lname,
+                'email': email
+            })
+
+            if not created:
+                # User už existuje, můžeme updatovat jméno/ email
+                user.first_name = fname
+                user.last_name = lname
+                user.email = email
+                user.save()
+
+            # Přidání do skupiny
+            if role == 'student':
+                user.groups.set([student_group])  # nebo .add()
+                # Vytvoříme userprofile, nastavíme třídu
+                if hasattr(user, 'userprofile'):
+                    user.userprofile.class_name = class_name
+                    user.userprofile.save()
+                else:
+                    UserProfile.objects.create(user=user, class_name=class_name)
+
+            elif role == 'teacher':
+                user.groups.set([teacher_group])
+
+            # Nastavit heslo - varianty:
+            # a) Vygenerovat náhodné
+            # b) Nastavit default heslo (např. "heslo123") - pro demo
+            if created:
+                user.set_password("heslo123")  # Lepší by bylo generovat
+                user.save()
+
+            count_created += 1
+
+        messages.success(request, f"Načteno {count_created} uživatelů.")
+        return redirect('projects:list')
+
+    return render(request, 'users/import_users.html')

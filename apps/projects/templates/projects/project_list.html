@@ -90,5 +90,11 @@
   </tbody>
 </table>
 
+{% if user.is_superuser %}
+  <a href="{% url 'projects:import_users' %}" class="btn btn-sm btn-danger">
+    Importovat žáky a učitele
+  </a>
+{% endif %}
+
 {% endblock %}
 
