@@ -7,7 +7,8 @@ from .views import (
     import_milestones_csv, delete_milestone,
     ControlCheckCreateView, ControlCheckUpdateView,
     LeaderEvalUpdateView, OpponentEvalUpdateView,
-    ProjectNotesUpdateView, delete_controlcheck
+    ProjectNotesUpdateView, delete_controlcheck,
+    take_opponent_role, ProjectOpponentUpdateView
 )
 
 app_name = 'projects'
@@ -33,4 +34,6 @@ urlpatterns = [
     # Hodnocení oponenta
     path('<int:project_id>/opponent-eval/', OpponentEvalUpdateView.as_view(), name='opponent_eval'),
     path('<int:pk>/notes/', ProjectNotesUpdateView.as_view(), name='notes_edit'),
+    path('<int:pk>/take-opponent/', take_opponent_role, name='take_opponent'),
+    path('<int:pk>/opponent-update/', ProjectOpponentUpdateView.as_view(), name='opponent_update'),
 ]

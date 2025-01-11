@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from .forms import (
     MilestoneForm,ProjectForm, ControlCheckForm,
     LeaderEvaluationForm, OpponentEvaluationForm,
-    ProjectNotesForm
+    ProjectNotesForm, ProjectOpponentForm
 )
 import csv
 from django.http import HttpResponse, HttpResponseForbidden
@@ -424,6 +424,43 @@ class ProjectNotesUpdateView(LoginRequiredMixin, UpdateView):
         # Přístup jen pro vedoucího nebo superusera
         if not (request.user == project.leader or request.user.is_superuser):
             messages.error(request, "Nemáte oprávnění upravovat interní poznámky.")
+            return redirect('projects:detail', pk=project.pk)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('projects:detail', args=[self.object.pk])
+    
+
+
+@login_required
+def take_opponent_role(request, pk):
+    """
+    Učitel klikne na tlačítko v detailu -> stane se oponentem projektu.
+    """
+    project = get_object_or_404(Project, pk=pk)
+
+    # Musí být učitel (nebo superuser)
+    if not request.user.groups.filter(name='Teacher').exists() and not request.user.is_superuser:
+        messages.error(request, "Nemáte oprávnění stát se oponentem.")
+        return redirect('projects:detail', pk=pk)
+
+    # Nastavím project.opponent = request.user
+    project.opponent = request.user
+    project.save()
+    messages.success(request, "Stali jste se oponentem projektu.")
+    return redirect('projects:detail', pk=pk)
+
+
+class ProjectOpponentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Project
+    form_class = ProjectOpponentForm
+    template_name = 'projects/project_opponent_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        project = self.get_object()
+        # Povolíme jen vedoucímu (nebo adminovi) vybrat oponenta
+        if not (request.user == project.leader or request.user.is_superuser):
+            messages.error(request, "Nemáte oprávnění přiřadit oponenta.")
             return redirect('projects:detail', pk=project.pk)
         return super().dispatch(request, *args, **kwargs)
 

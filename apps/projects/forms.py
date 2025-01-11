@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import User
 from .models import Milestone, Project, ControlCheck, LeaderEvaluation, OpponentEvaluation
 from ckeditor.widgets import CKEditorWidget
 from crispy_forms.helper import FormHelper
@@ -80,3 +81,15 @@ class ProjectNotesForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('content', label=False),  # Skryje popis pole
         )
+
+
+class ProjectOpponentForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['opponent']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Omezíme výběr pro opponent jen na učitele
+        self.fields['opponent'].queryset = User.objects.filter(groups__name='Teacher')
+        self.fields['opponent'].required = False

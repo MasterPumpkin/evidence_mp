@@ -3,16 +3,16 @@ from django.conf import settings
 from django.urls import reverse
 
 class ScoringScheme(models.Model):
-    year = models.CharField(max_length=20, unique=True, help_text="Školní rok, např. 2024/2025")
+    year = models.CharField(max_length=20, unique=True, help_text="Školní rok, např. 2024/2025", verbose_name="Školní rok")
     
     # Vedoucí – 3 oblasti
-    leader_area1_max = models.PositiveIntegerField(default=15)
-    leader_area2_max = models.PositiveIntegerField(default=10)
-    leader_area3_max = models.PositiveIntegerField(default=15)
+    leader_area1_max = models.PositiveIntegerField(default=15, help_text="Maximální počet bodů za oblast 1", verbose_name="Max. body oblast 1")
+    leader_area2_max = models.PositiveIntegerField(default=10, help_text="Maximální počet bodů za oblast 2", verbose_name="Max. body oblast 2")
+    leader_area3_max = models.PositiveIntegerField(default=15, help_text="Maximální počet bodů za oblast 3", verbose_name="Max. body oblast 3")
     
     # Oponent – 2 oblasti
-    opponent_area1_max = models.PositiveIntegerField(default=15)
-    opponent_area2_max = models.PositiveIntegerField(default=15)
+    opponent_area1_max = models.PositiveIntegerField(default=15, help_text="Maximální počet bodů za oblast 1", verbose_name="Max. body oblast 1")
+    opponent_area2_max = models.PositiveIntegerField(default=15, help_text="Maximální počet bodů za oblast 2", verbose_name="Max. body oblast 2")
 
     active = models.BooleanField(default=False, help_text="Je toto schéma aktuálně používané?")
 
@@ -28,12 +28,13 @@ class Project(models.Model):
         ('finished', 'Dokončeno'),
     ]
 
-    title = models.CharField(max_length=200)
-    description = models.TextField()
+    title = models.CharField(max_length=200, verbose_name="Název")
+    description = models.TextField(verbose_name="Popis")
     status = models.CharField(
         max_length=20, 
         choices=STATUS_CHOICES, 
-        default='pending_approval'
+        default='pending_approval',
+        verbose_name="Stav"
     )
 
     # student, který projekt založil:
@@ -41,7 +42,8 @@ class Project(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True, blank=True,
-        related_name='student_projects'
+        related_name='student_projects',
+        help_text="Student"
     )
 
     # vedoucí projektu (po schválení):
@@ -49,7 +51,8 @@ class Project(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True, blank=True,
-        related_name='leading_projects'
+        related_name='leading_projects',
+        help_text="Vedoucí projektu"
     )
 
     # případný oponent
@@ -57,24 +60,27 @@ class Project(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True, blank=True,
-        related_name='opponent_projects'
+        related_name='opponent_projects',
+        help_text="Oponent projektu"
     )
 
     scheme = models.ForeignKey(
         ScoringScheme,
         on_delete=models.SET_NULL,
         null=True, blank=True,
-        help_text="Scoring schema pro tento projekt (podle školního roku)"
+        help_text="Scoring schema pro tento projekt (podle školního roku)",
+        verbose_name="Scoring schema"
     )
 
     internal_notes = models.TextField(
         blank=True,
-        help_text="Poznámky viditelné pouze pro vedoucího (WYSIWYG)"
+        help_text="Poznámky viditelné pouze pro vedoucího (WYSIWYG)",
+        verbose_name="Interní poznámky"
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    edit_deadline = models.DateTimeField(null=True, blank=True, help_text="Do kdy může student upravovat projekt")
+    edit_deadline = models.DateTimeField(null=True, blank=True, help_text="Do kdy může student upravovat projekt", verbose_name="Upravit do")
 
 
     def __str__(self):
@@ -92,15 +98,16 @@ class Milestone(models.Model):
         ('done', 'Dokončeno'),
     ]
 
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='milestones')
-    title = models.CharField(max_length=200, help_text="Krátký popis milníku")
-    deadline = models.DateField(null=True, blank=True, help_text="Datum, do kdy je milník plánován")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='milestones', verbose_name="Projekt")
+    title = models.CharField(max_length=200, help_text="Krátký popis milníku", verbose_name="Název")
+    deadline = models.DateField(null=True, blank=True, help_text="Datum, do kdy je milník plánován", verbose_name="Termín")
     status = models.CharField(
         max_length=20, 
         choices=STATUS_CHOICES, 
-        default='not_started'
+        default='not_started',
+        verbose_name="Stav"
     )
-    note = models.TextField(blank=True, help_text="Poznámka k milníku")
+    note = models.TextField(blank=True, help_text="Poznámka k milníku", verbose_name="Poznámka")
 
     def __str__(self):
         return f"{self.project.title}: {self.title}"
@@ -108,10 +115,10 @@ class Milestone(models.Model):
 
 
 class ControlCheck(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='controls')
-    date = models.DateField(help_text="Datum kontroly")
-    content = models.TextField(help_text="Co bylo náplní kontroly")
-    evaluation = models.CharField(max_length=200, blank=True, help_text="Hodnocení / body / slovní")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='controls', verbose_name="Projekt")
+    date = models.DateField(help_text="Datum kontroly", verbose_name="Datum")
+    content = models.TextField(help_text="Co bylo náplní kontroly", verbose_name="Obsah")
+    evaluation = models.CharField(max_length=200, blank=True, help_text="Hodnocení / body / slovní", verbose_name="Hodnocení")
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -121,20 +128,20 @@ class ControlCheck(models.Model):
 
 
 class LeaderEvaluation(models.Model):
-    project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='leader_eval')
+    project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='leader_eval', verbose_name="Projekt")
     
     # Napojení na scheme, můžeme si ho tahat i přes project.scheme, ale mít ho i tady je někdy praktičtější
     # scheme = models.ForeignKey(ScoringScheme, on_delete=models.SET_NULL, null=True, blank=True)
 
     # Oblasti hodnocení:
-    area1_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 1)")
-    area1_points = models.PositiveIntegerField(default=0)
+    area1_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 1)", verbose_name="Oblast 1")
+    area1_points = models.PositiveIntegerField(default=0, verbose_name="Body")
     
-    area2_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 2)")
-    area2_points = models.PositiveIntegerField(default=0)
+    area2_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 2)", verbose_name="Oblast 2")
+    area2_points = models.PositiveIntegerField(default=0, verbose_name="Body")
     
-    area3_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 3)")
-    area3_points = models.PositiveIntegerField(default=0)
+    area3_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 3)", verbose_name="Oblast 3")
+    area3_points = models.PositiveIntegerField(default=0, verbose_name="Body")
 
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -157,13 +164,13 @@ class LeaderEvaluation(models.Model):
 
 
 class OpponentEvaluation(models.Model):
-    project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='opponent_eval')
+    project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='opponent_eval', verbose_name="Projekt")
     
-    area1_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 1)")
-    area1_points = models.PositiveIntegerField(default=0)
+    area1_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 1)", verbose_name="Oblast 1")
+    area1_points = models.PositiveIntegerField(default=0, verbose_name="Body")
     
-    area2_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 2)")
-    area2_points = models.PositiveIntegerField(default=0)
+    area2_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 2)", verbose_name="Oblast 2")
+    area2_points = models.PositiveIntegerField(default=0, verbose_name="Body")
 
     updated_at = models.DateTimeField(auto_now=True)
 

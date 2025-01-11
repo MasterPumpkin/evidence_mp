@@ -5,6 +5,7 @@
 <p>Stav: {{ project.get_status_display }}</p>
 <p>Student: {{ project.student }}</p>
 <p>Vedoucí: {{ project.leader }}</p>
+<p>Oponent: {{ project.opponent }}</p>
 
 <!-- Seznam milníků -->
 <h3>Milníky</h3>
@@ -39,43 +40,58 @@
 
 <!-- Tlačítko pro přidání nového milníku -->
 {% if user.is_authenticated and project.leader == user %}
-  <a href="{% url 'projects:milestone_add' project.id %}" class="btn btn-primary">Přidat milník</a>
+  <a href="{% url 'projects:milestone_add' project.id %}" class="btn btn-sm btn-primary">Přidat milník</a>
 {% endif %}
 
 <!-- Tlačítko pro přidání CSV milníků -->
 {% if user.is_authenticated and project.leader == user %}
-  <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-primary">Importovat milníky z CSV</a>
+  <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-sm btn-primary">Importovat milníky z CSV</a>
 {% endif %}
 
 <!-- Tlačítko pro schválení zobrazíme jen pokud je user teacher a projekt je pending_approval. -->
 {% if user.is_authenticated and is_teacher and project.status == 'pending_approval' %}
-  <a href="{% url 'projects:approve' project.pk %}" class="btn btn-primary">
+  <a href="{% url 'projects:approve' project.pk %}" class="btn btn-sm btn-primary">
     Schválit projekt a převzít vedení
   </a>
 {% endif %}
 
 {% if user.is_authenticated and project.leader == user %}
-  <a href="{% url 'projects:resign' project.pk %}" class="btn btn-warning">
+  <a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-warning">
     Vzdát se vedení
   </a>
 {% endif %}
 
+{% if user.is_authenticated and is_teacher and project.leader != user %}
+  <!-- Pokud projekt nemá oponenta -->
+  {% if not project.opponent %}
+    <a href="{% url 'projects:take_opponent' project.pk %}" class="btn btn-sm btn-info">
+      Převzít oponenturu
+    </a>
+  {% endif %}
+{% endif %}
+
+{% if user == project.leader or user.is_superuser %}
+  <a href="{% url 'projects:opponent_update' project.pk %}" class="btn btn-sm btn-secondary">
+    Vybrat oponenta
+  </a>
+{% endif %}
+
 {% if user.is_authenticated and can_edit %}
-  <a href="{% url 'projects:edit' project.pk %}" class="btn btn-warning">
+  <a href="{% url 'projects:edit' project.pk %}" class="btn btn-sm btn-warning">
     Upravit projekt
   </a>
 {% endif %}
 
 <!-- templates/projects/project_detail.html -->
 {% if user == project.leader or user.is_superuser %}
-  <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-warning">
+  <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-warning">
     Upravit interní poznámky
   </a>
 {% endif %}
 
 {% if user == project.leader or user.is_superuser %}
   <!-- Přidání nové kontroly -->
-  <a href="{% url 'projects:check_create' project.pk %}" class="btn btn-success">
+  <a href="{% url 'projects:check_create' project.pk %}" class="btn btn-sm btn-success">
     Přidat kontrolu
   </a>
 {% endif %}
@@ -109,13 +125,13 @@
 {% endif %}
 
 {% if user == project.leader or user.is_superuser %}
-  <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-info">
+  <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-info">
     Vedoucí posudek
   </a>
 {% endif %}
 
 {% if user == project.opponent or user.is_superuser %}
-  <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-info">
+  <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-info">
     Oponentský posudek
   </a>
 {% endif %}
