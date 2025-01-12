@@ -85,7 +85,7 @@
               <td>{{ ms.note }}</td>
               <td>
                 {% if user.is_authenticated and is_teacher %}
-                <a href="{% url 'projects:milestone_edit' ms.id %}" class="btn btn-sm btn-warning">Upravit</a>
+                <a href="{% url 'projects:milestone_edit' ms.id %}" class="btn btn-sm btn-primary">Upravit</a>
                 <a href="{% url 'projects:milestone_delete' ms.id %}" class="btn btn-sm btn-danger">Odstranit</a>
                 {% endif %}
               </td>
@@ -94,8 +94,8 @@
           </tbody>
         </table>
         {% if user.is_authenticated and project.leader == user %}
-        <a href="{% url 'projects:milestone_add' project.id %}" class="btn btn-sm btn-primary">Přidat milník</a>
-        <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-sm btn-primary">Importovat CSV</a>
+        <a href="{% url 'projects:milestone_add' project.id %}" class="btn btn-sm btn-success">Přidat milník</a>
+        <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-sm btn-danger">Importovat CSV s milníky</a>
         {% endif %}
       </div>
     </div>
@@ -127,7 +127,7 @@
               <td>{{ check.content }}</td>
               <td>{{ check.evaluation }}</td>
               <td>
-                <a href="{% url 'projects:check_edit' check.pk %}" class="btn btn-sm btn-warning">Upravit</a>
+                <a href="{% url 'projects:check_edit' check.pk %}" class="btn btn-sm btn-primary">Upravit</a>
                 <a href="{% url 'projects:controlcheck_delete' check.pk %}" class="btn btn-sm btn-danger">Odstranit</a>
               </td>
             </tr>
@@ -150,22 +150,23 @@
       </div>
       <div class="card-body">
         {% if user.is_authenticated and is_teacher and project.status == 'pending_approval' %}
-        <a href="{% url 'projects:approve' project.pk %}" class="btn btn-sm btn-primary">Schválit a převzít vedení</a>
+        <a href="{% url 'projects:approve' project.pk %}" class="btn btn-sm btn-success">Schválit a převzít vedení</a>
         {% endif %}
         {% if user.is_authenticated and project.leader == user %}
-        <a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-warning">Vzdát se vedení</a>
-        {% if not project.opponent %}
-          <a href="{% url 'projects:take_opponent' project.pk %}" class="btn btn-sm btn-info">Převzít oponenturu</a>
-        {% endif %}
-        <a href="{% url 'projects:opponent_update' project.pk %}" class="btn btn-sm btn-secondary">Vybrat oponenta</a>
-        <a href="{% url 'projects:edit' project.pk %}" class="btn btn-sm btn-warning">Upravit projekt</a>
-        <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-warning">Upravit poznámky</a>
-        {% endif %}
-        {% if user.is_authenticated and project.leader == user %}
-        <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-info">Posudek vedoucího</a>
+        <a href="{% url 'projects:edit' project.pk %}" class="btn btn-sm btn-primary">Upravit projekt</a>
+        <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit poznámky</a>
+        <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek vedoucího</a>
+        <a href="{% url 'projects:export_docx' project.pk %}" class="btn btn-sm btn-info">Export posudku do DOCX</a>
         {% endif %}
         {% if user.is_authenticated and project.opponent == user %}
-        <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-info">Posudek oponenta</a>
+        <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek oponenta</a>
+        {% endif %}
+        {% if user.is_authenticated and project.leader == user %}
+        <a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-danger">Vzdát se vedení</a>
+        {% if not project.opponent %}
+          <a href="{% url 'projects:take_opponent' project.pk %}" class="btn btn-sm btn-success">Převzít oponenturu</a>
+        {% endif %}
+        <a href="{% url 'projects:opponent_update' project.pk %}" class="btn btn-sm btn-secondary">Vybrat oponenta</a>
         {% endif %}
       </div>
     </div>

@@ -21,6 +21,69 @@ from django.http import HttpResponse, HttpResponseForbidden
 from datetime import datetime
 from django.urls import reverse
 from django.contrib.auth.models import User
+from docxtpl import DocxTemplate
+from django.http import HttpResponse
+from django.template.defaultfilters import date as date_filter
+import datetime
+
+@login_required
+def export_project_docx(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+
+    # Pouze vedoucí nebo superuser (nebo kdokoli, pokud je to volně přístupné)
+    if not (request.user == project.leader or request.user.is_superuser):
+        messages.error(request, "Nemáte oprávnění exportovat.")
+        return redirect('projects:detail', pk=pk)
+
+    doc = DocxTemplate("templates/docx/zadani_projektu.docx")  
+    # Ulož si .docx šablonu do nějaké složky, sem dáš reálnou cestu
+    
+    # Připrav data pro šablonu
+    student_profile = getattr(project.student, 'userprofile', None)
+    class_name = student_profile.class_name if student_profile else ""
+    
+    # Získání kontrol
+    controls_data = []
+    for c in project.controls.all():
+        controls_data.append({
+            'date': c.date.strftime("%d.%m.%Y"),  # formátování
+            'content': c.content,
+            'evaluation': c.evaluation,
+        })
+
+    leader_eval = project.leader_eval if hasattr(project, 'leader_eval') else None
+    opponent_eval = project.opponent_eval if hasattr(project, 'opponent_eval') else None
+
+    context = {
+        'student_name': f"{project.student.first_name} {project.student.last_name}",
+        'class_name': class_name,
+        'leader_name': project.leader.get_full_name() if project.leader else "",
+        'opponent_name': project.opponent.get_full_name() if project.opponent else "",
+        'project_title': project.title,
+        'project_description': project.description,
+
+        'controls': controls_data,
+
+        'leader_eval': {
+            'area1_text': leader_eval.area1_text if leader_eval else "",
+            'area1_points': leader_eval.area1_points if leader_eval else 0,
+            # area2, area3 ...
+        } if leader_eval else {},
+        'opponent_eval': {
+            'area1_text': opponent_eval.area1_text if opponent_eval else "",
+            'area1_points': opponent_eval.area1_points if opponent_eval else 0,
+            # area2 ...
+        } if opponent_eval else {},
+    }
+
+    doc.render(context)
+
+    # Vygenerujeme soubor
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = f'attachment; filename="projekt_{pk}.docx"'
+    doc.save(response)
+    return response
+
 
 
 def user_in_group(user, group_name):
@@ -105,8 +168,18 @@ class ProjectListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Seznam učitelů – budeme je zobrazovat v dropdownu
-        context['all_teachers'] = User.objects.filter(groups__name='Teacher')
+        # Seznam učitelů, který už máš:
+        context['all_teachers'] = (User.objects
+                                   .filter(groups__name='Teacher')
+                                   .select_related('userprofile'))
+
+        # Seznam **všech tříd** (distinct), např. z UserProfile:
+        context['all_classes'] = (UserProfile.objects
+                                  .exclude(class_name='')
+                                  .values_list('class_name', flat=True)
+                                  .distinct()
+                                  .order_by('class_name'))
+
         return context
 
 
@@ -187,7 +260,8 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
         # return redirect(project)
 
     def get_success_url(self):
-        return '/projects/'
+        # return '/projects/'
+        return reverse('projects:detail', args=[self.object.pk])
 
 
 class MilestoneCreateView(CreateView):

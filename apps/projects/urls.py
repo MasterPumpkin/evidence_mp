@@ -9,7 +9,8 @@ from .views import (
     LeaderEvalUpdateView, OpponentEvalUpdateView,
     ProjectNotesUpdateView, delete_controlcheck,
     take_opponent_role, ProjectOpponentUpdateView,
-    import_users_csv, UserProfileUpdateView
+    import_users_csv, UserProfileUpdateView,
+    export_project_docx
 )
 
 app_name = 'projects'
@@ -39,4 +40,5 @@ urlpatterns = [
     path('<int:pk>/opponent-update/', ProjectOpponentUpdateView.as_view(), name='opponent_update'),
     path('import-users/', import_users_csv, name='import_users'),
     path('user-profile/<int:pk>/edit/', UserProfileUpdateView.as_view(), name='user_profile_edit'),
+    path('<int:pk>/export-docx/', export_project_docx, name='export_docx'),
 ]
