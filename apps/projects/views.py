@@ -14,7 +14,7 @@ from .forms import (
     MilestoneForm,ProjectForm, ControlCheckForm,
     LeaderEvaluationForm, OpponentEvaluationForm,
     ProjectNotesForm, ProjectOpponentForm,
-    UserUpdateForm
+    UserUpdateForm, ProjectAssignmentForm
 )
 import csv
 from django.http import HttpResponse, HttpResponseForbidden
@@ -510,6 +510,23 @@ class ProjectNotesUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('projects:detail', args=[self.object.pk])
     
 
+
+class ProjectAssignmentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Project
+    form_class = ProjectAssignmentForm
+    template_name = 'projects/project_assignment_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        project = self.get_object()
+        # Přístup jen pro vedoucího nebo superusera
+        if not (request.user == project.leader or request.user.is_superuser):
+            messages.error(request, "Nemáte oprávnění upravovat zadání projektu.")
+            return redirect('projects:detail', pk=project.pk)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('projects:detail', args=[self.object.pk])
+  
 
 @login_required
 def take_opponent_role(request, pk):

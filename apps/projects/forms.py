@@ -105,3 +105,22 @@ class UserUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Skupiny a třídu nepovolíme editovat, ty jsou v adminu.
         # Nic speciálního nepotřebujeme tady, jen fields = ...
+
+
+class ProjectAssignmentForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['assignment']
+        # widgets = {
+        #    'internal_notes': CKEditorWidget(config_name='default'),
+        # }
+        labels = {
+            'assignment': '',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('assignment', label=False),  # Skryje popis pole
+        )

@@ -30,6 +30,8 @@ class Project(models.Model):
 
     title = models.CharField(max_length=200, verbose_name="Název")
     description = models.TextField(verbose_name="Popis")
+    assignment = models.TextField(blank=True, help_text="Oficiální zadání (needitovatelné studentem)")
+    
     status = models.CharField(
         max_length=20, 
         choices=STATUS_CHOICES, 

@@ -31,12 +31,28 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingDescription">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="false" aria-controls="collapseDescription">
-                Zobrazit zadání
+                Zobrazit studentův popis projektu
               </button>
             </h2>
             <div id="collapseDescription" class="accordion-collapse collapse" aria-labelledby="headingDescription" data-bs-parent="#projectDescriptionAccordion">
               <div class="accordion-body">
                 {{ project.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion pro zobrazení zadání -->
+        <div class="accordion" id="projectAssignmentAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingDescription">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAssignment" aria-expanded="false" aria-controls="collapseAssignment">
+                Zobrazit oficiální zadání projektu
+              </button>
+            </h2>
+            <div id="collapseAssignment" class="accordion-collapse collapse" aria-labelledby="headingAssignment" data-bs-parent="#projectAssignmentAccordion">
+              <div class="accordion-body">
+                {{ project.assignment }}
               </div>
             </div>
           </div>
@@ -154,6 +170,7 @@
         {% endif %}
         {% if user.is_authenticated and project.leader == user %}
         <a href="{% url 'projects:edit' project.pk %}" class="btn btn-sm btn-primary">Upravit projekt</a>
+        <a href="{% url 'projects:assignment' project.pk %}" class="btn btn-sm btn-primary">Upravit zadání</a>
         <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit poznámky</a>
         <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek vedoucího</a>
         <a href="{% url 'projects:export_docx' project.pk %}" class="btn btn-sm btn-info">Export posudku do DOCX</a>

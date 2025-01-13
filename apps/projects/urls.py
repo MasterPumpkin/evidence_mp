@@ -10,7 +10,7 @@ from .views import (
     ProjectNotesUpdateView, delete_controlcheck,
     take_opponent_role, ProjectOpponentUpdateView,
     import_users_csv, UserProfileUpdateView,
-    export_project_docx
+    export_project_docx, ProjectAssignmentUpdateView
 )
 
 app_name = 'projects'
@@ -36,6 +36,7 @@ urlpatterns = [
     # Hodnocení oponenta
     path('<int:project_id>/opponent-eval/', OpponentEvalUpdateView.as_view(), name='opponent_eval'),
     path('<int:pk>/notes/', ProjectNotesUpdateView.as_view(), name='notes_edit'),
+    path('<int:pk>/assignment/', ProjectAssignmentUpdateView.as_view(), name='assignment'),
     path('<int:pk>/take-opponent/', take_opponent_role, name='take_opponent'),
     path('<int:pk>/opponent-update/', ProjectOpponentUpdateView.as_view(), name='opponent_update'),
     path('import-users/', import_users_csv, name='import_users'),
