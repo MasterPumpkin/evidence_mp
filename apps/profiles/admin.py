@@ -3,5 +3,6 @@ from .models import UserProfile
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'class_name')
-    search_fields = ('user__username', 'class_name')
+    list_display = ('user', 'class_name', 'study_branch')
+    list_filter = ('class_name', 'study_branch')
+    search_fields = ('user__username', 'class_name', 'study_branch')

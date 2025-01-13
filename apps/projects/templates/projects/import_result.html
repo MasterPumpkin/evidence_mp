@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Výsledek importu</h2>
+  {% if log_entries %}
+    <ul>
+    {% for entry in log_entries %}
+      <li>{{ entry }}</li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>Import proběhl bez problémů.</p>
+  {% endif %}
+  <a href="{% url 'projects:list' %}" class="btn btn-secondary">Zpět na seznam</a>
+{% endblock %}

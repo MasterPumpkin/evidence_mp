@@ -14,6 +14,8 @@ class ScoringScheme(models.Model):
     opponent_area1_max = models.PositiveIntegerField(default=15, help_text="Maximální počet bodů za oblast 1", verbose_name="Max. body oblast 1")
     opponent_area2_max = models.PositiveIntegerField(default=15, help_text="Maximální počet bodů za oblast 2", verbose_name="Max. body oblast 2")
 
+    edit_deadline = models.DateTimeField(null=True, blank=True, help_text="Do kdy smí student editovat projekt")
+    
     active = models.BooleanField(default=False, help_text="Je toto schéma aktuálně používané?")
 
     def __str__(self):
@@ -31,7 +33,7 @@ class Project(models.Model):
     title = models.CharField(max_length=200, verbose_name="Název")
     description = models.TextField(verbose_name="Popis")
     assignment = models.TextField(blank=True, help_text="Oficiální zadání (needitovatelné studentem)")
-    
+
     status = models.CharField(
         max_length=20, 
         choices=STATUS_CHOICES, 

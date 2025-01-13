@@ -4,6 +4,7 @@ from django.contrib.auth.models import User, Group
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from apps.profiles.models import UserProfile
@@ -25,6 +26,8 @@ from docxtpl import DocxTemplate
 from django.http import HttpResponse
 from django.template.defaultfilters import date as date_filter
 import datetime
+import openpyxl
+
 
 @login_required
 def export_project_docx(request, pk):
@@ -35,13 +38,19 @@ def export_project_docx(request, pk):
         messages.error(request, "Nemáte oprávnění exportovat.")
         return redirect('projects:detail', pk=pk)
 
-    doc = DocxTemplate("templates/docx/zadani_projektu.docx")  
-    # Ulož si .docx šablonu do nějaké složky, sem dáš reálnou cestu
-    
-    # Připrav data pro šablonu
+    # Zjištění oboru studenta
     student_profile = getattr(project.student, 'userprofile', None)
+    branch = student_profile.study_branch if student_profile else 'E'  # pokud by student neměl profil, fallback = 'E'
+
+    # Podle oboru vybereme šablonu
+    if branch == 'IT':
+        doc = DocxTemplate("templates/docx/zadani_projektu_IT.docx")
+    else:
+        doc = DocxTemplate("templates/docx/zadani_projektu_E.docx")
+
+    # Připrav data pro šablonu
     class_name = student_profile.class_name if student_profile else ""
-    
+
     # Získání kontrol
     controls_data = []
     for c in project.controls.all():
@@ -80,7 +89,7 @@ def export_project_docx(request, pk):
 
     # Vygenerujeme soubor
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = f'attachment; filename="projekt_{pk}.docx"'
+    response['Content-Disposition'] = f'attachment; filename=\"projekt_{pk}.docx\""
     doc.save(response)
     return response
 
@@ -567,9 +576,9 @@ class ProjectOpponentUpdateView(LoginRequiredMixin, UpdateView):
 @login_required
 def import_users_csv(request):
     """
-    Očekává CSV s řádky:
-    username;first_name;last_name;email;role;class_name
-    kde role je 'student' nebo 'teacher'.
+    Očekává CSV (oddělené středníkem):
+    username;first_name;last_name;email;role;class_name;study_branch
+    Pokud study_branch chybí, nastaví se 'E'.
     """
     if request.method == 'POST':
         csv_file = request.FILES.get('file')
@@ -577,64 +586,79 @@ def import_users_csv(request):
             messages.error(request, "Není vybrán žádný CSV soubor.")
             return redirect('import_users_csv')
 
+        # Přečteme soubor
         data = csv_file.read().decode('utf-8')
-        reader = csv.reader(io.StringIO(data), delimiter=';')
+        reader = csv.reader(io.StringIO(data), delimiter=';', quotechar='"')
 
         student_group = Group.objects.get(name='Student')
         teacher_group = Group.objects.get(name='Teacher')
 
         count_created = 0
+        row_counter = 0
         for row in reader:
-            if len(row) < 5:
+            row_counter += 1
+            # Očekáváme aspoň 6 sloupců (role, class_name)
+            # a 7. sloupec pro study_branch
+            if len(row) < 6:
+                # Minimální formát je username;fname;lname;email;role;class_name
+                # Případně 7. sloupec je study_branch
+                messages.warning(request, f"Řádek {row_counter}: Příliš málo sloupců.")
                 continue
 
             username = row[0].strip()
-            fname = row[1].strip()
-            lname = row[2].strip()
+            first_name = row[1].strip()
+            last_name = row[2].strip()
             email = row[3].strip()
-            role = row[4].strip().lower()  # 'student' / 'teacher'
-            class_name = row[5].strip() if len(row) > 5 else ''
+            role = row[4].strip().lower()  # "student" nebo "teacher"
+            class_name = row[5].strip()
 
-            # Kontrola, zda user už existuje
+            # sloupec 6 = study_branch
+            if len(row) > 6:
+                study_branch = row[6].strip()
+                if not study_branch:  # prázdné
+                    study_branch = 'E'
+            else:
+                study_branch = 'E'
+
             user, created = User.objects.get_or_create(username=username, defaults={
-                'first_name': fname,
-                'last_name': lname,
+                'first_name': first_name,
+                'last_name': last_name,
                 'email': email
             })
 
             if not created:
-                # User už existuje, můžeme updatovat jméno/ email
-                user.first_name = fname
-                user.last_name = lname
+                # user už existuje, updatuj jméno
+                user.first_name = first_name
+                user.last_name = last_name
                 user.email = email
                 user.save()
 
-            # Přidání do skupiny
             if role == 'student':
-                user.groups.set([student_group])  # nebo .add()
-                # Vytvoříme userprofile, nastavíme třídu
+                user.groups.set([student_group])
+                # profil
                 if hasattr(user, 'userprofile'):
-                    user.userprofile.class_name = class_name
-                    user.userprofile.save()
+                    profile = user.userprofile
                 else:
-                    UserProfile.objects.create(user=user, class_name=class_name)
+                    profile = UserProfile.objects.create(user=user)
+                profile.class_name = class_name
+                profile.study_branch = study_branch
+                profile.save()
 
             elif role == 'teacher':
                 user.groups.set([teacher_group])
 
-            # Nastavit heslo - varianty:
-            # a) Vygenerovat náhodné
-            # b) Nastavit default heslo (např. "heslo123") - pro demo
+            # Nastav heslo, pokud user nově vznikl (dle tvé logiky)
             if created:
-                user.set_password("heslo123")  # Lepší by bylo generovat
+                user.set_password("heslo123")
                 user.save()
 
             count_created += 1
 
-        messages.success(request, f"Načteno {count_created} uživatelů.")
-        return redirect('projects:list')
+        messages.success(request, f"Import hotov, zpracováno {count_created} řádků.")
+        return redirect('somewhere')
 
     return render(request, 'users/import_users.html')
+
 
 
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
@@ -652,3 +676,140 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         messages.success(self.request, "Údaje úspěšně aktualizovány.")
         return reverse('projects:list')  # nebo detail uživatele
+    
+
+@staff_member_required  # nebo login_required + check user.is_superuser
+def import_projects(request):
+    """
+    CSV formát (quotechar='"', delimiter=';'), řádky:
+    student_username;title;description;[leader_username];[opponent_username]
+    V případě chyb se řádek přeskočí a zaloguje.
+    """
+    log_entries = []  # sem budeme ukládat záznamy o přeskočených řádcích
+
+    if request.method == 'POST':
+        csv_file = request.FILES.get('file')
+        if not csv_file:
+            messages.error(request, "Není vybrán žádný CSV soubor.")
+            return redirect('projects:import_projects')
+
+        # Čtení CSV s ohledem na uvozovky a středník
+        data = csv_file.read().decode('utf-8', errors='replace')
+        reader = csv.reader(io.StringIO(data), delimiter=';', quotechar='"')
+
+        count_created = 0
+        row_num = 0
+
+        for row in reader:
+            row_num += 1
+            # Očekávaný minimální počet sloupců = 3 (student, title, description)
+            if len(row) < 3:
+                log_entries.append(f"Řádek {row_num}: Nedostatečný počet sloupců.")
+                continue
+
+            student_username = row[0].strip()
+            title = row[1].strip()
+            description = row[2].strip()
+
+            leader_username = row[3].strip() if len(row) > 3 else ""
+            opponent_username = row[4].strip() if len(row) > 4 else ""
+
+            # Najít studenta
+            try:
+                student = User.objects.get(username=student_username)
+            except User.DoesNotExist:
+                log_entries.append(f"Řádek {row_num}: Student '{student_username}' neexistuje.")
+                continue
+
+            # Případně leader
+            leader = None
+            if leader_username:
+                try:
+                    leader = User.objects.get(username=leader_username)
+                except User.DoesNotExist:
+                    log_entries.append(f"Řádek {row_num}: Vedoucí '{leader_username}' neexistuje. Přeskakuji.")
+                    continue
+
+            # Případně opponent
+            opponent = None
+            if opponent_username:
+                try:
+                    opponent = User.objects.get(username=opponent_username)
+                except User.DoesNotExist:
+                    log_entries.append(f"Řádek {row_num}: Oponent '{opponent_username}' neexistuje. Přeskakuji.")
+                    continue
+
+            # Kontrola duplicity (stejný title + stejný student)
+            existing = Project.objects.filter(title=title, student=student).exists()
+            if existing:
+                log_entries.append(f"Řádek {row_num}: Projekt '{title}' pro studenta '{student_username}' už existuje.")
+                continue
+
+            # Vytvořit nový Project
+            Project.objects.create(
+                student=student,
+                title=title,
+                description=description,
+                leader=leader,
+                opponent=opponent
+            )
+            count_created += 1
+
+        messages.success(request, f"Import hotov. Vytvořeno {count_created} projektů.")
+        # Můžeme log_entries uložit do session, abychom je zobrazili ve výsledné stránce nebo stáhli jako CSV
+        request.session['import_logs'] = log_entries
+        return redirect('projects:import_result')
+
+    return render(request, 'projects/import_projects.html')
+
+
+@staff_member_required
+def import_result_view(request):
+    """
+    Zobrazí log_entries ze session, příp. nabídne stažení jako CSV.
+    """
+    log_entries = request.session.pop('import_logs', [])
+    return render(request, 'projects/import_result.html', {'log_entries': log_entries})
+
+
+@staff_member_required
+def export_projects_xlsx(request):
+    """
+    Exportuje seznam projektů do XLSX.
+    Sloupce: Student, Třída, Název, Vedoucí, Oponent, Stav.
+    Případně můžeme přidat filtry.
+    """
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Projekty"
+
+    # Hlavička
+    ws.append(["Student", "Třída", "Název projektu", "Vedoucí", "Oponent", "Stav"])
+
+    projects = Project.objects.all()  # nebo filtr, to je na tobě
+
+    for proj in projects:
+        student_name = f"{proj.student.first_name} {proj.student.last_name}" if proj.student else ""
+        student_class = ""
+        if proj.student and hasattr(proj.student, 'userprofile'):
+            student_class = proj.student.userprofile.class_name or ""
+        
+        leader_name = proj.leader.username if proj.leader else ""
+        opponent_name = proj.opponent.username if proj.opponent else ""
+        row = [
+            student_name,
+            student_class,
+            proj.title,
+            leader_name,
+            opponent_name,
+            proj.get_status_display(),
+        ]
+        ws.append(row)
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename="projekty.xlsx"'
+
+    wb.save(response)
+    return response

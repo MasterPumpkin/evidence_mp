@@ -10,7 +10,9 @@ from .views import (
     ProjectNotesUpdateView, delete_controlcheck,
     take_opponent_role, ProjectOpponentUpdateView,
     import_users_csv, UserProfileUpdateView,
-    export_project_docx, ProjectAssignmentUpdateView
+    export_project_docx, ProjectAssignmentUpdateView,
+    import_projects, import_result_view,
+    export_projects_xlsx
 )
 
 app_name = 'projects'
@@ -36,10 +38,13 @@ urlpatterns = [
     # Hodnocení oponenta
     path('<int:project_id>/opponent-eval/', OpponentEvalUpdateView.as_view(), name='opponent_eval'),
     path('<int:pk>/notes/', ProjectNotesUpdateView.as_view(), name='notes_edit'),
-    path('<int:pk>/assignment/', ProjectAssignmentUpdateView.as_view(), name='assignment'),
+    path('<int:pk>/assignment-edit/', ProjectAssignmentUpdateView.as_view(), name='assignment_edit'),
     path('<int:pk>/take-opponent/', take_opponent_role, name='take_opponent'),
     path('<int:pk>/opponent-update/', ProjectOpponentUpdateView.as_view(), name='opponent_update'),
     path('import-users/', import_users_csv, name='import_users'),
     path('user-profile/<int:pk>/edit/', UserProfileUpdateView.as_view(), name='user_profile_edit'),
     path('<int:pk>/export-docx/', export_project_docx, name='export_docx'),
+    path('import-projects/', import_projects, name='import_projects'),
+    path('import-projects/result/', import_result_view, name='import_result'),
+    path('export-projects/', export_projects_xlsx, name='export_projects'),
 ]

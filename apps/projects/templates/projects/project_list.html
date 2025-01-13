@@ -113,6 +113,12 @@
   <a href="{% url 'projects:import_users' %}" class="btn btn-sm btn-danger">
     Importovat žáky a učitele
   </a>
+  <a href="{% url 'projects:import_projects' %}" class="btn btn-sm btn-danger">
+    Importovat projekty
+  </a>
+  <a href="{% url 'projects:export_projects' %}" class="btn btn-sm btn-danger">
+    Export projektů do XLSX
+  </a>
 {% endif %}
 
 {% endblock %}

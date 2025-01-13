@@ -7,8 +7,19 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     class_name = models.CharField(max_length=50, blank=True, null=True, help_text="Např. '3.A'")
 
+    STUDY_BRANCH_CHOICES = [
+        ('E', 'Elektrotechnika'),
+        ('IT', 'Informační technologie'),
+    ]
+    study_branch = models.CharField(
+        max_length=2,
+        choices=STUDY_BRANCH_CHOICES,
+        default='E',  # pokud není zadáno, bude E
+        help_text="Obor studia (E = Elektrotechnika, IT = Informační technologie)."
+    )
+
     def __str__(self):
-        return f"Profil: {self.user.username} (třída: {self.class_name})"
+        return f"{self.user.username} (třída: {self.class_name}, obor: {self.study_branch})"
 
 # Volitelný signál pro automatické vytváření profilu:
 @receiver(post_save, sender=User)

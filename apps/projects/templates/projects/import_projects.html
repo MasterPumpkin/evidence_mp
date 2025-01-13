@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Import projektů</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>Vyber CSV soubor:</p>
+    <input type="file" name="file" />
+    <button type="submit" class="btn btn-primary">Nahrát</button>
+  </form>
+{% endblock %}

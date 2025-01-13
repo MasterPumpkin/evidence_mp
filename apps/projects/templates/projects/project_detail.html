@@ -170,7 +170,7 @@
         {% endif %}
         {% if user.is_authenticated and project.leader == user %}
         <a href="{% url 'projects:edit' project.pk %}" class="btn btn-sm btn-primary">Upravit projekt</a>
-        <a href="{% url 'projects:assignment' project.pk %}" class="btn btn-sm btn-primary">Upravit zadání</a>
+        <a href="{% url 'projects:assignment_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit zadání</a>
         <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit poznámky</a>
         <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek vedoucího</a>
         <a href="{% url 'projects:export_docx' project.pk %}" class="btn btn-sm btn-info">Export posudku do DOCX</a>
