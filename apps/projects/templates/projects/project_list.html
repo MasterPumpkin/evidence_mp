@@ -72,6 +72,14 @@
     </select>
   </div>
 
+  <div class="col-auto form-check">
+    <input type="checkbox" class="form-check-input"
+           name="my_projects" id="my_projects"
+           value="1" 
+           {% if request.GET.my_projects == '1' %}checked{% endif %}>
+    <label class="form-check-label" for="my_projects">Pouze moje projekty</label>
+  </div>
+
   <div class="col-auto">
     <button type="submit" class="btn btn-primary">Filtrovat</button>
   </div>

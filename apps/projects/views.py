@@ -8,14 +8,16 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from apps.profiles.models import UserProfile
-from .models import Project, Milestone, ControlCheck, LeaderEvaluation, OpponentEvaluation
+from .models import Project, Milestone, ControlCheck, LeaderEvaluation, OpponentEvaluation, UserPreferences
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.db.models import Q
 from .forms import (
     MilestoneForm,ProjectForm, ControlCheckForm,
     LeaderEvaluationForm, OpponentEvaluationForm,
     ProjectNotesForm, ProjectOpponentForm,
-    UserUpdateForm, ProjectAssignmentForm
+    UserUpdateForm, ProjectAssignmentForm,
+    UserPreferencesForm
 )
 import csv
 from django.http import HttpResponse, HttpResponseForbidden
@@ -140,6 +142,15 @@ class ProjectListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         qs = super().get_queryset()
 
+        user_prefs = getattr(self.request.user, 'userpreferences', None)
+        
+        if user_prefs and user_prefs.pref_myprojects_default and 'my_projects' not in self.request.GET:
+            # Force the param
+            # Když user poprvé načte stránku, nastavíme param 'my_projects=1'
+            self.request.GET._mutable = True
+            self.request.GET['my_projects'] = '1'
+            self.request.GET._mutable = False
+
         # Pokud je user ve skupině 'Student', zobrazí jen své projekty
         if user_in_group(self.request.user, 'Student'):
             qs = qs.filter(student=self.request.user)
@@ -172,6 +183,11 @@ class ProjectListView(LoginRequiredMixin, ListView):
         valid_order_fields = ['title', '-title', 'created_at', '-created_at', 'status', '-status']
         if ordering in valid_order_fields:
             qs = qs.order_by(ordering)
+
+        # Jen moje projekty
+        if self.request.GET.get('my_projects') == '1':
+            user = self.request.user
+            qs = qs.filter(Q(leader=user) | Q(opponent=user))
 
         return qs
     
@@ -210,6 +226,20 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
             (user.groups.filter(name='Student').exists() and project.student == user and project.status == 'pending_approval') or
             (user.groups.filter(name='Teacher').exists() and project.leader == user and project.status == 'approved')
         )
+
+        # Připravíme milníky s atributem `short_note`
+        milestones_with_short_notes = []
+        for milestone in project.milestones.all():
+            milestones_with_short_notes.append({
+                'title': milestone.title,
+                'deadline': milestone.deadline,
+                'status': milestone.get_status_display(),
+                'short_note': milestone.note[:20] + '...' if len(milestone.note) > 20 else milestone.note,
+            })
+
+        # Přidání milníků do kontextu
+        context['milestones'] = milestones_with_short_notes
+
         return context
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
@@ -813,3 +843,61 @@ def export_projects_xlsx(request):
 
     wb.save(response)
     return response
+
+
+
+@login_required
+def user_preferences_view(request):
+    # pokud user nemá preferences, vytvoříme
+    prefs, created = UserPreferences.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        form = UserPreferencesForm(request.POST, instance=prefs)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Nastavení uloženo.")
+            return redirect('projects:list')
+    else:
+        form = UserPreferencesForm(instance=prefs)
+    return render(request, 'users/user_preferences.html', {'form': form})
+
+
+@login_required
+def generate_consultations(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    if not (request.user == project.leader or request.user.is_superuser):
+        messages.error(request, "Nemáte oprávnění generovat konzultace.")
+        return redirect('projects:detail', pk=pk)
+
+    scheme = project.scheme
+    if not scheme:
+        messages.error(request, "Není přiřazen scoreboard/ročník. Nelze generovat termíny.")
+        return redirect('projects:detail', pk=pk)
+
+    # Najít user preferences
+    prefs = getattr(request.user, 'preferences', None)
+
+    # Vytvořit 3 záznamy v milnících nebo ControlCheck (jak preferuješ),
+    # tady ukázka s ControlCheck
+    from .models import ControlCheck
+    # Example
+    texts = [
+        prefs.consultation_text1 if prefs else "",
+        prefs.consultation_text2 if prefs else "",
+        prefs.consultation_text3 if prefs else "",
+    ]
+    deadlines = [
+        scheme.control_deadline1,
+        scheme.control_deadline2,
+        scheme.control_deadline3,
+    ]
+
+    for i in range(3):
+        if deadlines[i]:
+            ControlCheck.objects.create(
+                project=project,
+                date=deadlines[i],
+                content=texts[i] or f"Konzultace #{i+1}",
+                evaluation=""
+            )
+    messages.success(request, "Konzultace vygenerovány.")
+    return redirect('projects:detail', pk=pk)

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Milestone, Project, ControlCheck, LeaderEvaluation, OpponentEvaluation
+from .models import Milestone, Project, ControlCheck, LeaderEvaluation, OpponentEvaluation, UserPreferences
 from ckeditor.widgets import CKEditorWidget
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
@@ -124,3 +124,15 @@ class ProjectAssignmentForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('assignment', label=False),  # Skryje popis pole
         )
+
+
+class UserPreferencesForm(forms.ModelForm):
+    class Meta:
+        model = UserPreferences
+        fields = [
+            'pref_myprojects_default',
+            'email_notifications',
+            'consultation_text1',
+            'consultation_text2',
+            'consultation_text3',
+        ]

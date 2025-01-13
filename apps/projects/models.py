@@ -1,6 +1,21 @@
+from datetime import date
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from django.contrib.auth.models import User
+
+class UserPreferences(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='preferences')
+
+    pref_myprojects_default = models.BooleanField(default=False, help_text="Zobrazovat rovnou moje projekty", verbose_name="Moje projekty")
+    email_notifications = models.BooleanField(default=True, help_text="Zasílat e-mail notifikace", verbose_name="E-mail notifikace")
+    consultation_text1 = models.TextField(blank=True, help_text="Předdefinovaný text konzultace #1", verbose_name="Konzultace #1")
+    consultation_text2 = models.TextField(blank=True, help_text="Předdefinovaný text konzultace #2", verbose_name="Konzultace #2")
+    consultation_text3 = models.TextField(blank=True, help_text="Předdefinovaný text konzultace #3", verbose_name="Konzultace #3")
+
+    def __str__(self):
+        return f"Preferences for {self.user.username}"
+
 
 class ScoringScheme(models.Model):
     year = models.CharField(max_length=20, unique=True, help_text="Školní rok, např. 2024/2025", verbose_name="Školní rok")
@@ -18,8 +33,13 @@ class ScoringScheme(models.Model):
     
     active = models.BooleanField(default=False, help_text="Je toto schéma aktuálně používané?")
 
+    # Tři termíny
+    control_deadline1 = models.DateField(null=True, blank=True, help_text="Termín kontroly #1", verbose_name="Kontrola #1")
+    control_deadline2 = models.DateField(null=True, blank=True, help_text="Termín kontroly #2", verbose_name="Kontrola #2")
+    control_deadline3 = models.DateField(null=True, blank=True, help_text="Termín kontroly #3", verbose_name="Kontrola #3")
+
     def __str__(self):
-        return f"Scoring {self.year} (Aktivní: {self.active})"
+        return f"ScoreBoard {self.year} (Aktivní: {self.active})"
     
 
 
@@ -115,6 +135,14 @@ class Milestone(models.Model):
 
     def __str__(self):
         return f"{self.project.title}: {self.title}"
+    
+    @property
+    def is_overdue(self):
+        if self.status == 'done':
+            return False
+        if self.deadline and self.deadline < date.today():
+            return True
+        return False
 
 
 

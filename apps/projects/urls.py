@@ -12,7 +12,8 @@ from .views import (
     import_users_csv, UserProfileUpdateView,
     export_project_docx, ProjectAssignmentUpdateView,
     import_projects, import_result_view,
-    export_projects_xlsx
+    export_projects_xlsx, user_preferences_view,
+    generate_consultations
 )
 
 app_name = 'projects'
@@ -47,4 +48,6 @@ urlpatterns = [
     path('import-projects/', import_projects, name='import_projects'),
     path('import-projects/result/', import_result_view, name='import_result'),
     path('export-projects/', export_projects_xlsx, name='export_projects'),
+    path('preferences/', user_preferences_view, name='user_preferences'),
+    path('<int:pk>/generate-consultations/', generate_consultations, name='generate_consultations'),
 ]
