@@ -89,7 +89,7 @@ def export_project_docx(request, pk):
 
     # Vygenerujeme soubor
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = f'attachment; filename=\"projekt_{pk}.docx\""
+    response['Content-Disposition'] = f'attachment; filename=\"projekt_{pk}.docx\"'
     doc.save(response)
     return response
 
