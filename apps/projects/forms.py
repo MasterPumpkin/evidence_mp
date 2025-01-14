@@ -28,6 +28,19 @@ class MilestoneForm(forms.ModelForm):
             self.fields['deadline'].initial = self.instance.deadline.strftime('%Y-%m-%d')
 
 
+class TeacherProjectForm(forms.ModelForm):
+    """Učitel při zakládání projektu nepotřebuje studenta, atd."""
+    class Meta:
+        model = Project
+        fields = ['title', 'description', 'assignment']  # assignment? je to volitelné
+
+
+class StudentProjectForm(forms.ModelForm):
+    """Student zakládá projekt, nepotřebuje leader/opponent."""
+    class Meta:
+        model = Project
+        fields = ['title', 'description']
+
 
 class ProjectForm(forms.ModelForm):
     class Meta:

@@ -1,6 +1,7 @@
 from datetime import date
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.models import User
 
@@ -29,7 +30,7 @@ class ScoringScheme(models.Model):
     opponent_area1_max = models.PositiveIntegerField(default=15, help_text="Maximální počet bodů za oblast 1", verbose_name="Max. body oblast 1")
     opponent_area2_max = models.PositiveIntegerField(default=15, help_text="Maximální počet bodů za oblast 2", verbose_name="Max. body oblast 2")
 
-    edit_deadline = models.DateTimeField(null=True, blank=True, help_text="Do kdy smí student editovat projekt")
+    student_edit_deadline = models.DateTimeField(null=True, blank=True, help_text="Do kdy smí student editovat projekt")
     
     active = models.BooleanField(default=False, help_text="Je toto schéma aktuálně používané?")
 
@@ -92,6 +93,7 @@ class Project(models.Model):
         ScoringScheme,
         on_delete=models.SET_NULL,
         null=True, blank=True,
+        related_name='projects',
         help_text="Scoring schema pro tento projekt (podle školního roku)",
         verbose_name="Scoring schema"
     )
@@ -104,7 +106,6 @@ class Project(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    edit_deadline = models.DateTimeField(null=True, blank=True, help_text="Do kdy může student upravovat projekt", verbose_name="Upravit do")
 
 
     def __str__(self):

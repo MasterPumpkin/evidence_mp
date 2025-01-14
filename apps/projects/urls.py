@@ -13,7 +13,9 @@ from .views import (
     export_project_docx, ProjectAssignmentUpdateView,
     import_projects, import_result_view,
     export_projects_xlsx, user_preferences_view,
-    generate_consultations
+    generate_consultations,
+    TeacherProjectCreateView, StudentProjectCreateView,
+    StudentProjectUpdateView, TeacherProjectUpdateView
 )
 
 app_name = 'projects'
@@ -50,4 +52,11 @@ urlpatterns = [
     path('export-projects/', export_projects_xlsx, name='export_projects'),
     path('preferences/', user_preferences_view, name='user_preferences'),
     path('<int:pk>/generate-consultations/', generate_consultations, name='generate_consultations'),
+
+    path('create/teacher/', TeacherProjectCreateView.as_view(), name='teacher_project_create'),
+    path('create/student/', StudentProjectCreateView.as_view(), name='student_project_create'),
+
+    path('<int:pk>/edit/student/', StudentProjectUpdateView.as_view(), name='student_project_update'),
+    path('<int:pk>/edit/teacher/', TeacherProjectUpdateView.as_view(), name='teacher_project_update')
+
 ]

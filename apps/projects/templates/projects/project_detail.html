@@ -77,7 +77,18 @@
   </div>
 </div>
 
-
+{% if project.milestones.count == 0 %}
+  <p>Žádné milníky. 
+     {% if user == project.student and project.leader == None and now < project.scheme.student_edit_deadline %}
+       <a href="{% url 'milestones_import' project.pk %}">Import milníků</a>
+     {% endif %}
+     {% if user.is_authenticated and project.leader == user %}
+        <a href="{% url 'projects:milestone_add' project.id %}" class="btn btn-sm btn-success">Přidat milník</a>
+        <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-sm btn-danger">Importovat CSV s
+          milníky</a>
+     {% endif %}
+  </p>
+{% else %}
 <!-- Sekce milníků -->
 <div class="row">
   <div class="col-md-12 mb-4">
@@ -139,6 +150,7 @@
     </div>
   </div>
 </div>
+{% endif %}
 
 <!-- Sekce kontrol -->
 {% if user == project.leader or user.is_superuser %}
@@ -210,11 +222,11 @@
         {% endif %}
         {% if user.is_authenticated and project.leader == user %}
         <a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-danger">Vzdát se vedení</a>
-        {% if not project.opponent %}
-        <a href="{% url 'projects:take_opponent' project.pk %}" class="btn btn-sm btn-success">Převzít oponenturu</a>
+        {% if project.opponent == None and project.leader != user %}
+        <a href="{% url 'take_opponent' project.pk %}" class="btn btn-sm btn-success">Převzít oponenturu</a>
         {% endif %}
         <a href="{% url 'projects:opponent_update' project.pk %}" class="btn btn-sm btn-secondary">Vybrat oponenta</a>
-        {% endif %}
+        {% endif %}     
       </div>
     </div>
   </div>

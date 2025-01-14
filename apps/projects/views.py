@@ -8,7 +8,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from apps.profiles.models import UserProfile
-from .models import Project, Milestone, ControlCheck, LeaderEvaluation, OpponentEvaluation, UserPreferences
+from .models import Project, Milestone, ControlCheck, LeaderEvaluation, OpponentEvaluation, UserPreferences, ScoringScheme
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.db.models import Q
@@ -17,7 +17,8 @@ from .forms import (
     LeaderEvaluationForm, OpponentEvaluationForm,
     ProjectNotesForm, ProjectOpponentForm,
     UserUpdateForm, ProjectAssignmentForm,
-    UserPreferencesForm
+    UserPreferencesForm, StudentProjectForm,
+    TeacherProjectForm
 )
 import csv
 from django.http import HttpResponse, HttpResponseForbidden
@@ -29,6 +30,118 @@ from django.http import HttpResponse
 from django.template.defaultfilters import date as date_filter
 import datetime
 import openpyxl
+
+
+class TeacherProjectCreateView(CreateView):
+    model = Project
+    form_class = TeacherProjectForm
+    template_name = 'projects/project_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Kontrola, zda user je teacher/superuser
+        if not (request.user.is_superuser or request.user.groups.filter(name='Teacher').exists()):
+            messages.error(request, "Nemáte oprávnění zakládat projekt jako učitel.")
+            return redirect('projects:list')
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # Při uložení:
+        # 1. Nastavíme scoreboard (active=True)
+        try:
+            scheme = ScoringScheme.objects.get(active=True)
+            form.instance.scheme = scheme
+        except ScoringScheme.DoesNotExist:
+            messages.error(self.request, "Není definován aktivní scoreboard.")
+            return redirect('projects:list')
+
+        # 2. Leader = request.user
+        form.instance.leader = self.request.user
+
+        # 3. Student = None (zatím)
+        form.instance.student = None
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('projects:detail', args=[self.object.pk])
+
+
+class TeacherProjectUpdateView(UpdateView):
+    model = Project
+    template_name = 'projects/project_form.html'
+    fields = ['title', 'description', 'student', 'assignment', 'opponent', 'status']
+    # atd. - cokoliv učitel smí upravovat
+
+    def dispatch(self, request, *args, **kwargs):
+        # jen teacher/superuser
+        if not (request.user.is_superuser or request.user.groups.filter(name='Teacher').exists()):
+            messages.error(request, "Nemáte oprávnění.")
+            return redirect('projects:list')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('projects:detail', args=[self.object.pk])
+
+
+class StudentProjectCreateView(CreateView):
+    model = Project
+    form_class = StudentProjectForm
+    template_name = 'projects/project_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Kontrola, zda user je student
+        # (nebo neděláme? Záleží na tobě)
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # scoreboard
+        try:
+            scheme = ScoringScheme.objects.get(active=True)
+            form.instance.scheme = scheme
+        except ScoringScheme.DoesNotExist:
+            messages.error(self.request, "Není definován aktivní scoreboard.")
+            return redirect('projects:list')
+
+        # Student = request.user
+        form.instance.student = self.request.user
+        # Leader/opponent = None
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('projects:detail', args=[self.object.pk])
+
+
+class StudentProjectUpdateView(UpdateView):
+    model = Project
+    form_class = StudentProjectForm
+    template_name = 'projects/project_student_update.html'
+    # fields = ['title','description'] (může být i v form_class)
+
+    def dispatch(self, request, *args, **kwargs):
+        project = self.get_object()
+
+        # (1) Kontrola, zda user == project.student
+        if project.student != request.user:
+            messages.error(request, "Nemáte oprávnění upravovat tento projekt.")
+            return redirect('projects:detail', pk=project.pk)
+
+        # (2) Kontrola, zda projekt NENÍ schválen (tj. leader existuje / status=approved)
+        if project.leader is not None or project.status == 'approved':
+            messages.error(request, "Projekt již byl schválen, nelze upravovat.")
+            return redirect('projects:detail', pk=project.pk)
+
+        # (3) Kontrola deadline
+        scheme = project.scheme
+        if scheme and scheme.student_edit_deadline:
+            if timezone.now() > scheme.student_edit_deadline:
+                messages.error(request, "Vypršel termín pro editaci projektu.")
+                return redirect('projects:detail', pk=project.pk)
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('projects:detail', args=[self.object.pk])
+
 
 
 @login_required
@@ -290,10 +403,10 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
             return redirect(project)
         
 
-        if project.edit_deadline and timezone.now() > project.edit_deadline:
-            messages.error(request, "Vypršela lhůta pro úpravu projektu.")
-            # return redirect('projects:detail', pk=project.pk)
-            return redirect(project)
+        # if project.edit_deadline and timezone.now() > project.edit_deadline:
+        #     messages.error(request, "Vypršela lhůta pro úpravu projektu.")
+        #     # return redirect('projects:detail', pk=project.pk)
+        #     return redirect(project)
 
         return super().dispatch(request, *args, **kwargs)
         # return redirect(project)

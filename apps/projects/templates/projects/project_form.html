@@ -9,8 +9,21 @@
     <form method="post">
       {% csrf_token %}
       {{ form|crispy }}
+      <p>Zbývá znaků: <span id="desc_counter"></span></p>
       <button type="submit" class="btn btn-success">Uložit</button>
     </form>
+    <script>
+      const descField = document.getElementById("id_description");
+      const counter = document.getElementById("desc_counter");
+      const maxLen = 1000; // např. 1000 znaků
+    
+      function updateCounter() {
+        const len = descField.value.length;
+        counter.innerText = (maxLen - len) >= 0 ? (maxLen - len) : 0;
+      }
+      descField.addEventListener("input", updateCounter);
+      updateCounter();
+    </script>
   </div>
 </div>
 {% endblock %}
