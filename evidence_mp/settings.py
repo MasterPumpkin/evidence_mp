@@ -15,7 +15,8 @@ DEBUG = env.bool('DEBUG', default=False)
 SECRET_KEY = env('SECRET_KEY', default='unsafe-default-key')
 # ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost'])
 # ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]").split(",")
-ALLOWED_HOSTS=['localhost']
+# ALLOWED_HOSTS=['localhost']
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
 
 SECURE_BROWSER_XSS_FILTER = True
