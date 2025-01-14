@@ -224,8 +224,8 @@
         <a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-danger">Vzdát se vedení</a>
         <a href="{% url 'projects:opponent_update' project.pk %}" class="btn btn-sm btn-secondary">Vybrat oponenta</a>
         {% endif %} 
-        {% if user.is_authenticated and project.opponent == None and project.leader != user %}
-        <a href="{% url 'take_opponent' project.pk %}" class="btn btn-sm btn-success">Převzít oponenturu</a>
+        {% if user.is_authenticated and project.opponent == None and is_teacher and project.leader != user %}
+        <a href="{% url 'projects:take_opponent' project.pk %}" class="btn btn-sm btn-success">Převzít oponenturu</a>
         {% endif %}    
       </div>
     </div>
