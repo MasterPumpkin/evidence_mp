@@ -8,6 +8,9 @@
     <h2 class="mb-4">Založit nový projekt / Upravit projekt</h2>
     <form method="post">
       {% csrf_token %}
+      {% if form.instance.student %}
+      <p class="text-info">Student již přiřazen: {{ form.instance.student }}</p>
+      {% endif %}
       {{ form|crispy }}
       <p>Zbývá znaků: <span id="desc_counter"></span></p>
       <button type="submit" class="btn btn-success">Uložit</button>

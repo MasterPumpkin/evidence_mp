@@ -66,8 +66,9 @@
                 Přihlášen: {{ user.username }}
               </span>
             </li>
+            {% if is_teacher %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'projects:create' %}">Založit nový projekt</a>
+              <a class="nav-link" href="{% url 'projects:teacher_project_create' %}">Založit nový projekt</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'projects:user_profile_edit' user.pk %}">
@@ -79,6 +80,11 @@
                 Předvolby
               </a>
             </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'projects:student_project_create' %}">Založit nový S projekt</a>
+            </li>
+            {% endif %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'password_change' %}">Změnit heslo</a>
             </li>

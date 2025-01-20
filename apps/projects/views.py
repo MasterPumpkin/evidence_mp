@@ -60,6 +60,8 @@ class TeacherProjectCreateView(CreateView):
         # 3. Student = None (zatím)
         form.instance.student = None
 
+        form.instance.status = 'approved'  # schváleno učitelem
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -68,9 +70,8 @@ class TeacherProjectCreateView(CreateView):
 
 class TeacherProjectUpdateView(UpdateView):
     model = Project
+    form_class = TeacherProjectForm
     template_name = 'projects/project_form.html'
-    fields = ['title', 'description', 'student', 'assignment', 'opponent', 'status']
-    # atd. - cokoliv učitel smí upravovat
 
     def dispatch(self, request, *args, **kwargs):
         # jen teacher/superuser
@@ -78,6 +79,16 @@ class TeacherProjectUpdateView(UpdateView):
             messages.error(request, "Nemáte oprávnění.")
             return redirect('projects:list')
         return super().dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        project = self.get_object()
+
+        # Povolit změnu studenta pouze pokud ještě není přiřazen
+        if project.student is None or form.cleaned_data.get('student') == project.student:
+            return super().form_valid(form)
+        else:
+            messages.error(self.request, "Studenta nelze změnit.")
+            return redirect('projects:detail', args=[self.object.pk])
 
     def get_success_url(self):
         return reverse('projects:detail', args=[self.object.pk])
@@ -114,8 +125,7 @@ class StudentProjectCreateView(CreateView):
 class StudentProjectUpdateView(UpdateView):
     model = Project
     form_class = StudentProjectForm
-    template_name = 'projects/project_student_update.html'
-    # fields = ['title','description'] (může být i v form_class)
+    template_name = 'projects/project_form.html'
 
     def dispatch(self, request, *args, **kwargs):
         project = self.get_object()
@@ -318,6 +328,10 @@ class ProjectListView(LoginRequiredMixin, ListView):
                                   .distinct()
                                   .order_by('class_name'))
 
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+        
         return context
 
 

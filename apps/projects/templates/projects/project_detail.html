@@ -64,14 +64,25 @@
 
         <!-- Informace v jednom řádku -->
         <div class="d-flex justify-content-between align-items-center mt-3">
-          <p><strong>Student:</strong> <span class="badge bg-primary">
-              {{ project.student }}
-              ({{ project.student.userprofile.class_name|default:"-" }})
-            </span></p>
+          <p><strong>Student:</strong> 
+            {% if project.student %}
+              <span class="badge bg-primary">
+                {{ project.student.get_full_name }}
+                ({{ project.student.userprofile.class_name|default:"-" }})
+              </span>
+            {% else %}
+              <span class="text-danger">Není přiřazen žádný student</span>
+            {% endif %}
+          </p>
           <p><strong>Vedoucí:</strong> {{ project.leader }}</p>
           <p><strong>Oponent:</strong> {{ project.opponent }}</p>
           <p><strong>Stav:</strong> {{ project.get_status_display }}</p>
         </div>
+        
+        {% if user == project.leader and project.student is None %}
+          <a href="{% url 'projects:teacher_project_update' project.pk %}" class="btn btn-primary">Přiřadit studenta</a>
+        {% endif %}
+        
       </div>
     </div>
   </div>
@@ -208,9 +219,12 @@
         {% if user.is_authenticated and is_teacher and project.status == 'pending_approval' %}
         <a href="{% url 'projects:approve' project.pk %}" class="btn btn-sm btn-success">Schválit a převzít vedení</a>
         {% endif %}
+        {% if user.is_authenticated and project.student == user %}
+        <a href="{% url 'projects:student_project_update' project.pk %}" class="btn btn-sm btn-primary">Upravit projekt</a>
+        {% endif %}
         {% if user.is_authenticated and project.leader == user %}
-        <a href="{% url 'projects:edit' project.pk %}" class="btn btn-sm btn-primary">Upravit projekt</a>
-        <a href="{% url 'projects:assignment_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit zadání</a>
+        <a href="{% url 'projects:teacher_project_update' project.pk %}" class="btn btn-sm btn-primary">Upravit zadání</a>
+        <!--<a href="{% url 'projects:assignment_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit zadání</a>-->
         <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit poznámky</a>
         <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek</a>
         <a href="{% url 'projects:export_docx' project.pk %}" class="btn btn-sm btn-info">Export posudku</a>

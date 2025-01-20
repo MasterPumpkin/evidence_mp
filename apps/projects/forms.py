@@ -29,10 +29,32 @@ class MilestoneForm(forms.ModelForm):
 
 
 class TeacherProjectForm(forms.ModelForm):
-    """Učitel při zakládání projektu nepotřebuje studenta, atd."""
+    """Učitel při zakládání projektu vybírá studenta."""
+    student = forms.ModelChoiceField(
+        queryset=User.objects.filter(groups__name='Student'),
+        required=False,
+        label="Student",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Project
-        fields = ['title', 'description', 'assignment']  # assignment? je to volitelné
+        fields = ['title', 'student', 'description', 'assignment']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Pouze studenti ve skupině 'Student'
+        self.fields['student'].queryset = User.objects.filter(groups__name='Student')
+
+        # Pokud je student již přiřazen, zobrazíme ho ve formuláři
+        if self.instance and self.instance.student:
+            self.fields['student'].initial = self.instance.student
+
+        # Přidání Bootstrap stylů
+        self.fields['student'].widget.attrs.update({'class': 'form-control'})
+
+
 
 
 class StudentProjectForm(forms.ModelForm):

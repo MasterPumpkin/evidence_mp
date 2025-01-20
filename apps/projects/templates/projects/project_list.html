@@ -2,6 +2,7 @@
 {% block content %}
 <h1>Seznam projektů</h1>
 
+{% if not is_student %}
 <form method="get" class="row g-3 align-items-end mb-4">
   
   <!-- TŘÍDA - teď bude rozbalovací seznam -->
@@ -84,6 +85,7 @@
     <button type="submit" class="btn btn-primary">Filtrovat</button>
   </div>
 </form>
+{% endif %}
 
 <!-- VÝPIS PROJEKTŮ -->
 <table class="table table-striped">
