@@ -10,6 +10,7 @@ from django.contrib import messages
 from apps.profiles.models import UserProfile
 from .models import Project, Milestone, ControlCheck, LeaderEvaluation, OpponentEvaluation, UserPreferences, ScoringScheme
 from django.utils import timezone
+from django.utils.timezone import now
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 from .forms import (
@@ -18,7 +19,7 @@ from .forms import (
     ProjectNotesForm, ProjectOpponentForm,
     UserUpdateForm, ProjectAssignmentForm,
     UserPreferencesForm, StudentProjectForm,
-    TeacherProjectForm
+    TeacherProjectForm, StudentMilestoneForm
 )
 import csv
 from django.http import HttpResponse, HttpResponseForbidden
@@ -103,7 +104,7 @@ class StudentProjectCreateView(CreateView):
         # Kontrola, zda user je student
         # (nebo neděláme? Záleží na tobě)
         return super().dispatch(request, *args, **kwargs)
-
+    
     def form_valid(self, form):
         # scoreboard
         try:
@@ -115,6 +116,12 @@ class StudentProjectCreateView(CreateView):
 
         # Student = request.user
         form.instance.student = self.request.user
+
+        existing = Project.objects.filter(student=self.request.user).exists()
+        if existing:
+            messages.error(self.request, "Už máte jeden projekt založen.")
+            return redirect('projects:list')
+        
         # Leader/opponent = None
         return super().form_valid(form)
 
@@ -257,6 +264,14 @@ def resign_as_leader(request, pk):
     return redirect('projects:detail', pk=pk)
 
 
+def resign_as_opponent(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    if project.opponent == request.user:
+        project.opponent = None
+        project.save()
+    return redirect('projects:detail', pk=pk)
+
+
 class ProjectListView(LoginRequiredMixin, ListView):
     model = Project
     template_name = 'projects/project_list.html'
@@ -366,6 +381,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
 
         # Přidání milníků do kontextu
         context['milestones'] = milestones_with_short_notes
+        context['now'] = now()
 
         return context
 
@@ -1028,3 +1044,74 @@ def generate_consultations(request, pk):
             )
     messages.success(request, "Konzultace vygenerovány.")
     return redirect('projects:detail', pk=pk)
+
+
+class StudentMilestoneCreateView(CreateView):
+    model = Milestone
+    form_class = StudentMilestoneForm
+    template_name = 'projects/milestone_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        project = get_object_or_404(Project, pk=self.kwargs['project_id'])
+
+        if request.user != project.student:
+            messages.error(request, "Nemáte oprávnění přidávat milníky k tomuto projektu.")
+            return redirect('projects:detail', pk=project.pk)
+
+        if project.status == 'approved' or (project.scheme and timezone.now() > project.scheme.student_edit_deadline):
+            messages.error(request, "Nelze upravovat milníky po termínu nebo po schválení projektu.")
+            return redirect('projects:detail', pk=project.pk)
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        project = get_object_or_404(Project, pk=self.kwargs['project_id'])
+        form.instance.project = project
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        milestone = self.object
+        return reverse('projects:detail', kwargs={'pk': milestone.project.id})
+
+
+class StudentMilestoneUpdateView(UpdateView):
+    model = Milestone
+    form_class = StudentMilestoneForm
+    template_name = 'projects/milestone_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        milestone = self.get_object()
+        project = milestone.project
+
+        if request.user != project.student:
+            messages.error(request, "Nemáte oprávnění upravovat tento milník.")
+            return redirect('projects:detail', pk=project.pk)
+
+        if project.status == 'approved' or (project.scheme and timezone.now() > project.scheme.student_edit_deadline):
+            messages.error(request, "Nelze upravovat milníky po termínu nebo po schválení projektu.")
+            return redirect('projects:detail', pk=project.pk)
+
+        return super().dispatch(request, *args, **kwargs)
+
+    
+    def get_success_url(self):
+        milestone = self.object
+        return reverse('projects:detail', kwargs={'pk': milestone.project.id})
+
+
+@login_required
+def student_delete_milestone(request, milestone_id):
+    milestone = get_object_or_404(Milestone, id=milestone_id)
+    project = milestone.project
+
+    if request.user != project.student:
+        messages.error(request, "Nemáte oprávnění odstranit tento milník.")
+        return redirect('projects:detail', pk=project.pk)
+
+    if project.status == 'approved' or (project.scheme and timezone.now() > project.scheme.student_edit_deadline):
+        messages.error(request, "Nelze odstranit milník po termínu nebo po schválení projektu.")
+        return redirect('projects:detail', pk=project.pk)
+
+    milestone.delete()
+    messages.success(request, "Milník byl úspěšně odstraněn.")
+    return redirect('projects:detail', pk=project.pk)

@@ -15,7 +15,9 @@ from .views import (
     export_projects_xlsx, user_preferences_view,
     generate_consultations,
     TeacherProjectCreateView, StudentProjectCreateView,
-    StudentProjectUpdateView, TeacherProjectUpdateView
+    StudentProjectUpdateView, TeacherProjectUpdateView,
+    StudentMilestoneCreateView, StudentMilestoneUpdateView,
+    student_delete_milestone, resign_as_opponent
 )
 
 app_name = 'projects'
@@ -26,6 +28,7 @@ urlpatterns = [
     path('<int:pk>/', ProjectDetailView.as_view(), name='detail'),
     path('<int:pk>/approve/', approve_project, name='approve'),
     path('<int:pk>/resign/', resign_as_leader, name='resign'),
+    path('<int:pk>/resign-opponent/', resign_as_opponent, name='resign_opponent'),
     path('<int:pk>/edit/', ProjectUpdateView.as_view(), name='edit'),
     # Milníky
     path('<int:project_id>/milestones/new/', MilestoneCreateView.as_view(), name='milestone_add'),
@@ -57,6 +60,11 @@ urlpatterns = [
     path('create/student/', StudentProjectCreateView.as_view(), name='student_project_create'),
 
     path('<int:pk>/edit/student/', StudentProjectUpdateView.as_view(), name='student_project_update'),
-    path('<int:pk>/edit/teacher/', TeacherProjectUpdateView.as_view(), name='teacher_project_update')
+    path('<int:pk>/edit/teacher/', TeacherProjectUpdateView.as_view(), name='teacher_project_update'),
+
+    # Nové URL pro studenty – přidání/úprava/mazání milníků
+    path('<int:project_id>/milestones/student/new/', StudentMilestoneCreateView.as_view(), name='student_milestone_add'),
+    path('milestones/<int:pk>/student/edit/', StudentMilestoneUpdateView.as_view(), name='student_milestone_edit'),
+    path('milestones/<int:milestone_id>/student/delete/', student_delete_milestone, name='student_milestone_delete'),
 
 ]

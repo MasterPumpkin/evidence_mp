@@ -8,9 +8,50 @@
     <h2 class="mb-4">Hodnocení oponenta projektu</h2>
     <form method="post">
       {% csrf_token %}
-      {{ form|crispy }}
+      
+      <!-- První textové pole -->
+      <div class="mb-3">
+        {{ form.area1_text|as_crispy_field }}
+        <p>Zbývá znaků: <span id="area1_counter">1000</span></p>
+      </div>
+      
+      <!-- Pole pro body k prvnímu textovému poli -->
+      <div class="mb-3">
+        {{ form.area1_points|as_crispy_field }}
+      </div>
+
+      <!-- Druhé textové pole -->
+      <div class="mb-3">
+        {{ form.area2_text|as_crispy_field }}
+        <p>Zbývá znaků: <span id="area2_counter">1000</span></p>
+      </div>
+      
+      <!-- Pole pro body k druhému textovému poli -->
+      <div class="mb-3">
+        {{ form.area2_points|as_crispy_field }}
+      </div>
+
       <button type="submit" class="btn btn-success">Uložit</button>
     </form>
+
+    <script>
+      function setupCharacterCounter(fieldId, counterId, maxLen) {
+        const field = document.getElementById(fieldId);
+        const counter = document.getElementById(counterId);
+        
+        function updateCounter() {
+          const len = field.value.length;
+          counter.innerText = (maxLen - len) >= 0 ? (maxLen - len) : 0;
+        }
+        
+        field.addEventListener("input", updateCounter);
+        updateCounter();
+      }
+
+      // Nastavení odpočtů pro jednotlivá pole
+      setupCharacterCounter("id_area1_text", "area1_counter", 1000);
+      setupCharacterCounter("id_area2_text", "area2_counter", 1000);
+    </script>
   </div>
 </div>
 {% endblock %}

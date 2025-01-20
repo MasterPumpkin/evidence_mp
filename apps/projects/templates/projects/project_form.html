@@ -9,23 +9,33 @@
     <form method="post">
       {% csrf_token %}
       {% if form.instance.student %}
-      <p class="text-info">Student již přiřazen: {{ form.instance.student }}</p>
+        <p class="text-info">Student již přiřazen: {{ form.instance.student }}</p>
       {% endif %}
       {{ form|crispy }}
-      <p>Zbývá znaků: <span id="desc_counter"></span></p>
+
+      <!-- Přidání odpočtu znaků pro pole assignment -->
+      <div class="mb-3">
+        <p>Zbývá znaků (Zadání): <span id="assignment_counter">2000</span></p>
+      </div>
+
       <button type="submit" class="btn btn-success">Uložit</button>
     </form>
+
     <script>
-      const descField = document.getElementById("id_description");
-      const counter = document.getElementById("desc_counter");
-      const maxLen = 1000; // např. 1000 znaků
-    
-      function updateCounter() {
-        const len = descField.value.length;
-        counter.innerText = (maxLen - len) >= 0 ? (maxLen - len) : 0;
+      function setupCounter(fieldId, counterId, maxLen) {
+        const field = document.getElementById(fieldId);
+        const counter = document.getElementById(counterId);
+
+        function updateCounter() {
+          const len = field.value.length;
+          counter.innerText = (maxLen - len) >= 0 ? (maxLen - len) : 0;
+        }
+
+        field.addEventListener("input", updateCounter);
+        updateCounter();
       }
-      descField.addEventListener("input", updateCounter);
-      updateCounter();
+
+      setupCounter("id_assignment", "assignment_counter", 2000);
     </script>
   </div>
 </div>

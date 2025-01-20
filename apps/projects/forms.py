@@ -28,6 +28,27 @@ class MilestoneForm(forms.ModelForm):
             self.fields['deadline'].initial = self.instance.deadline.strftime('%Y-%m-%d')
 
 
+class StudentMilestoneForm(forms.ModelForm):
+    class Meta:
+        model = Milestone
+        fields = ['title', 'deadline']
+        widgets = {
+            'deadline': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}, format='%Y-%m-%d'),
+        }
+        labels = {
+            'title': 'Název milníku',
+            'deadline': 'Termín',
+        }
+        help_texts = {
+            'deadline': 'Datum, do kdy je milník plánován',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.deadline:
+            self.fields['deadline'].initial = self.instance.deadline.strftime('%Y-%m-%d')
+
+
 class TeacherProjectForm(forms.ModelForm):
     """Učitel při zakládání projektu vybírá studenta."""
     student = forms.ModelChoiceField(

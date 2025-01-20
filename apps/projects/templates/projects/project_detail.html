@@ -88,18 +88,7 @@
   </div>
 </div>
 
-{% if project.milestones.count == 0 %}
-  <p>Žádné milníky. 
-     {% if user == project.student and project.leader == None and now < project.scheme.student_edit_deadline %}
-       <a href="{% url 'milestones_import' project.pk %}">Import milníků</a>
-     {% endif %}
-     {% if user.is_authenticated and project.leader == user %}
-        <a href="{% url 'projects:milestone_add' project.id %}" class="btn btn-sm btn-success">Přidat milník</a>
-        <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-sm btn-danger">Importovat CSV s
-          milníky</a>
-     {% endif %}
-  </p>
-{% else %}
+
 <!-- Sekce milníků -->
 <div class="row">
   <div class="col-md-12 mb-4">
@@ -143,9 +132,13 @@
                 {% endif %}
               </td>
               <td>
-                {% if user.is_authenticated and is_teacher %}
+                {% if user.is_authenticated and project.leader == user %}
                 <a href="{% url 'projects:milestone_edit' ms.id %}" class="btn btn-sm btn-primary">Upravit</a>
                 <a href="{% url 'projects:milestone_delete' ms.id %}" class="btn btn-sm btn-danger">Odstranit</a>
+                {% endif %}
+                {% if user == project.student and project.status != 'approved' and now < project.scheme.student_edit_deadline %}
+                <a href="{% url 'projects:student_milestone_edit' ms.id %}" class="btn btn-sm btn-primary">Upravit</a>
+                <a href="{% url 'projects:student_milestone_delete' ms.id %}" class="btn btn-sm btn-danger">Odstranit</a>
                 {% endif %}
               </td>
             </tr>
@@ -157,11 +150,14 @@
         <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-sm btn-danger">Importovat CSV s
           milníky</a>
         {% endif %}
+        {% if user == project.student and project.status != 'approved' and now < project.scheme.student_edit_deadline %}
+        <a href="{% url 'projects:student_milestone_add' project.id %}" class="btn btn-sm btn-success">Přidat milník</a>
+        {% endif %}
       </div>
     </div>
   </div>
 </div>
-{% endif %}
+
 
 <!-- Sekce kontrol -->
 {% if user == project.leader or user.is_superuser %}
@@ -233,6 +229,8 @@
         {% if user.is_authenticated and project.opponent == user %}
         <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek
           oponenta</a>
+        <a href="{% url 'projects:export_docx' project.pk %}" class="btn btn-sm btn-info">Export posudku</a>
+        <a href="{% url 'projects:resign_opponent' project.pk %}" class="btn btn-sm btn-danger">Vzdát se oponentury</a>
         {% endif %}
         {% if user.is_authenticated and project.leader == user %}
         <a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-danger">Vzdát se vedení</a>
