@@ -17,7 +17,9 @@ from .views import (
     TeacherProjectCreateView, StudentProjectCreateView,
     StudentProjectUpdateView, TeacherProjectUpdateView,
     StudentMilestoneCreateView, StudentMilestoneUpdateView,
-    student_delete_milestone, resign_as_opponent
+    student_delete_milestone, resign_as_opponent,
+    export_opponent_eval, export_leader_eval,
+    export_consultation_list, export_project_assignment,
 )
 
 app_name = 'projects'
@@ -67,4 +69,9 @@ urlpatterns = [
     path('milestones/<int:pk>/student/edit/', StudentMilestoneUpdateView.as_view(), name='student_milestone_edit'),
     path('milestones/<int:milestone_id>/student/delete/', student_delete_milestone, name='student_milestone_delete'),
 
+    # Exporty
+    path('<int:pk>/export/opponent-eval/', export_opponent_eval, name='export_opponent_eval'),
+    path('<int:pk>/export/leader-eval/', export_leader_eval, name='export_leader_eval'),
+    path('<int:pk>/export/control-checks/', export_consultation_list, name='export_consultation_list'),
+    path('<int:pk>/export/assignment/', export_project_assignment, name='export_project_assignment'),
 ]

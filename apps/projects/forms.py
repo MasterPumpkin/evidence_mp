@@ -192,3 +192,13 @@ class UserPreferencesForm(forms.ModelForm):
             'consultation_text2',
             'consultation_text3',
         ]
+
+class DateInputForm(forms.Form):
+    handover_date = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'type': 'date',  # HTML5 atribut pro kalendář
+            'class': 'form-control',
+        }),
+        label="Datum předání",
+        required=True
+    )

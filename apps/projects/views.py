@@ -19,7 +19,8 @@ from .forms import (
     ProjectNotesForm, ProjectOpponentForm,
     UserUpdateForm, ProjectAssignmentForm,
     UserPreferencesForm, StudentProjectForm,
-    TeacherProjectForm, StudentMilestoneForm
+    TeacherProjectForm, StudentMilestoneForm,
+    DateInputForm
 )
 import csv
 from django.http import HttpResponse, HttpResponseForbidden
@@ -1115,3 +1116,152 @@ def student_delete_milestone(request, milestone_id):
     milestone.delete()
     messages.success(request, "Milník byl úspěšně odstraněn.")
     return redirect('projects:detail', pk=project.pk)
+
+
+
+
+@login_required
+def export_consultation_list(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    
+    if request.method == 'POST':
+        form = DateInputForm(request.POST)
+        if form.is_valid():
+            handover_date = form.cleaned_data['handover_date']
+
+            doc = DocxTemplate("templates/docx/consultation_list.docx")
+            controls = project.controls.all().order_by('date')[:3]  # První 3 kontroly
+
+            context = {
+                'student_name': f"{project.student.first_name} {project.student.last_name}",
+                'class_name': project.student.userprofile.class_name,
+                'school_year': project.scheme.year if project.scheme else "N/A",
+                'control_1_date': controls[0].date.strftime('%d.%m.%Y') if len(controls) > 0 else "N/A",
+                'control_1_eval': controls[0].evaluation if len(controls) > 0 else "N/A",
+                'control_1_desc': controls[0].content if len(controls) > 0 else "N/A",
+                'control_2_date': controls[1].date.strftime('%d.%m.%Y') if len(controls) > 1 else "N/A",
+                'control_2_eval': controls[1].evaluation if len(controls) > 1 else "N/A",
+                'control_2_desc': controls[1].content if len(controls) > 1 else "N/A",
+                'control_3_date': controls[2].date.strftime('%d.%m.%Y') if len(controls) > 2 else "N/A",
+                'control_3_eval': controls[2].evaluation if len(controls) > 2 else "N/A",
+                'control_3_desc': controls[2].content if len(controls) > 2 else "N/A",
+                'handover_date': handover_date.strftime('%d.%m.%Y')
+            }
+
+            doc.render(context)
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            response['Content-Disposition'] = f'attachment; filename="konzultacni_list_{pk}.docx"'
+            doc.save(response)
+            return response
+    else:
+        form = DateInputForm()
+
+    return render(request, 'projects/export_form.html', {'form': form, 'project': project})
+
+
+@login_required
+def export_project_assignment(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+
+    template = "templates/docx/assignment_IT.docx" if project.student.userprofile.study_branch == "IT" else "templates/docx/assignment_E.docx"
+    
+    context = {
+        'student_name': f"{project.student.first_name} {project.student.last_name}",
+        'class_name': project.student.userprofile.class_name,
+        'school_year': project.scheme.year if project.scheme else "N/A",
+        'project_title': project.title,
+        'assignment': project.assignment,
+    }
+
+    doc = DocxTemplate(template)
+    doc.render(context)
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = f'attachment; filename="zadani_prace_{pk}.docx"'
+    doc.save(response)
+    return response
+
+
+@login_required
+def export_leader_eval(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+
+    if request.method == 'POST':
+        form = DateInputForm(request.POST)
+        if form.is_valid():
+            review_date = form.cleaned_data['handover_date']
+
+            doc = DocxTemplate("templates/docx/leader_eval.docx")
+            leader_eval = getattr(project, 'leader_eval', None)
+
+            context = {
+                'student_name': f"{project.student.first_name} {project.student.last_name}",
+                'class_name': project.student.userprofile.class_name,
+                'school_year': project.scheme.year if project.scheme else "N/A",
+                'leader_name': f"{project.leader.first_name} {project.leader.last_name}",
+                'project_title': project.title,
+                'area1_text': leader_eval.area1_text,
+                'area1_points': leader_eval.area1_points,
+                'area2_text': leader_eval.area2_text,
+                'area2_points': leader_eval.area2_points,
+                'area3_text': leader_eval.area3_text,
+                'area3_points': leader_eval.area3_points,
+                'total_points': leader_eval.area1_points + leader_eval.area2_points + leader_eval.area3_points,
+                'max_points': (
+                    project.scheme.leader_area1_max +
+                    project.scheme.leader_area2_max +
+                    project.scheme.leader_area3_max
+                ) if project.scheme else "N/A",
+                'review_date': review_date.strftime('%d.%m.%Y')
+            }
+
+            doc.render(context)
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            response['Content-Disposition'] = f'attachment; filename="posudek_vedouciho_{pk}.docx"'
+            doc.save(response)
+            return response
+    else:
+        form = DateInputForm()
+
+    return render(request, 'projects/export_form.html', {'form': form, 'project': project})
+
+
+@login_required
+def export_opponent_eval(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+
+    if request.method == 'POST':
+        form = DateInputForm(request.POST)
+        if form.is_valid():
+            review_date = form.cleaned_data['handover_date']
+
+            doc = DocxTemplate("templates/docx/opponent_eval.docx")
+            opponent_eval = getattr(project, 'opponent_eval', None)
+
+            context = {
+                'student_name': f"{project.student.first_name} {project.student.last_name}",
+                'class_name': project.student.userprofile.class_name,
+                'school_year': project.scheme.year if project.scheme else "N/A",
+                'opponent_name': f"{project.opponent.first_name} {project.opponent.last_name}",
+                'project_title': project.title,
+                'area1_text': opponent_eval.area1_text,
+                'area1_points': opponent_eval.area1_points,
+                'area2_text': opponent_eval.area2_text,
+                'area2_points': opponent_eval.area2_points,
+                'total_points': opponent_eval.area1_points + opponent_eval.area2_points,
+                'max_points': (
+                    project.scheme.opponent_area1_max +
+                    project.scheme.opponent_area2_max
+                ) if project.scheme else "N/A",
+                'review_date': review_date.strftime('%d.%m.%Y')
+            }
+
+            doc.render(context)
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            response['Content-Disposition'] = f'attachment; filename="posudek_oponenta_{pk}.docx"'
+            doc.save(response)
+            return response
+    else:
+        form = DateInputForm()
+
+    return render(request, 'projects/export_form.html', {'form': form, 'project': project})

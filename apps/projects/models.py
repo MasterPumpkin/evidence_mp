@@ -77,7 +77,8 @@ class Project(models.Model):
         on_delete=models.SET_NULL,
         null=True, blank=True,
         related_name='leading_projects',
-        help_text="Vedoucí projektu"
+        help_text="Vedoucí projektu",
+        verbose_name="Vedoucí"
     )
 
     # případný oponent
@@ -86,7 +87,8 @@ class Project(models.Model):
         on_delete=models.SET_NULL,
         null=True, blank=True,
         related_name='opponent_projects',
-        help_text="Oponent projektu"
+        help_text="Oponent projektu",
+        verbose_name="Oponent"
     )
 
     scheme = models.ForeignKey(

@@ -223,13 +223,17 @@
         <!--<a href="{% url 'projects:assignment_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit zadání</a>-->
         <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit poznámky</a>
         <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek</a>
-        <a href="{% url 'projects:export_docx' project.pk %}" class="btn btn-sm btn-info">Export posudku</a>
+        
+        <a href="{% url 'projects:export_leader_eval' project.pk %}" class="btn btn-sm btn-info">Exportovat posudek</a>
+        <a href="{% url 'projects:export_consultation_list' project.pk %}" class="btn btn-sm btn-info">Exportovat konzultace</a>
+        <a href="{% url 'projects:export_project_assignment' project.pk %}" class="btn btn-sm btn-info">Exportovat zadání</a>
+        
         <a href="{% url 'projects:generate_consultations' project.pk %}" class="btn btn-sm btn-danger">Přidat kontroly</a>
         {% endif %}
         {% if user.is_authenticated and project.opponent == user %}
         <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek
           oponenta</a>
-        <a href="{% url 'projects:export_docx' project.pk %}" class="btn btn-sm btn-info">Export posudku</a>
+        <a href="{% url 'projects:export_opponent_eval' project.pk %}" class="btn btn-sm btn-info">Exportovat posudek oponenta</a>
         <a href="{% url 'projects:resign_opponent' project.pk %}" class="btn btn-sm btn-danger">Vzdát se oponentury</a>
         {% endif %}
         {% if user.is_authenticated and project.leader == user %}
