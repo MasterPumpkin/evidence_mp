@@ -14,10 +14,11 @@
       {{ form|crispy }}
 
       <!-- Přidání odpočtu znaků pro pole assignment -->
+      {% if is_teacher %}
       <div class="mb-3">
         <p>Zbývá znaků (Zadání): <span id="assignment_counter">2000</span></p>
       </div>
-
+      {% endif %}
       <button type="submit" class="btn btn-success">Uložit</button>
     </form>
 

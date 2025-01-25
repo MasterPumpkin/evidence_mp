@@ -20,11 +20,11 @@ from .forms import (
     UserUpdateForm, ProjectAssignmentForm,
     UserPreferencesForm, StudentProjectForm,
     TeacherProjectForm, StudentMilestoneForm,
-    DateInputForm
+    DateInputForm, ExportForm
 )
 import csv
 from django.http import HttpResponse, HttpResponseForbidden
-from datetime import datetime
+from datetime import date, datetime
 from django.urls import reverse
 from django.contrib.auth.models import User
 from docxtpl import DocxTemplate
@@ -69,6 +69,15 @@ class TeacherProjectCreateView(CreateView):
     def get_success_url(self):
         return reverse('projects:detail', args=[self.object.pk])
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
+
 
 class TeacherProjectUpdateView(UpdateView):
     model = Project
@@ -95,6 +104,15 @@ class TeacherProjectUpdateView(UpdateView):
     def get_success_url(self):
         return reverse('projects:detail', args=[self.object.pk])
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
+    
 
 class StudentProjectCreateView(CreateView):
     model = Project
@@ -272,33 +290,38 @@ def resign_as_opponent(request, pk):
         project.save()
     return redirect('projects:detail', pk=pk)
 
-
+"""
 class ProjectListView(LoginRequiredMixin, ListView):
     model = Project
     template_name = 'projects/project_list.html'
     context_object_name = 'projects'
     
     def get_queryset(self):
-        qs = super().get_queryset()
+        # qs = super().get_queryset()
+        qs = Project.objects.all()
+        my_projects_param = self.request.GET.get('my_projects')
 
-        user_prefs = getattr(self.request.user, 'userpreferences', None)
-        
-        if user_prefs and user_prefs.pref_myprojects_default and 'my_projects' not in self.request.GET:
-            # Force the param
-            # Když user poprvé načte stránku, nastavíme param 'my_projects=1'
-            self.request.GET._mutable = True
-            self.request.GET['my_projects'] = '1'
-            self.request.GET._mutable = False
+        if my_projects_param == '1':
+            qs = qs.filter(Q(leader=self.request.user) | Q(opponent=self.request.user))
 
-        # Pokud je user ve skupině 'Student', zobrazí jen své projekty
+            # Pokud je user ve skupině 'Student', zobrazí jen své projekty
         if user_in_group(self.request.user, 'Student'):
             qs = qs.filter(student=self.request.user)
         # Pokud je user ve skupině 'Teacher', zobrazí všechny (např.)
 
         # -- Filtrování podle třídy:
-        class_name = self.request.GET.get('class')
-        if class_name:
+        # class_name = self.request.GET.get('class')
+        # if class_name:
             # student__userprofile__class_name = "3.A" například
+        #     qs = qs.filter(student__userprofile__class_name=class_name)
+
+        class_name = self.request.GET.get('class')
+
+        # Pokud je třída None nebo 'None', nastavíme výchozí hodnotu
+        if not class_name or class_name == 'None':
+            self.request.GET = self.request.GET.copy()
+            self.request.GET['class'] = ''
+            class_name = ''
             qs = qs.filter(student__userprofile__class_name=class_name)
 
         # -- Filtrování podle stavu projektu:
@@ -323,10 +346,8 @@ class ProjectListView(LoginRequiredMixin, ListView):
         if ordering in valid_order_fields:
             qs = qs.order_by(ordering)
 
-        # Jen moje projekty
-        if self.request.GET.get('my_projects') == '1':
-            user = self.request.user
-            qs = qs.filter(Q(leader=user) | Q(opponent=user))
+        # Uložení do session pro správné uchování hodnoty mezi požadavky
+        # self.request.session['my_projects'] = get_params.get('my_projects')
 
         return qs
     
@@ -347,8 +368,24 @@ class ProjectListView(LoginRequiredMixin, ListView):
         user = self.request.user
         context['is_teacher'] = user.groups.filter(name='Teacher').exists()
         context['is_student'] = user.groups.filter(name='Student').exists()
+        #context['default_my_projects'] = self.request.GET.get('my_projects', self.default_my_projects)
+        context['default_my_projects'] = self.request.session.get('my_projects', '1')
         
         return context
+    
+    def get(self, request, *args, **kwargs):
+        query_params = request.GET.copy()
+
+        # Pokud je hodnota v session, použijeme ji, pokud není, nastavíme výchozí
+        if 'my_projects' not in query_params:
+            query_params['my_projects'] = '1' if request.session.get('my_projects', '1') == '1' else ''
+
+        # Kontrola změny URL
+        if query_params.urlencode() != request.META['QUERY_STRING']:
+            return redirect(f"{request.path}?{query_params.urlencode()}")
+
+        return super().get(request, *args, **kwargs)
+"""
 
 
 class ProjectDetailView(LoginRequiredMixin, DetailView):
@@ -851,6 +888,15 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
         messages.success(self.request, "Údaje úspěšně aktualizovány.")
         return reverse('projects:list')  # nebo detail uživatele
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
+    
 
 @staff_member_required  # nebo login_required + check user.is_superuser
 def import_projects(request):
@@ -1002,7 +1048,14 @@ def user_preferences_view(request):
             return redirect('projects:list')
     else:
         form = UserPreferencesForm(instance=prefs)
-    return render(request, 'users/user_preferences.html', {'form': form})
+    # Přidání informací o roli uživatele do kontextu
+    context = {
+        'form': form,
+        'is_teacher': request.user.groups.filter(name='Teacher').exists(),
+        'is_student': request.user.groups.filter(name='Student').exists(),
+    }
+    # return render(request, 'users/user_preferences.html', {'form': form})
+    return render(request, 'users/user_preferences.html', context)
 
 
 @login_required
@@ -1136,6 +1189,7 @@ def export_consultation_list(request, pk):
                 'student_name': f"{project.student.first_name} {project.student.last_name}",
                 'class_name': project.student.userprofile.class_name,
                 'school_year': project.scheme.year if project.scheme else "N/A",
+                'project_title': project.title,
                 'control_1_date': controls[0].date.strftime('%d.%m.%Y') if len(controls) > 0 else "N/A",
                 'control_1_eval': controls[0].evaluation if len(controls) > 0 else "N/A",
                 'control_1_desc': controls[0].content if len(controls) > 0 else "N/A",
@@ -1187,9 +1241,24 @@ def export_leader_eval(request, pk):
     project = get_object_or_404(Project, pk=pk)
 
     if request.method == 'POST':
-        form = DateInputForm(request.POST)
+        # form = DateInputForm(request.POST)
+        form = ExportForm(request.POST, export_type='export_leader_eval')
         if form.is_valid():
             review_date = form.cleaned_data['handover_date']
+            submission_status = form.cleaned_data.get('submission_status')
+
+            # Inicializace hodnot
+            submitted_on_time = ''
+            submitted_late = ''
+            not_submitted = ''
+
+            # Přidání "X" do správného pole dle submission_status
+            if submission_status == 'on_time':
+                submitted_on_time = 'X'
+            elif submission_status == 'late':
+                submitted_late = 'X'
+            elif submission_status == 'not_submitted':
+                not_submitted = 'X'
 
             doc = DocxTemplate("templates/docx/leader_eval.docx")
             leader_eval = getattr(project, 'leader_eval', None)
@@ -1212,7 +1281,11 @@ def export_leader_eval(request, pk):
                     project.scheme.leader_area2_max +
                     project.scheme.leader_area3_max
                 ) if project.scheme else "N/A",
-                'review_date': review_date.strftime('%d.%m.%Y')
+                'review_date': review_date.strftime('%d.%m.%Y'),
+                # Zaškrtnutí příslušného pole
+                'submitted_on_time': submitted_on_time,
+                'submitted_late': submitted_late,
+                'not_submitted': not_submitted,
             }
 
             doc.render(context)
@@ -1221,7 +1294,9 @@ def export_leader_eval(request, pk):
             doc.save(response)
             return response
     else:
-        form = DateInputForm()
+        # form = DateInputForm()
+        form = ExportForm(export_type='export_leader_eval')
+
 
     return render(request, 'projects/export_form.html', {'form': form, 'project': project})
 
@@ -1265,3 +1340,90 @@ def export_opponent_eval(request, pk):
         form = DateInputForm()
 
     return render(request, 'projects/export_form.html', {'form': form, 'project': project})
+
+
+class ProjectListView(LoginRequiredMixin, ListView):
+    model = Project
+    template_name = 'projects/project_list.html'
+    context_object_name = 'projects'
+
+    def get(self, request, *args, **kwargs):
+        query_params = request.GET.copy()
+
+        # Načtení uživatelských preferencí pro my_projects
+        user_prefs = getattr(self.request.user, 'preferences', None)
+        default_my_projects = '1' if user_prefs and user_prefs.pref_myprojects_default else '0'
+
+        # Pokud uživatel poprvé vstupuje na stránku (není v URL parametr), použij preference
+        if 'my_projects' not in request.GET:
+            query_params['my_projects'] = default_my_projects
+            return redirect(f"{request.path}?{query_params.urlencode()}")
+        
+        # Nastavení výchozí třídy na prázdnou hodnotu, pokud není zadaná
+        if 'class' not in query_params or query_params['class'] == 'None':
+            query_params['class'] = ''
+
+        # Přesměrování pouze pokud se změnily GET parametry
+        if query_params.urlencode() != request.META['QUERY_STRING']:
+            return redirect(f"{request.path}?{query_params.urlencode()}")
+
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        qs = Project.objects.all()
+
+        # Zpracování parametru "Pouze moje projekty"
+        my_projects = self.request.GET.get('my_projects', '0')
+
+        if my_projects == '1':
+            qs = qs.filter(Q(leader=self.request.user) | Q(opponent=self.request.user))
+
+        # Pokud je user ve skupině 'Student', zobrazí jen své projekty
+        if user_in_group(self.request.user, 'Student'):
+            qs = qs.filter(student=self.request.user)
+        
+        # Filtr třídy (pokud není zadána, použij default)
+        class_name = self.request.GET.get('class', '')
+        if class_name:
+            qs = qs.filter(student__userprofile__class_name=class_name)
+
+        # Filtr podle stavu projektu
+        if status := self.request.GET.get('status'):
+            qs = qs.filter(status=status)
+
+        # Filtr podle vedoucího
+        if leader_id := self.request.GET.get('leader'):
+            qs = qs.filter(leader_id=leader_id)
+
+        # Filtr podle oponenta
+        if opponent_id := self.request.GET.get('opponent'):
+            qs = qs.filter(opponent_id=opponent_id)
+
+        # Řazení výsledků
+        if ordering := self.request.GET.get('ordering'):
+            qs = qs.order_by(ordering)
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        try:
+            user_prefs = self.request.user.preferences
+            context['default_my_projects'] = '1' if user_prefs.pref_myprojects_default else '0'
+        except AttributeError:
+            context['default_my_projects'] = '0'
+            # print(f"Uživatel {self.request.user} nemá nastavené preference!")
+
+        # print(f"Uživatel: {self.request.user}, Preference: {context['default_my_projects']}")
+
+        context['all_teachers'] = User.objects.filter(groups__name='Teacher')
+        context['all_classes'] = UserProfile.objects.exclude(class_name='').values_list('class_name', flat=True).distinct().order_by('class_name')
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context
+
+

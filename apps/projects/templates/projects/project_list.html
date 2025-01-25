@@ -4,7 +4,10 @@
 
 {% if not is_student %}
 <form method="get" class="row g-3 align-items-end mb-4">
-  
+
+  <!-- Skrytý input pro odeslání nezaškrtnutého checkboxu -->
+  <input type="hidden" name="my_projects" value="0">
+
   <!-- TŘÍDA - teď bude rozbalovací seznam -->
   <div class="col-auto">
     <label for="class" class="form-label">Třída</label>
@@ -12,7 +15,7 @@
       <option value="">-- Vše --</option>
       {% for c in all_classes %}
         <option value="{{ c }}"
-          {% if request.GET.class == c %}selected{% endif %}
+          {% if request.GET.class == c and c != 'None' %}selected{% endif %}
         >
           {{ c }}
         </option>
@@ -75,9 +78,8 @@
 
   <div class="col-auto form-check">
     <input type="checkbox" class="form-check-input"
-           name="my_projects" id="my_projects"
-           value="1" 
-           {% if request.GET.my_projects == '1' %}checked{% endif %}>
+       name="my_projects" id="my_projects" value="1"
+       {% if request.GET.my_projects == '1' %}checked{% endif %}>
     <label class="form-check-label" for="my_projects">Pouze moje projekty</label>
   </div>
 

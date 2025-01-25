@@ -224,7 +224,7 @@
         <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit poznámky</a>
         <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek</a>
         
-        <a href="{% url 'projects:export_leader_eval' project.pk %}" class="btn btn-sm btn-info">Exportovat posudek</a>
+        <a href="{% url 'projects:export_leader_eval' project.pk %}" class="btn btn-sm btn-info {% if not project.leader_eval %}disabled{% endif %}">Exportovat posudek</a>
         <a href="{% url 'projects:export_consultation_list' project.pk %}" class="btn btn-sm btn-info">Exportovat konzultace</a>
         <a href="{% url 'projects:export_project_assignment' project.pk %}" class="btn btn-sm btn-info">Exportovat zadání</a>
         
@@ -233,14 +233,14 @@
         {% if user.is_authenticated and project.opponent == user %}
         <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek
           oponenta</a>
-        <a href="{% url 'projects:export_opponent_eval' project.pk %}" class="btn btn-sm btn-info">Exportovat posudek oponenta</a>
+        <a href="{% url 'projects:export_opponent_eval' project.pk %}" class="btn btn-sm btn-info {% if not project.opponent_eval %}disabled{% endif %}">Exportovat posudek oponenta</a>
         <a href="{% url 'projects:resign_opponent' project.pk %}" class="btn btn-sm btn-danger">Vzdát se oponentury</a>
         {% endif %}
         {% if user.is_authenticated and project.leader == user %}
         <a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-danger">Vzdát se vedení</a>
         <a href="{% url 'projects:opponent_update' project.pk %}" class="btn btn-sm btn-secondary">Vybrat oponenta</a>
         {% endif %} 
-        {% if user.is_authenticated and project.opponent == None and is_teacher and project.leader != user %}
+        {% if user.is_authenticated and project.opponent == None and is_teacher and project.leader != user and project.status != 'pending_approval' %}
         <a href="{% url 'projects:take_opponent' project.pk %}" class="btn btn-sm btn-success">Převzít oponenturu</a>
         {% endif %}    
       </div>

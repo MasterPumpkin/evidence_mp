@@ -4,6 +4,7 @@ from .models import Milestone, Project, ControlCheck, LeaderEvaluation, Opponent
 from ckeditor.widgets import CKEditorWidget
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
+from datetime import date
 
 class MilestoneForm(forms.ModelForm):
     class Meta:
@@ -202,3 +203,42 @@ class DateInputForm(forms.Form):
         label="Datum předání",
         required=True
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Automatické nastavení dnešního data při vykreslení formuláře
+        self.fields['handover_date'].initial = date.today().strftime('%Y-%m-%d')
+
+
+
+class ExportForm(forms.Form):
+    handover_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        label="Datum předání",
+        required=True
+    )
+
+    SUBMISSION_CHOICES = [
+        ('on_time', 'Odevzdal v řádném termínu'),
+        ('late', 'Odevzdal v náhradním termínu'),
+        ('not_submitted', 'Neodevzdal v termínu'),
+    ]
+
+    submission_status = forms.ChoiceField(
+        choices=SUBMISSION_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label="Stav odevzdání",
+        required=False  # Volitelné pole
+    )
+
+    def __init__(self, *args, **kwargs):
+        export_type = kwargs.pop('export_type', None)
+        super().__init__(*args, **kwargs)
+
+        # Automatické nastavení dnešního data při vykreslení formuláře
+        self.fields['handover_date'].initial = date.today().strftime('%Y-%m-%d')
+
+        # Skryjeme pole submission_status pokud exportujeme konzultační list nebo posudek oponenta
+        if export_type in ['export_opponent_eval', 'export_consultation_list']:
+            self.fields.pop('submission_status')

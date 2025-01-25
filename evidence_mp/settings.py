@@ -166,3 +166,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # nebo 'cache' dle potřeby
+SESSION_COOKIE_AGE = 86400  # 1 den
+SESSION_SAVE_EVERY_REQUEST = True
+

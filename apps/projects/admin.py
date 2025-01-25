@@ -1,8 +1,16 @@
 from django.contrib import admin
 from .models import (
     ScoringScheme, Project, ControlCheck,
-    LeaderEvaluation, OpponentEvaluation
+    LeaderEvaluation, OpponentEvaluation,
+    UserPreferences
 )
+
+@admin.register(UserPreferences)
+class UserPreferencesAdmin(admin.ModelAdmin):
+    list_display = ('user', 'pref_myprojects_default')
+    search_fields = ('user__username',)
+    list_filter = ('pref_myprojects_default',)
+
 
 @admin.register(ScoringScheme)
 class ScoringSchemeAdmin(admin.ModelAdmin):
