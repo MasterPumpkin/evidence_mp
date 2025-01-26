@@ -20,6 +20,7 @@ from .views import (
     student_delete_milestone, resign_as_opponent,
     export_opponent_eval, export_leader_eval,
     export_consultation_list, export_project_assignment,
+    export_project_detail_pdf, export_control_check_pdf
 )
 
 app_name = 'projects'
@@ -74,4 +75,7 @@ urlpatterns = [
     path('<int:pk>/export/leader-eval/', export_leader_eval, name='export_leader_eval'),
     path('<int:pk>/export/control-checks/', export_consultation_list, name='export_consultation_list'),
     path('<int:pk>/export/assignment/', export_project_assignment, name='export_project_assignment'),
+
+    path('projects/<int:pk>/export/pdf/', export_project_detail_pdf, name='export_project_pdf'),
+    path('projects/export/control-check/', export_control_check_pdf, name='export_control_check_pdf'),
 ]

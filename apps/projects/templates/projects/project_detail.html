@@ -227,7 +227,9 @@
         <a href="{% url 'projects:export_leader_eval' project.pk %}" class="btn btn-sm btn-info {% if not project.leader_eval %}disabled{% endif %}">Exportovat posudek</a>
         <a href="{% url 'projects:export_consultation_list' project.pk %}" class="btn btn-sm btn-info">Exportovat konzultace</a>
         <a href="{% url 'projects:export_project_assignment' project.pk %}" class="btn btn-sm btn-info">Exportovat zadání</a>
-        
+        <a href="{% url 'projects:export_project_pdf' project.pk %}" class="btn btn-sm btn-info">Exportovat detaily pro studenta (PDF)</a>
+        <a href="{% url 'projects:export_control_check_pdf' %}" class="btn btn-sm btn-info">Exportovat záznamy o kontrolách - všechny projekty (PDF)</a>
+
         <a href="{% url 'projects:generate_consultations' project.pk %}" class="btn btn-sm btn-danger">Přidat kontroly</a>
         {% endif %}
         {% if user.is_authenticated and project.opponent == user %}

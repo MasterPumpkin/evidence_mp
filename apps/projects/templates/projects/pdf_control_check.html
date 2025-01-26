@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4 landscape;  /* Nastavení na šířku */
+            margin: 1cm;         /* Přidáme okraje */
+        }
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+    </style>
+    
+</head>
+<body>
+    <h1 style="text-align: center;">Přehled kontrol</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Jméno studenta</th>
+                <th>Třída</th>
+                <th>Název práce</th>
+                <th>Datum 1. kontroly</th>
+                <th>Hodnocení 1. kontroly</th>
+                <th>Datum 2. kontroly</th>
+                <th>Hodnocení 2. kontroly</th>
+                <th>Datum 3. kontroly</th>
+                <th>Hodnocení 3. kontroly</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+                <tr>
+                    <td>{{ project.student.first_name }} {{ project.student.last_name }}</td>
+                    <td>{{ project.student.userprofile.class_name }}</td>
+                    <td>{{ project.title|truncatechars:30 }}</td>
+        
+                    {% with project.controls.all as checks %}
+                        {% if checks|length >= 1 %}
+                            <td>{{ checks.0.date|date:"d.m.Y" }}</td>
+                            <td>{{ checks.0.evaluation|default_if_none:"" }}</td>
+                        {% else %}
+                            <td></td><td></td>
+                        {% endif %}
+        
+                        {% if checks|length >= 2 %}
+                            <td>{{ checks.1.date|date:"d.m.Y" }}</td>
+                            <td>{{ checks.1.evaluation|default_if_none:"" }}</td>
+                        {% else %}
+                            <td></td><td></td>
+                        {% endif %}
+        
+                        {% if checks|length >= 3 %}
+                            <td>{{ checks.2.date|date:"d.m.Y" }}</td>
+                            <td>{{ checks.2.evaluation|default_if_none:"" }}</td>
+                        {% else %}
+                            <td></td><td></td>
+                        {% endif %}
+                    {% endwith %}
+                </tr>
+            {% endfor %}
+        </tbody>     
+    </table>
+</body>
+</html>
+

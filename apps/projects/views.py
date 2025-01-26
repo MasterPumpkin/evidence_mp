@@ -32,6 +32,8 @@ from django.http import HttpResponse
 from django.template.defaultfilters import date as date_filter
 import datetime
 import openpyxl
+from django.template.loader import render_to_string
+from weasyprint import HTML
 
 
 class TeacherProjectCreateView(CreateView):
@@ -1426,4 +1428,37 @@ class ProjectListView(LoginRequiredMixin, ListView):
 
         return context
 
+
+@login_required
+def export_project_detail_pdf(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    context = {
+        'student_name': f"{project.student.first_name} {project.student.last_name}",
+        'class_name': project.student.userprofile.class_name,
+        'project_title': project.title,
+        'assignment': project.assignment,
+        'milestones': project.milestones.all()
+    }
+    html_string = render_to_string('projects/pdf_project_detail.html', context)
+    pdf_file = HTML(string=html_string).write_pdf()
+
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="projekt_{pk}.pdf"'
+    return response
+
+
+@login_required
+def export_control_check_pdf(request):
+    projects = Project.objects.all()
+
+    context = {
+        'projects': projects,
+    }
+
+    html_string = render_to_string('projects/pdf_control_check.html', context)
+    pdf_file = HTML(string=html_string).write_pdf()
+
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="prehled_kontrol.pdf"'
+    return response
 
