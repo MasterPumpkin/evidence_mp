@@ -80,7 +80,8 @@
                 Předvolby
               </a>
             </li>
-            {% else %}
+            {% endif %}
+            {% if is_student %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'projects:student_project_create' %}">Založit nový projekt</a>
             </li>

@@ -1,5 +1,7 @@
 import csv
 import io
+import os
+from django.conf import settings
 from django.contrib.auth.models import User, Group
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -27,13 +29,14 @@ from django.http import HttpResponse, HttpResponseForbidden
 from datetime import date, datetime
 from django.urls import reverse
 from django.contrib.auth.models import User
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, InlineImage
 from django.http import HttpResponse
 from django.template.defaultfilters import date as date_filter
 import datetime
 import openpyxl
 from django.template.loader import render_to_string
 from weasyprint import HTML
+from docx.shared import Cm
 
 
 class TeacherProjectCreateView(CreateView):
@@ -511,6 +514,15 @@ class MilestoneCreateView(CreateView):
         # Po vytvoření se vrátíme na detail projektu
         # return redirect('projects:detail', pk=self.kwargs['project_id'])
         return reverse('projects:detail', kwargs={'pk': milestone.project.id})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
 
 class MilestoneUpdateView(UpdateView):
     model = Milestone
@@ -530,6 +542,14 @@ class MilestoneUpdateView(UpdateView):
         # return redirect('projects:detail', pk=milestone.project.id)
         return reverse('projects:detail', kwargs={'pk': milestone.project.id})
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
 
 
 
@@ -643,6 +663,15 @@ class ControlCheckCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         # return redirect('projects:detail', pk=self.project.pk)
         return reverse('projects:detail', kwargs={'pk': self.project.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
 
 
 class ControlCheckUpdateView(LoginRequiredMixin, UpdateView):
@@ -663,6 +692,15 @@ class ControlCheckUpdateView(LoginRequiredMixin, UpdateView):
         check = self.object
         # return redirect('projects:detail', pk=check.project.pk)
         return reverse('projects:detail', kwargs={'pk': check.project.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
 
 
 class LeaderEvalUpdateView(LoginRequiredMixin, UpdateView):
@@ -684,10 +722,36 @@ class LeaderEvalUpdateView(LoginRequiredMixin, UpdateView):
             messages.error(request, "Nemáte oprávnění vyplňovat hodnocení vedoucího.")
             return redirect('projects:detail', pk=project.pk)
         return super().dispatch(request, *args, **kwargs)
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        leader_eval = self.get_object()
+
+        # Pokud existuje uložené datum, předvyplníme ho
+        if leader_eval.export_date:
+            initial['export_date'] = leader_eval.export_date.strftime('%Y-%m-%d')
+
+        return initial
+    
+    def form_valid(self, form):
+        leader_eval = form.save(commit=False)
+        leader_eval.export_date = form.cleaned_data['export_date']
+        leader_eval.submission_status = form.cleaned_data['submission_status']
+        leader_eval.save()
+        return super().form_valid(form)
 
     def get_success_url(self):
         # return redirect('projects:detail', pk=self.object.project.pk)
         return reverse('projects:detail', kwargs={'pk': self.object.project.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
 
 
 class OpponentEvalUpdateView(LoginRequiredMixin, UpdateView):
@@ -710,9 +774,34 @@ class OpponentEvalUpdateView(LoginRequiredMixin, UpdateView):
             return redirect('projects:detail', pk=project.pk)
         return super().dispatch(request, *args, **kwargs)
 
+    def get_initial(self):
+        initial = super().get_initial()
+        opponent_eval = self.get_object()
+
+        # Pokud existuje uložené datum, předvyplníme ho
+        if opponent_eval.export_date:
+            initial['export_date'] = opponent_eval.export_date.strftime('%Y-%m-%d')
+
+        return initial
+    
+    def form_valid(self, form):
+        opponent_eval = form.save(commit=False)
+        opponent_eval.export_date = form.cleaned_data['export_date']
+        opponent_eval.save()
+        return super().form_valid(form)
+    
     def get_success_url(self):
         # return redirect('projects:detail', pk=self.object.project.pk)
         return reverse('projects:detail', kwargs={'pk': self.object.project.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
 
 
 class ProjectNotesUpdateView(LoginRequiredMixin, UpdateView):
@@ -731,6 +820,15 @@ class ProjectNotesUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('projects:detail', args=[self.object.pk])
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
+    
 
 
 class ProjectAssignmentUpdateView(LoginRequiredMixin, UpdateView):
@@ -748,6 +846,15 @@ class ProjectAssignmentUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('projects:detail', args=[self.object.pk])
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
   
 
 @login_required
@@ -784,6 +891,15 @@ class ProjectOpponentUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('projects:detail', args=[self.object.pk])
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context 
 
 
 @login_required
@@ -1043,7 +1159,7 @@ def user_preferences_view(request):
     # pokud user nemá preferences, vytvoříme
     prefs, created = UserPreferences.objects.get_or_create(user=request.user)
     if request.method == 'POST':
-        form = UserPreferencesForm(request.POST, instance=prefs)
+        form = UserPreferencesForm(request.POST, request.FILES, instance=prefs)
         if form.is_valid():
             form.save()
             messages.success(request, "Nastavení uloženo.")
@@ -1204,6 +1320,15 @@ def export_consultation_list(request, pk):
                 'handover_date': handover_date.strftime('%d.%m.%Y')
             }
 
+            user_prefs = UserPreferences.objects.filter(user=request.user).first()
+
+            # Vložení podpisu, pokud existuje
+            if user_prefs and user_prefs.signature and os.path.exists(user_prefs.signature.path):
+                signature_img = InlineImage(doc, user_prefs.signature.path, width=Cm(2.5))  
+                context["signature"] = signature_img  # Odkazujeme se na ALT text v šabloně
+            else:
+                context["signature"] = ""  # Pokud není podpis, zůstane prázdný
+
             doc.render(context)
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
             response['Content-Disposition'] = f'attachment; filename="konzultacni_list_{pk}.docx"'
@@ -1211,8 +1336,14 @@ def export_consultation_list(request, pk):
             return response
     else:
         form = DateInputForm()
-
-    return render(request, 'projects/export_form.html', {'form': form, 'project': project})
+        context = {
+        'form': form,
+        'project': project,
+        'is_teacher': request.user.groups.filter(name='Teacher').exists(),
+        'is_student': request.user.groups.filter(name='Student').exists(),
+    }
+        
+    return render(request, 'projects/export_form.html',context)
 
 
 @login_required
@@ -1236,112 +1367,6 @@ def export_project_assignment(request, pk):
     response['Content-Disposition'] = f'attachment; filename="zadani_prace_{pk}.docx"'
     doc.save(response)
     return response
-
-
-@login_required
-def export_leader_eval(request, pk):
-    project = get_object_or_404(Project, pk=pk)
-
-    if request.method == 'POST':
-        # form = DateInputForm(request.POST)
-        form = ExportForm(request.POST, export_type='export_leader_eval')
-        if form.is_valid():
-            review_date = form.cleaned_data['handover_date']
-            submission_status = form.cleaned_data.get('submission_status')
-
-            # Inicializace hodnot
-            submitted_on_time = ''
-            submitted_late = ''
-            not_submitted = ''
-
-            # Přidání "X" do správného pole dle submission_status
-            if submission_status == 'on_time':
-                submitted_on_time = 'X'
-            elif submission_status == 'late':
-                submitted_late = 'X'
-            elif submission_status == 'not_submitted':
-                not_submitted = 'X'
-
-            doc = DocxTemplate("templates/docx/leader_eval.docx")
-            leader_eval = getattr(project, 'leader_eval', None)
-
-            context = {
-                'student_name': f"{project.student.first_name} {project.student.last_name}",
-                'class_name': project.student.userprofile.class_name,
-                'school_year': project.scheme.year if project.scheme else "N/A",
-                'leader_name': f"{project.leader.first_name} {project.leader.last_name}",
-                'project_title': project.title,
-                'area1_text': leader_eval.area1_text,
-                'area1_points': leader_eval.area1_points,
-                'area2_text': leader_eval.area2_text,
-                'area2_points': leader_eval.area2_points,
-                'area3_text': leader_eval.area3_text,
-                'area3_points': leader_eval.area3_points,
-                'total_points': leader_eval.area1_points + leader_eval.area2_points + leader_eval.area3_points,
-                'max_points': (
-                    project.scheme.leader_area1_max +
-                    project.scheme.leader_area2_max +
-                    project.scheme.leader_area3_max
-                ) if project.scheme else "N/A",
-                'review_date': review_date.strftime('%d.%m.%Y'),
-                # Zaškrtnutí příslušného pole
-                'submitted_on_time': submitted_on_time,
-                'submitted_late': submitted_late,
-                'not_submitted': not_submitted,
-            }
-
-            doc.render(context)
-            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-            response['Content-Disposition'] = f'attachment; filename="posudek_vedouciho_{pk}.docx"'
-            doc.save(response)
-            return response
-    else:
-        # form = DateInputForm()
-        form = ExportForm(export_type='export_leader_eval')
-
-
-    return render(request, 'projects/export_form.html', {'form': form, 'project': project})
-
-
-@login_required
-def export_opponent_eval(request, pk):
-    project = get_object_or_404(Project, pk=pk)
-
-    if request.method == 'POST':
-        form = DateInputForm(request.POST)
-        if form.is_valid():
-            review_date = form.cleaned_data['handover_date']
-
-            doc = DocxTemplate("templates/docx/opponent_eval.docx")
-            opponent_eval = getattr(project, 'opponent_eval', None)
-
-            context = {
-                'student_name': f"{project.student.first_name} {project.student.last_name}",
-                'class_name': project.student.userprofile.class_name,
-                'school_year': project.scheme.year if project.scheme else "N/A",
-                'opponent_name': f"{project.opponent.first_name} {project.opponent.last_name}",
-                'project_title': project.title,
-                'area1_text': opponent_eval.area1_text,
-                'area1_points': opponent_eval.area1_points,
-                'area2_text': opponent_eval.area2_text,
-                'area2_points': opponent_eval.area2_points,
-                'total_points': opponent_eval.area1_points + opponent_eval.area2_points,
-                'max_points': (
-                    project.scheme.opponent_area1_max +
-                    project.scheme.opponent_area2_max
-                ) if project.scheme else "N/A",
-                'review_date': review_date.strftime('%d.%m.%Y')
-            }
-
-            doc.render(context)
-            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-            response['Content-Disposition'] = f'attachment; filename="posudek_oponenta_{pk}.docx"'
-            doc.save(response)
-            return response
-    else:
-        form = DateInputForm()
-
-    return render(request, 'projects/export_form.html', {'form': form, 'project': project})
 
 
 class ProjectListView(LoginRequiredMixin, ListView):
@@ -1462,3 +1487,227 @@ def export_control_check_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="prehled_kontrol.pdf"'
     return response
 
+
+"""
+@login_required
+def export_leader_eval(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+
+    if request.method == 'POST':
+        # form = DateInputForm(request.POST)
+        form = ExportForm(request.POST, export_type='export_leader_eval')
+        if form.is_valid():
+            review_date = form.cleaned_data['handover_date']
+            submission_status = form.cleaned_data.get('submission_status')
+
+            # Inicializace hodnot
+            submitted_on_time = ''
+            submitted_late = ''
+            not_submitted = ''
+
+            # Přidání "X" do správného pole dle submission_status
+            if submission_status == 'on_time':
+                submitted_on_time = 'X'
+            elif submission_status == 'late':
+                submitted_late = 'X'
+            elif submission_status == 'not_submitted':
+                not_submitted = 'X'
+
+            doc = DocxTemplate("templates/docx/leader_eval.docx")
+            leader_eval = getattr(project, 'leader_eval', None)
+
+            context = {
+                'student_name': f"{project.student.first_name} {project.student.last_name}",
+                'class_name': project.student.userprofile.class_name,
+                'school_year': project.scheme.year if project.scheme else "N/A",
+                'leader_name': f"{project.leader.first_name} {project.leader.last_name}",
+                'project_title': project.title,
+                'area1_text': leader_eval.area1_text,
+                'area1_points': leader_eval.area1_points,
+                'area2_text': leader_eval.area2_text,
+                'area2_points': leader_eval.area2_points,
+                'area3_text': leader_eval.area3_text,
+                'area3_points': leader_eval.area3_points,
+                'total_points': leader_eval.area1_points + leader_eval.area2_points + leader_eval.area3_points,
+                'max_points': (
+                    project.scheme.leader_area1_max +
+                    project.scheme.leader_area2_max +
+                    project.scheme.leader_area3_max
+                ) if project.scheme else "N/A",
+                'review_date': review_date.strftime('%d.%m.%Y'),
+                # Zaškrtnutí příslušného pole
+                'submitted_on_time': submitted_on_time,
+                'submitted_late': submitted_late,
+                'not_submitted': not_submitted,
+            }
+
+            doc.render(context)
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            response['Content-Disposition'] = f'attachment; filename="posudek_vedouciho_{pk}.docx"'
+            doc.save(response)
+            return response
+    else:
+        # form = DateInputForm()
+        form = ExportForm(export_type='export_leader_eval')
+
+
+    return render(request, 'projects/export_form.html', {'form': form, 'project': project})
+
+
+@login_required
+def export_opponent_eval(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+
+    if request.method == 'POST':
+        form = DateInputForm(request.POST)
+        if form.is_valid():
+            review_date = form.cleaned_data['handover_date']
+
+            doc = DocxTemplate("templates/docx/opponent_eval.docx")
+            opponent_eval = getattr(project, 'opponent_eval', None)
+
+            context = {
+                'student_name': f"{project.student.first_name} {project.student.last_name}",
+                'class_name': project.student.userprofile.class_name,
+                'school_year': project.scheme.year if project.scheme else "N/A",
+                'opponent_name': f"{project.opponent.first_name} {project.opponent.last_name}",
+                'project_title': project.title,
+                'area1_text': opponent_eval.area1_text,
+                'area1_points': opponent_eval.area1_points,
+                'area2_text': opponent_eval.area2_text,
+                'area2_points': opponent_eval.area2_points,
+                'total_points': opponent_eval.area1_points + opponent_eval.area2_points,
+                'max_points': (
+                    project.scheme.opponent_area1_max +
+                    project.scheme.opponent_area2_max
+                ) if project.scheme else "N/A",
+                'review_date': review_date.strftime('%d.%m.%Y')
+            }
+
+            doc.render(context)
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            response['Content-Disposition'] = f'attachment; filename="posudek_oponenta_{pk}.docx"'
+            doc.save(response)
+            return response
+    else:
+        form = DateInputForm()
+
+    return render(request, 'projects/export_form.html', {'form': form, 'project': project})
+"""
+
+@login_required
+def export_leader_eval(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    leader_eval = get_object_or_404(LeaderEvaluation, project=project)
+
+    if not leader_eval:
+        messages.error(request, "Posudek vedoucího neexistuje.")
+        return redirect('projects:detail', pk=pk)
+
+    submission_status = leader_eval.submission_status
+
+    # Inicializace hodnot
+    submitted_on_time = ''
+    submitted_late = ''
+    not_submitted = ''
+
+    # Přidání "X" do správného pole dle submission_status
+    if submission_status == 'on_time':
+        submitted_on_time = 'X'
+    elif submission_status == 'late':
+        submitted_late = 'X'
+    elif submission_status == 'not_submitted':
+        not_submitted = 'X'
+
+    doc = DocxTemplate("templates/docx/leader_eval.docx")
+    # leader_eval = getattr(project, 'leader_eval', None)
+
+    # Načtení dat z modelu
+    context = {
+        'student_name': f"{project.student.first_name} {project.student.last_name}",
+        'class_name': project.student.userprofile.class_name,
+        'school_year': project.scheme.year if project.scheme else "N/A",
+        'leader_name': f"{project.leader.first_name} {project.leader.last_name}",
+        'project_title': project.title,
+        'area1_text': leader_eval.area1_text,
+        'area1_points': leader_eval.area1_points,
+        'area2_text': leader_eval.area2_text,
+        'area2_points': leader_eval.area2_points,
+        'area3_text': leader_eval.area3_text,
+        'area3_points': leader_eval.area3_points,
+        'total_points': leader_eval.area1_points + leader_eval.area2_points + leader_eval.area3_points,
+        'max_points': (
+            project.scheme.leader_area1_max +
+            project.scheme.leader_area2_max +
+            project.scheme.leader_area3_max
+        ) if project.scheme else "N/A",
+        'review_date': leader_eval.export_date.strftime('%d.%m.%Y') if leader_eval.export_date else '',
+        # Zaškrtnutí příslušného pole
+        'submitted_on_time': submitted_on_time,
+        'submitted_late': submitted_late,
+        'not_submitted': not_submitted,
+    }
+
+    # Přidání podpisu
+    # user_prefs = getattr(request.user, 'userpreferences', None)
+    user_prefs = UserPreferences.objects.filter(user=request.user).first()
+
+    # Vložení podpisu, pokud existuje
+    if user_prefs and user_prefs.signature and os.path.exists(user_prefs.signature.path):
+        signature_img = InlineImage(doc, user_prefs.signature.path, width=Cm(2.5))  
+        context["signature"] = signature_img  # Odkazujeme se na ALT text v šabloně
+    else:
+        context["signature"] = ""  # Pokud není podpis, zůstane prázdný
+
+    doc.render(context)
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = f'attachment; filename="posudek_vedouciho_{pk}.docx"'
+    doc.save(response)
+    return response
+
+
+@login_required
+def export_opponent_eval(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    # opponent_eval = get_object_or_404(OpponentEvaluation, project=project)
+
+    doc = DocxTemplate("templates/docx/opponent_eval.docx")
+    opponent_eval = getattr(project, 'opponent_eval', None)
+
+    # Načtení dat z modelu
+    context = {
+        'student_name': f"{project.student.first_name} {project.student.last_name}",
+        'class_name': project.student.userprofile.class_name,
+        'school_year': project.scheme.year if project.scheme else "N/A",
+        'opponent_name': f"{project.opponent.first_name} {project.opponent.last_name}",
+        'project_title': project.title,
+        'area1_text': opponent_eval.area1_text,
+        'area1_points': opponent_eval.area1_points,
+        'area2_text': opponent_eval.area2_text,
+        'area2_points': opponent_eval.area2_points,
+        'total_points': opponent_eval.area1_points + opponent_eval.area2_points,
+        'max_points': (
+            project.scheme.opponent_area1_max +
+            project.scheme.opponent_area2_max
+        ) if project.scheme else "N/A",
+        'review_date': opponent_eval.export_date.strftime('%d.%m.%Y') if opponent_eval.export_date else '',
+    }
+
+    # Cesta k šabloně
+    # template_path = os.path.join('static', 'templates', 'opponent_eval_template.docx')
+    # doc = DocxTemplate(template_path)
+
+    user_prefs = UserPreferences.objects.filter(user=request.user).first()
+
+    # Vložení podpisu, pokud existuje
+    if user_prefs and user_prefs.signature and os.path.exists(user_prefs.signature.path):
+        signature_img = InlineImage(doc, user_prefs.signature.path, width=Cm(2.5))  
+        context["signature"] = signature_img  # Odkazujeme se na ALT text v šabloně
+    else:
+        context["signature"] = ""  # Pokud není podpis, zůstane prázdný
+
+    doc.render(context)
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = f'attachment; filename="posudek_oponenta_{pk}.docx"'
+    doc.save(response)
+    return response

@@ -4,6 +4,31 @@ from django.conf import settings
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.models import User
+from PIL import Image
+from django.core.exceptions import ValidationError
+import os
+
+def validate_image(image):
+    # Kontrola velikosti souboru
+    max_file_size = 1 * 1024 * 1024  # 1 MB
+    if image.size > max_file_size:
+        raise ValidationError("Obrázek je příliš velký (max. 1 MB).")
+
+    # Kontrola typu souboru
+    valid_extensions = ['.jpg', '.jpeg', '.png']
+    ext = os.path.splitext(image.name)[1].lower()
+    if ext not in valid_extensions:
+        raise ValidationError("Obrázek musí být ve formátu JPEG nebo PNG.")
+
+    # Kontrola rozměrů (používáme Pillow)
+    try:
+        img = Image.open(image)
+        max_width, max_height = 800, 400
+        if img.width > max_width or img.height > max_height:
+            raise ValidationError(f"Rozměry obrázku nesmí přesáhnout {max_width}x{max_height} px.")
+    except IOError:
+        raise ValidationError("Nepodařilo se otevřít soubor. Ujistěte se, že jde o platný obrázek.")
+
 
 class UserPreferences(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='preferences')
@@ -13,9 +38,17 @@ class UserPreferences(models.Model):
     consultation_text1 = models.TextField(blank=True, help_text="Předdefinovaný text konzultace #1", verbose_name="Konzultace #1")
     consultation_text2 = models.TextField(blank=True, help_text="Předdefinovaný text konzultace #2", verbose_name="Konzultace #2")
     consultation_text3 = models.TextField(blank=True, help_text="Předdefinovaný text konzultace #3", verbose_name="Konzultace #3")
+    signature = models.ImageField(
+            upload_to='signatures/',
+            null=True,
+            blank=True,
+            validators=[validate_image],
+            help_text="Nahrajte podpis (JPEG/PNG, max. 1 MB, max. 800x400 px).",
+            verbose_name="Podpis"
+        )
 
     def __str__(self):
-        return f"Preferences for {self.user.username}"
+        return f"Nastavení uživatele: {self.user.username}"
 
 
 class ScoringScheme(models.Model):
@@ -163,6 +196,12 @@ class ControlCheck(models.Model):
 
 
 class LeaderEvaluation(models.Model):
+
+    SUBMISSION_STATUS_CHOICES = [
+        ('on_time', 'Odevzdal v řádném termínu'),
+        ('late', 'Odevzdal v náhradním termínu'),
+        ('not_submitted', 'Neodevzdal v termínu')
+    ]
     project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='leader_eval', verbose_name="Projekt")
     
     # Napojení na scheme, můžeme si ho tahat i přes project.scheme, ale mít ho i tady je někdy praktičtější
@@ -177,6 +216,16 @@ class LeaderEvaluation(models.Model):
     
     area3_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 3)", verbose_name="Oblast 3")
     area3_points = models.PositiveIntegerField(default=0, verbose_name="Body")
+
+    export_date = models.DateField(blank=True, null=True, help_text="Datum exportu hodnocení", verbose_name="Datum exportu")
+    submission_status = models.CharField(
+        max_length=50,
+        choices=SUBMISSION_STATUS_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Stav odevzdání", 
+        help_text="Stav odevzdání hodnocení"
+    )
 
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -206,6 +255,8 @@ class OpponentEvaluation(models.Model):
     
     area2_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 2)", verbose_name="Oblast 2")
     area2_points = models.PositiveIntegerField(default=0, verbose_name="Body")
+
+    export_date = models.DateField(blank=True, null=True, help_text="Datum exportu hodnocení", verbose_name="Datum exportu")
 
     updated_at = models.DateTimeField(auto_now=True)
 

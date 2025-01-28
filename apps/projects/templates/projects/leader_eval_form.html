@@ -42,6 +42,17 @@
         {{ form.area3_points|as_crispy_field }}
       </div>
 
+      <hr>
+
+      <div class="row">
+        <div class="col-md-6">
+          {{ form.export_date|as_crispy_field }}
+        </div>
+        <div class="col-md-6">
+          {{ form.submission_status|as_crispy_field }}
+        </div>
+      </div>
+
       <button type="submit" class="btn btn-success">Uložit</button>
     </form>
 

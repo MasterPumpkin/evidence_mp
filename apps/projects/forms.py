@@ -104,20 +104,41 @@ class ControlCheckForm(forms.ModelForm):
         }
 
 class LeaderEvaluationForm(forms.ModelForm):
+    export_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        required=False,
+        label=LeaderEvaluation._meta.get_field('export_date').verbose_name,
+        help_text=LeaderEvaluation._meta.get_field('export_date').help_text
+    )
+    submission_status = forms.ChoiceField(
+        choices=LeaderEvaluation.SUBMISSION_STATUS_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False,
+        label=LeaderEvaluation._meta.get_field('submission_status').verbose_name,
+        help_text=LeaderEvaluation._meta.get_field('submission_status').help_text
+    )
     class Meta:
         model = LeaderEvaluation
         fields = [
             'area1_text', 'area1_points',
             'area2_text', 'area2_points',
-            'area3_text', 'area3_points'
+            'area3_text', 'area3_points',
+            'export_date', 'submission_status'
         ]
 
 class OpponentEvaluationForm(forms.ModelForm):
+    export_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        required=False,
+        label=LeaderEvaluation._meta.get_field('export_date').verbose_name,
+        help_text=LeaderEvaluation._meta.get_field('export_date').help_text
+    )
     class Meta:
         model = OpponentEvaluation
         fields = [
             'area1_text', 'area1_points',
-            'area2_text', 'area2_points'
+            'area2_text', 'area2_points',
+            'export_date'
         ]
 
 
@@ -192,7 +213,11 @@ class UserPreferencesForm(forms.ModelForm):
             'consultation_text1',
             'consultation_text2',
             'consultation_text3',
+            'signature',
         ]
+        widgets = {
+            'signature': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
 
 class DateInputForm(forms.Form):
     handover_date = forms.DateField(
