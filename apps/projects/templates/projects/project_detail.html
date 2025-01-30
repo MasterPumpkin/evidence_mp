@@ -165,7 +165,7 @@
   <div class="col-md-12 mb-4">
     <div class="card">
       <div class="card-header bg-success text-white">
-        <h3>Kontroly</h3>
+        <h3>Klasifikované kontroly</h3>
       </div>
       <div class="card-body">
         <table class="table table-hover">
@@ -317,17 +317,92 @@
       </div>
       <div class="card-body">
         {% if user.is_authenticated and project.opponent == user %}
-        <a href="{% url 'projects:resign_opponent' project.pk %}" class="btn btn-sm btn-danger">Vzdát se oponentury</a>
+        <!--<a href="{% url 'projects:resign_opponent' project.pk %}" class="btn btn-sm btn-danger">Vzdát se oponentury</a>-->
+        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmResignOpponentModal">
+          Vzdát se oponentury
+      </button>
         {% endif %}
         {% if user.is_authenticated and project.leader == user %}
-        <a href="{% url 'projects:generate_consultations' project.pk %}" class="btn btn-sm btn-danger">Přidat povinné kontroly</a>
+        <!--<a href="{% url 'projects:generate_consultations' project.pk %}" class="btn btn-sm btn-danger">Přidat povinné kontroly</a>-->
+        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmGenerateConsultationsModal">
+          Přidat záznamy o klasifikovaných kontrolách
+        </button>
         <a href="{% url 'projects:opponent_update' project.pk %}" class="btn btn-sm btn-danger">Vybrat oponenta</a>
-        <a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-danger">Vzdát se vedení</a>
+        <!--<a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-danger">Vzdát se vedení</a>-->
+        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmResignLeaderModal">
+          Vzdát se vedení
+        </button>
         {% endif %} 
       </div>
     </div>
   </div>
 </div>
 {% endif %}
+
+<!-- Modální okno -->
+
+<div class="modal fade" id="confirmResignLeaderModal" tabindex="-1" aria-labelledby="resignLeaderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="resignLeaderModalLabel">Potvrzení akce</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+          </div>
+          <div class="modal-body">
+              Opravdu si přejete vzdát se vedení tohoto projektu?
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+              
+              <!-- Odkaz na vzdání se vedení - volá view po potvrzení -->
+              <a href="{% url 'projects:resign' project.pk %}" class="btn btn-danger">
+                  Ano, vzdát se vedení
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade" id="confirmResignOpponentModal" tabindex="-1" aria-labelledby="resignOpponentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="resignOpponentModalLabel">Potvrzení akce</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+          </div>
+          <div class="modal-body">
+              Opravdu si přejete vzdát se oponentury tohoto projektu?
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+              
+              <!-- Odkaz na vzdání se oponentury -->
+              <a href="{% url 'projects:resign_opponent' project.pk %}" class="btn btn-danger">
+                  Ano, vzdát se oponentury
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade" id="confirmGenerateConsultationsModal" tabindex="-1" aria-labelledby="generateConsultationsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="generateConsultationsModalLabel">Potvrzení akce</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+          </div>
+          <div class="modal-body">
+              Opravdu chcete vygenerovat tři záznamy o klasifikovaných kontrolách pro tento projekt? 
+              <strong>Omylem vygenerované záznamy je nutno odstranit ručně.</strong>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+              <a href="{% url 'projects:generate_consultations' project.pk %}" class="btn btn-danger">Ano, vygenerovat</a>
+          </div>
+      </div>
+  </div>
+</div>
+
 
 {% endblock %}
