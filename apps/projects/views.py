@@ -1711,3 +1711,130 @@ def export_opponent_eval(request, pk):
     response['Content-Disposition'] = f'attachment; filename="posudek_oponenta_{pk}.docx"'
     doc.save(response)
     return response
+
+
+@login_required
+def export_final_report_pdf(request, pk):
+    """
+    Vygeneruje jedno stránkový PDF report obsahující:
+    - Studenta (jméno, třída)
+    - Název, zadání
+    - Vedoucí a oponent
+    - Posudky vedoucího i oponenta (body)
+    - Celkový počet bodů a max
+    - Tabulka bodů vs známky
+    """
+    project = get_object_or_404(Project, pk=pk)
+
+    # Student
+    student_name = ""
+    class_name = ""
+    if project.student:
+        student_name = f"{project.student.first_name} {project.student.last_name}"
+        # Pokud je třída v userprofile:
+        if hasattr(project.student, 'userprofile'):
+            class_name = project.student.userprofile.class_name or ""
+
+    # Vedoucí
+    leader_name = ""
+    if project.leader:
+        leader_name = f"{project.leader.first_name} {project.leader.last_name}"
+
+    # Oponent
+    opponent_name = ""
+    if project.opponent:
+        opponent_name = f"{project.opponent.first_name} {project.opponent.last_name}"
+
+    # Posudky - vedoucí
+    # Můžeš mít LeaderEvaluation s 3 oblastmi (text a body)
+    leader_eval = getattr(project, 'leader_eval', None)  # nebo LeaderEvaluation.objects.filter(project=project).first()
+    if leader_eval:
+        leader_area1_points = leader_eval.area1_points
+        leader_area2_points = leader_eval.area2_points
+        leader_area3_points = leader_eval.area3_points
+        leader_area1_text = leader_eval.area1_text
+        leader_area2_text = leader_eval.area2_text
+        leader_area3_text = leader_eval.area3_text
+    else:
+        leader_area1_points = 0
+        leader_area2_points = 0
+        leader_area3_points = 0
+        leader_area1_text = ""
+        leader_area2_text = ""
+        leader_area3_text = ""
+
+    # Oponent
+    opponent_eval = getattr(project, 'opponent_eval', None)  
+    if opponent_eval:
+        opponent_area1_points = opponent_eval.area1_points
+        opponent_area2_points = opponent_eval.area2_points
+        opponent_area1_text = opponent_eval.area1_text
+        opponent_area2_text = opponent_eval.area2_text
+    else:
+        opponent_area1_points = 0
+        opponent_area2_points = 0
+        opponent_area1_text = ""
+        opponent_area2_text = ""
+
+    # Sečíst total
+    total_points = (leader_area1_points + leader_area2_points + leader_area3_points
+                    + opponent_area1_points + opponent_area2_points)
+    # max_points = ... buď napevno, nebo z scoreboardu
+    max_leader_area1 = project.scheme.leader_area1_max
+    max_leader_area2 = project.scheme.leader_area2_max
+    max_leader_area3 = project.scheme.leader_area3_max
+    max_opponent_area1 = project.scheme.opponent_area1_max
+    max_opponent_area2 = project.scheme.opponent_area2_max
+    max_points = (max_leader_area1 + max_leader_area2 + max_leader_area3 
+                  + max_opponent_area1 + max_opponent_area2)
+
+    # assignment = project.assignment (zadání práce)
+    # Tabulka body vs známky -> staticky v šabloně, nebo definuj python list
+    grade_table = [
+        {"max":100, "min":85, "grade": "výborně"},
+        {"max":84, "min":70, "grade": "chvalitebně"},
+        {"max":69, "min":50, "grade": "dobře"},
+        {"max":49, "min":35, "grade": "dostatečně"},
+        {"max":34, "min":0, "grade": "nedostatečně"},
+        # atd
+    ]
+
+    context = {
+        "project": project,
+        "student_name": student_name,
+        "class_name": class_name,
+        "leader_name": leader_name,
+        "opponent_name": opponent_name,
+        "leader_area1_text": leader_area1_text,
+        "leader_area2_text": leader_area2_text,
+        "leader_area3_text": leader_area3_text,
+        "leader_area1_points": leader_area1_points,
+        "leader_area2_points": leader_area2_points,
+        "leader_area3_points": leader_area3_points,
+        "opponent_area1_text": opponent_area1_text,
+        "opponent_area2_text": opponent_area2_text,
+        "opponent_area1_points": opponent_area1_points,
+        "opponent_area2_points": opponent_area2_points,
+        "total_points": total_points,
+        "max_points": max_points,
+        "grade_table": grade_table,
+        "leader_max_1": max_leader_area1,
+        "leader_max_2": max_leader_area2,
+        "leader_max_3": max_leader_area3,
+        "opponent_max_1": max_opponent_area1,
+        "opponent_max_2": max_opponent_area2,
+        "defence_points": 100 - max_points,
+        # ...
+    }
+
+    # Vyrenderovat HTML šablonu do řetězce
+    html_string = render_to_string("pdf/final_report.html", context)
+
+    # Convert HTML to PDF (WeasyPrint)
+    pdf_file = HTML(string=html_string).write_pdf()
+
+    # Odpověď do prohlížeče
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    filename = f"zaverecny_posudek_{project.pk}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response

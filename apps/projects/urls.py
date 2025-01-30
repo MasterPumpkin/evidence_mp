@@ -22,7 +22,8 @@ from .views import (
     student_delete_milestone, resign_as_opponent,
     export_opponent_eval, export_leader_eval,
     export_consultation_list, export_project_assignment,
-    export_project_detail_pdf, export_control_check_pdf
+    export_project_detail_pdf, export_control_check_pdf,
+    export_final_report_pdf
 )
 
 app_name = 'projects'
@@ -80,4 +81,5 @@ urlpatterns = [
 
     path('projects/<int:pk>/export/pdf/', export_project_detail_pdf, name='export_project_pdf'),
     path('projects/export/control-check/', export_control_check_pdf, name='export_control_check_pdf'),
+    path('<int:pk>/pdf-report/', export_final_report_pdf, name='pdf_final_report'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
