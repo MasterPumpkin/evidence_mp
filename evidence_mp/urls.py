@@ -9,7 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('projects/', include('apps.projects.urls', namespace='projects')),
-    # path('profiles/', include('apps.profiles.urls', namespace='profiles')),
+    path('profiles/', include('apps.profiles.urls', namespace='profiles')),
     path('', RedirectView.as_view(url='/projects/', permanent=False)),
     path('accounts/password_change/', 
          auth_views.PasswordChangeView.as_view(template_name='registration/password_change_form.html'),

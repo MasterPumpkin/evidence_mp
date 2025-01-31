@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Upravit profil</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ u_form|crispy }}
+  {{ p_form|crispy }}
+
+  <button type="submit" class="btn btn-primary">
+    Uložit změny
+  </button>
+</form>
+{% endblock %}

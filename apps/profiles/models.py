@@ -8,14 +8,22 @@ class UserProfile(models.Model):
     class_name = models.CharField(max_length=50, blank=True, null=True, help_text="Např. '3.A'")
 
     STUDY_BRANCH_CHOICES = [
+        ('-', 'Učitel'),
         ('E', 'Elektrotechnika'),
         ('IT', 'Informační technologie'),
     ]
     study_branch = models.CharField(
         max_length=2,
         choices=STUDY_BRANCH_CHOICES,
-        default='E',  # pokud není zadáno, bude E
+        default='-',  # pokud není zadáno, bude - (učitel)
         help_text="Obor studia (E = Elektrotechnika, IT = Informační technologie)."
+    )
+
+    title = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Titul (např. Mgr., Ing., Ph.D. apod.)",
+        verbose_name="Titul"
     )
 
     def __str__(self):

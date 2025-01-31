@@ -53,8 +53,8 @@ def export_project_docx(request, pk):
     context = {
         'student_name': f"{project.student.first_name} {project.student.last_name}",
         'class_name': class_name,
-        'leader_name': project.leader.get_full_name() if project.leader else "",
-        'opponent_name': project.opponent.get_full_name() if project.opponent else "",
+        'leader_name': project.leader.userprofile.title + " " + project.leader.get_full_name() if project.leader else "",
+        'opponent_name': project.opponent.userprofile.title + " " + project.opponent.get_full_name() if project.opponent else "",
         'project_title': project.title,
         'project_description': project.description,
 
@@ -271,7 +271,7 @@ def export_leader_eval(request, pk):
         'student_name': f"{project.student.first_name} {project.student.last_name}",
         'class_name': project.student.userprofile.class_name,
         'school_year': project.scheme.year if project.scheme else "N/A",
-        'leader_name': f"{project.leader.first_name} {project.leader.last_name}",
+        'leader_name': f"{project.leader.userprofile.title} {project.leader.first_name} {project.leader.last_name}",
         'project_title': project.title,
         'area1_text': leader_eval.area1_text,
         'area1_points': leader_eval.area1_points,
@@ -323,7 +323,7 @@ def export_opponent_eval(request, pk):
         'student_name': f"{project.student.first_name} {project.student.last_name}",
         'class_name': project.student.userprofile.class_name,
         'school_year': project.scheme.year if project.scheme else "N/A",
-        'opponent_name': f"{project.opponent.first_name} {project.opponent.last_name}",
+        'opponent_name': f"{project.opponent.userprofile.title} {project.opponent.first_name} {project.opponent.last_name}",
         'project_title': project.title,
         'area1_text': opponent_eval.area1_text,
         'area1_points': opponent_eval.area1_points,

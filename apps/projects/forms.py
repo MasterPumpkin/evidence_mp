@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Milestone, Project, ControlCheck, LeaderEvaluation, OpponentEvaluation, UserPreferences
-from ckeditor.widgets import CKEditorWidget
 from django_ckeditor_5.widgets import CKEditor5Widget
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
