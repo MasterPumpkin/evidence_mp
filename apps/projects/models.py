@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from PIL import Image
 from django.core.exceptions import ValidationError
 import os
+from django_ckeditor_5.fields import CKEditor5Field
 
 def validate_image(image):
     # Kontrola velikosti souboru
@@ -135,7 +136,7 @@ class Project(models.Model):
 
     internal_notes = models.TextField(
         blank=True,
-        help_text="Poznámky viditelné pouze pro vedoucího (WYSIWYG)",
+        help_text="Poznámky viditelné pouze pro vedoucího práce",
         verbose_name="Interní poznámky"
     )
 

@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import Milestone, Project, ControlCheck, LeaderEvaluation, OpponentEvaluation, UserPreferences
 from ckeditor.widgets import CKEditorWidget
+from django_ckeditor_5.widgets import CKEditor5Widget
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
 from datetime import date
@@ -146,9 +147,14 @@ class ProjectNotesForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['internal_notes']
+        # widgets = {
+        #   'internal_notes': CKEditorWidget(config_name='default'),
+        # }
         widgets = {
-           'internal_notes': CKEditorWidget(config_name='default'),
-        }
+              "internal_notes": CKEditor5Widget(
+                  attrs={"class": "django_ckeditor_5"}, config_name="extends"
+              )
+          }
         labels = {
             'internal_notes': '',
         }
