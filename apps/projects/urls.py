@@ -1,30 +1,35 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import (
-    ProjectListView, ProjectDetailView, 
-    ProjectCreateView, approve_project, 
-    ProjectUpdateView, resign_as_leader, 
-    MilestoneCreateView, MilestoneUpdateView,
-    import_milestones_csv, delete_milestone,
-    ControlCheckCreateView, ControlCheckUpdateView,
-    LeaderEvalUpdateView, OpponentEvalUpdateView,
-    ProjectNotesUpdateView, delete_controlcheck,
-    take_opponent_role, ProjectOpponentUpdateView,
-    import_users_csv, UserProfileUpdateView,
-    export_project_docx, ProjectAssignmentUpdateView,
-    import_projects, import_result_view,
-    export_projects_xlsx, user_preferences_view,
-    generate_consultations,
-    TeacherProjectCreateView, StudentProjectCreateView,
-    StudentProjectUpdateView, TeacherProjectUpdateView,
-    StudentMilestoneCreateView, StudentMilestoneUpdateView,
-    student_delete_milestone, resign_as_opponent,
-    export_opponent_eval, export_leader_eval,
+from .views.evaluation_views import (
+    LeaderEvalUpdateView, OpponentEvalUpdateView)
+from .views.export_views import (
+    export_project_docx, export_projects_xlsx, 
     export_consultation_list, export_project_assignment,
     export_project_detail_pdf, export_control_check_pdf,
-    export_final_report_pdf
-)
+    export_leader_eval, export_opponent_eval,
+    export_final_report_pdf)
+from .views.import_views import (
+    import_milestones_csv, import_users_csv, 
+    import_projects, import_result_view)
+from .views.milestone_views import (
+    MilestoneCreateView, MilestoneUpdateView,
+    delete_milestone, StudentMilestoneCreateView,
+    StudentMilestoneUpdateView, student_delete_milestone)
+from .views.project_views import (
+    ProjectListView, TeacherProjectCreateView,
+    TeacherProjectUpdateView, StudentProjectCreateView,
+    StudentProjectUpdateView, approve_project,
+    resign_as_leader, resign_as_opponent,
+    ProjectDetailView, ProjectCreateView,
+    ProjectUpdateView, delete_controlcheck,
+    ControlCheckCreateView, ControlCheckUpdateView,
+    ProjectNotesUpdateView, ProjectAssignmentUpdateView,
+    take_opponent_role, ProjectOpponentUpdateView,
+    generate_consultations)
+from .views.user_views import (
+    UserProfileUpdateView, user_preferences_view)
+
 
 app_name = 'projects'
 
@@ -83,3 +88,32 @@ urlpatterns = [
     path('projects/export/control-check/', export_control_check_pdf, name='export_control_check_pdf'),
     path('<int:pk>/pdf-report/', export_final_report_pdf, name='pdf_final_report'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+"""
+from .views import (
+    ProjectListView, ProjectDetailView, 
+    ProjectCreateView, approve_project, 
+    ProjectUpdateView, resign_as_leader, 
+    MilestoneCreateView, MilestoneUpdateView,
+    import_milestones_csv, delete_milestone,
+    ControlCheckCreateView, ControlCheckUpdateView,
+    LeaderEvalUpdateView, OpponentEvalUpdateView,
+    ProjectNotesUpdateView, delete_controlcheck,
+    take_opponent_role, ProjectOpponentUpdateView,
+    import_users_csv, UserProfileUpdateView,
+    export_project_docx, ProjectAssignmentUpdateView,
+    import_projects, import_result_view,
+    export_projects_xlsx, user_preferences_view,
+    generate_consultations,
+    TeacherProjectCreateView, StudentProjectCreateView,
+    StudentProjectUpdateView, TeacherProjectUpdateView,
+    StudentMilestoneCreateView, StudentMilestoneUpdateView,
+    student_delete_milestone, resign_as_opponent,
+    export_opponent_eval, export_leader_eval,
+    export_consultation_list, export_project_assignment,
+    export_project_detail_pdf, export_control_check_pdf,
+    export_final_report_pdf
+)
+"""
