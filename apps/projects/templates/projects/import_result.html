@@ -1,14 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2>Výsledek importu</h2>
-  {% if log_entries %}
-    <ul>
-    {% for entry in log_entries %}
-      <li>{{ entry }}</li>
-    {% endfor %}
-    </ul>
-  {% else %}
-    <p>Import proběhl bez problémů.</p>
-  {% endif %}
-  <a href="{% url 'projects:list' %}" class="btn btn-secondary">Zpět na seznam</a>
+<h2>Import uživatelů byl dokončen</h2>
+<p>Počet nově vytvořených uživatelů: {{ newly_created_passwords|length }}</p>
+
+{% if newly_created_passwords %}
+  <p>
+    <a href="{% url 'projects:download_passwords_csv' %}" class="btn btn-primary">
+       Stáhnout CSV s novými hesly
+    </a>
+  </p>
+  <table class="table table-striped">
+    <thead>
+      <tr><th>Uživatelské jméno</th><th>Heslo</th></tr>
+    </thead>
+    <tbody>
+      {% for item in newly_created_passwords %}
+        <tr>
+          <td>{{ item.username }}</td>
+          <td>{{ item.password }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>Žádní noví uživatelé nevznikli.</p>
+{% endif %}
+<a href="{% url 'projects:list' %}" class="btn btn-secondary">Zpět na seznam</a>
 {% endblock %}

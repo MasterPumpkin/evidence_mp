@@ -11,7 +11,8 @@ from .views.export_views import (
     export_final_report_pdf)
 from .views.import_views import (
     import_milestones_csv, import_users_csv, 
-    import_projects, import_result_view)
+    import_projects, import_result_view,
+    import_result, download_passwords_csv)
 from .views.milestone_views import (
     MilestoneCreateView, MilestoneUpdateView,
     delete_milestone, StudentMilestoneCreateView,
@@ -59,10 +60,12 @@ urlpatterns = [
     path('<int:pk>/take-opponent/', take_opponent_role, name='take_opponent'),
     path('<int:pk>/opponent-update/', ProjectOpponentUpdateView.as_view(), name='opponent_update'),
     path('import-users/', import_users_csv, name='import_users'),
+    path('import-result/', import_result, name='import_result'),
+    path('download-passwords-csv/', download_passwords_csv, name='download_passwords_csv'),
     # path('user-profile/<int:pk>/edit/', UserProfileUpdateView.as_view(), name='user_profile_edit'),
     path('<int:pk>/export-docx/', export_project_docx, name='export_docx'),
     path('import-projects/', import_projects, name='import_projects'),
-    path('import-projects/result/', import_result_view, name='import_result'),
+    path('import-projects/result/', import_result_view, name='import_projects_result'),
     path('export-projects/', export_projects_xlsx, name='export_projects'),
     path('preferences/', user_preferences_view, name='user_preferences'),
     path('<int:pk>/generate-consultations/', generate_consultations, name='generate_consultations'),
