@@ -166,15 +166,37 @@ class TeacherProjectUpdateView(UpdateView):
             return redirect('projects:list')
         return super().dispatch(request, *args, **kwargs)
     
+    def get_initial(self):
+        initial = super().get_initial()
+        project = self.get_object()
+
+        # Pokud existuje uložené datum, předvyplníme ho
+        if project.delivery_work_date:
+            initial['delivery_work_date'] = project.delivery_work_date.strftime('%Y-%m-%d')
+        
+        if project.delivery_documentation_date:
+            initial['delivery_documentation_date'] = project.delivery_documentation_date.strftime('%Y-%m-%d')
+
+        return initial
+    
+        
     def form_valid(self, form):
         project = self.get_object()
 
         # Povolit změnu studenta pouze pokud ještě není přiřazen
         if project.student is None or form.cleaned_data.get('student') == project.student:
+            # Aktualizujeme data předání z formuláře
+            project.delivery_work_date = form.cleaned_data.get('delivery_work_date')
+            project.delivery_documentation_date = form.cleaned_data.get('delivery_documentation_date')
+
+            # Uložíme aktualizovaný projekt
+            project.save()
+
             return super().form_valid(form)
         else:
             messages.error(self.request, "Studenta nelze změnit.")
             return redirect('projects:detail', args=[self.object.pk])
+
 
     def get_success_url(self):
         return reverse('projects:detail', args=[self.object.pk])

@@ -140,6 +140,9 @@ class Project(models.Model):
         verbose_name="Interní poznámky"
     )
 
+    delivery_work_date = models.DateField(blank=True, null=True, help_text="Datum předání výrobku", verbose_name="Datum předání výrobku")
+    delivery_documentation_date = models.DateField(blank=True, null=True, help_text="Datum předání dokumentace", verbose_name="Datum předání dokumentace")
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

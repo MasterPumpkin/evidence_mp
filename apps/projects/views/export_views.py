@@ -382,12 +382,12 @@ def export_final_report_pdf(request, pk):
     # Vedoucí
     leader_name = ""
     if project.leader:
-        leader_name = f"{project.leader.first_name} {project.leader.last_name}"
+        leader_name = f"{project.leader.userprofile.title} {project.leader.first_name} {project.leader.last_name}"
 
     # Oponent
     opponent_name = ""
     if project.opponent:
-        opponent_name = f"{project.opponent.first_name} {project.opponent.last_name}"
+        opponent_name = f"{project.opponent.userprofile.title} {project.opponent.first_name} {project.opponent.last_name}"
 
     # Posudky - vedoucí
     # Můžeš mít LeaderEvaluation s 3 oblastmi (text a body)
@@ -449,6 +449,8 @@ def export_final_report_pdf(request, pk):
         "class_name": class_name,
         "leader_name": leader_name,
         "opponent_name": opponent_name,
+        "delivery_date": project.delivery_work_date.strftime('%d.%m.%Y') if project.delivery_work_date else "",
+        "documentation_date": project.delivery_documentation_date.strftime('%d.%m.%Y') if project.delivery_documentation_date else "",
         "leader_area1_text": leader_area1_text,
         "leader_area2_text": leader_area2_text,
         "leader_area3_text": leader_area3_text,

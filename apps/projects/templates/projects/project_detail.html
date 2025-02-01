@@ -269,7 +269,7 @@
         <a href="{% url 'projects:student_project_update' project.pk %}" class="btn btn-sm btn-primary">Upravit projekt</a>
         {% endif %}
         {% if user.is_authenticated and project.leader == user %}
-        <a href="{% url 'projects:teacher_project_update' project.pk %}" class="btn btn-sm btn-primary">Upravit zadání</a>
+        <a href="{% url 'projects:teacher_project_update' project.pk %}" class="btn btn-sm btn-primary">Upravit detaily projektu</a>
         <!--<a href="{% url 'projects:assignment_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit zadání</a>-->
         <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit interní poznámky k projektu</a>
         <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek vedoucího</a>

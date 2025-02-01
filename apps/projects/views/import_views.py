@@ -302,7 +302,7 @@ def import_projects(request):
         messages.success(request, f"Import hotov. Vytvořeno {count_created} projektů.")
         # Můžeme log_entries uložit do session, abychom je zobrazili ve výsledné stránce nebo stáhli jako CSV
         request.session['import_logs'] = log_entries
-        return redirect('projects:import_result')
+        return redirect('projects:import_projects_result')
 
     return render(request, 'projects/import_projects.html')
 

@@ -59,15 +59,29 @@ class TeacherProjectForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
+    delivery_work_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        required=False,
+        label=Project._meta.get_field('delivery_work_date').verbose_name,
+        help_text=Project._meta.get_field('delivery_work_date').help_text
+    )
+
+    delivery_documentation_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        required=False,
+        label=Project._meta.get_field('delivery_documentation_date').verbose_name,
+        help_text=Project._meta.get_field('delivery_documentation_date').help_text
+    )
+
     class Meta:
         model = Project
-        fields = ['title', 'student', 'description', 'assignment']
+        fields = ['title', 'student', 'description', 'assignment', 'delivery_work_date', 'delivery_documentation_date']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Pouze studenti ve skupině 'Student'
-        self.fields['student'].queryset = User.objects.filter(groups__name='Student')
+        self.fields['student'].queryset = User.objects.filter(groups__name='Student').order_by('username')
 
         # Pokud je student již přiřazen, zobrazíme ho ve formuláři
         if self.instance and self.instance.student:
