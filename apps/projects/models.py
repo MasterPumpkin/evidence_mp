@@ -212,13 +212,13 @@ class LeaderEvaluation(models.Model):
     # scheme = models.ForeignKey(ScoringScheme, on_delete=models.SET_NULL, null=True, blank=True)
 
     # Oblasti hodnocení:
-    area1_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 1)", verbose_name="Oblast 1")
+    area1_text = models.TextField(blank=True, help_text="Úplnost, funkčnost, zpracování, obtížnost, invence", verbose_name="Kvalita výrobku (počet bodů 0 - 14)")
     area1_points = models.PositiveIntegerField(default=0, verbose_name="Body")
     
-    area2_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 2)", verbose_name="Oblast 2")
+    area2_text = models.TextField(blank=True, help_text="Odborný obsah, formální stránka", verbose_name="Dokumentace (počet bodů 0 - 8)")
     area2_points = models.PositiveIntegerField(default=0, verbose_name="Body")
     
-    area3_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 3)", verbose_name="Oblast 3")
+    area3_text = models.TextField(blank=True, help_text="Dodržování termínů konzultací, průběžné plnění zadaných úkolů, samostatnost, orientace v problematice", verbose_name="Průběžné kontroly plnění zadaných úkolů (počet bodů 0 - 18)")
     area3_points = models.PositiveIntegerField(default=0, verbose_name="Body")
 
     export_date = models.DateField(blank=True, null=True, help_text="Datum exportu hodnocení", verbose_name="Datum exportu")
@@ -240,24 +240,24 @@ class LeaderEvaluation(models.Model):
         """
         Můžeme validovat, že areaX_points <= project.scheme.leader_areaX_max
         """
-        from django.core.exceptions import ValidationError
+        # from django.core.exceptions import ValidationError
         scheme = self.project.scheme
         if scheme:
             if self.area1_points > scheme.leader_area1_max:
-                raise ValidationError("Area1 points exceed maximum allowed!")
+                raise ValidationError("Přesáhli jste povolené maximum bodů za oblast 1!")
             if self.area2_points > scheme.leader_area2_max:
-                raise ValidationError("Area2 points exceed maximum allowed!")
+                raise ValidationError("Přesáhli jste povolené maximum bodů za oblast 2!")
             if self.area3_points > scheme.leader_area3_max:
-                raise ValidationError("Area3 points exceed maximum allowed!")
+                raise ValidationError("Přesáhli jste povolené maximum bodů za oblast 3!")
 
 
 class OpponentEvaluation(models.Model):
     project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='opponent_eval', verbose_name="Projekt")
     
-    area1_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 1)", verbose_name="Oblast 1")
+    area1_text = models.TextField(blank=True, help_text="Úplnost, funkčnost, zpracování, obtížnost, invence", verbose_name="Oblast výrobku (počet bodů 0 - 12)")
     area1_points = models.PositiveIntegerField(default=0, verbose_name="Body")
     
-    area2_text = models.TextField(blank=True, help_text="Popis hodnocení (oblast 2)", verbose_name="Oblast 2")
+    area2_text = models.TextField(blank=True, help_text="Odborný obsah, přehledná a srozumitelná prezentace výsledků", verbose_name="Dokumentace (počet bodů 0 - 12)")
     area2_points = models.PositiveIntegerField(default=0, verbose_name="Body")
 
     export_date = models.DateField(blank=True, null=True, help_text="Datum exportu hodnocení", verbose_name="Datum exportu")
@@ -268,11 +268,11 @@ class OpponentEvaluation(models.Model):
         return f"Hodnocení oponenta pro projekt: {self.project.title}"
 
     def clean(self):
-        from django.core.exceptions import ValidationError
+        # from django.core.exceptions import ValidationError
         scheme = self.project.scheme
         if scheme:
             if self.area1_points > scheme.opponent_area1_max:
-                raise ValidationError("Area1 points exceed maximum allowed (opponent)!")
+                raise ValidationError("Přesáhli jste povolené maximum bodů za oblast 1!")
             if self.area2_points > scheme.opponent_area2_max:
-                raise ValidationError("Area2 points exceed maximum allowed (opponent)!")
+                raise ValidationError("Přesáhli jste povolené maximum bodů za oblast 2!")
 
