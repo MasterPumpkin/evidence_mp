@@ -74,8 +74,8 @@
               <span class="text-danger">Není přiřazen žádný student</span>
             {% endif %}
           </p>
-          <p><strong>Vedoucí:</strong> {{ project.leader.userprofile.title }} {{ project.leader }}</p>
-          <p><strong>Oponent:</strong> {{ project.opponent.userprofile.title }} {{ project.opponent }}</p>
+          <p><strong>Vedoucí:</strong> {{ project.leader.userprofile.title }} {{ project.leader.first_name }} {{ project.leader.last_name }}</p>
+          <p><strong>Oponent:</strong> {{ project.opponent.userprofile.title }} {{ project.opponent.first_name }} {{ project.opponent.last_name }}</p>
           <p><strong>Stav:</strong> {{ project.get_status_display }}</p>
         </div>
         

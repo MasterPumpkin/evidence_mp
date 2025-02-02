@@ -106,12 +106,12 @@
       <tr>
         <td>{{ proj.title }}</td>
         <td>
-          {{ proj.student.username }}
+          {{ proj.student.last_name }} {{ proj.student.first_name }}
           ({{ proj.student.userprofile.class_name|default:"-" }})
         </td>
         <td>{{ proj.get_status_display }}</td>
-        <td>{{ proj.leader }}</td>
-        <td>{{ proj.opponent }}</td>
+        <td>{{ proj.leader.last_name }}</td>
+        <td>{{ proj.opponent.last_name }}</td>
         <td>
           <a href="{% url 'projects:detail' proj.pk %}" class="btn btn-sm btn-success">Detail</a>
         </td>

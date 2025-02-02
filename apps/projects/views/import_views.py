@@ -7,7 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from apps.profiles.models import UserProfile
-from ..models import Project, Milestone
+from ..models import Project, Milestone, ScoringScheme
 import csv
 from datetime import datetime
 from django.contrib.auth.models import User
@@ -294,8 +294,11 @@ def import_projects(request):
                 student=student,
                 title=title,
                 description=description,
+                assignment=description,
                 leader=leader,
-                opponent=opponent
+                opponent=opponent,
+                status='approved',
+                scheme=ScoringScheme.objects.get(active=True)
             )
             count_created += 1
 
@@ -313,7 +316,7 @@ def import_result_view(request):
     Zobrazí log_entries ze session, příp. nabídne stažení jako CSV.
     """
     log_entries = request.session.pop('import_logs', [])
-    return render(request, 'projects/import_result.html', {'log_entries': log_entries})
+    return render(request, 'projects/import_projects_result.html', {'log_entries': log_entries})
 
 
 @user_passes_test(admin_check)
