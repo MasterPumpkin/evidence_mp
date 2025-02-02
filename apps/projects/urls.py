@@ -27,7 +27,7 @@ from .views.project_views import (
     ControlCheckCreateView, ControlCheckUpdateView,
     ProjectNotesUpdateView, ProjectAssignmentUpdateView,
     take_opponent_role, ProjectOpponentUpdateView,
-    generate_consultations)
+    generate_consultations, update_milestone_status)
 from .views.user_views import (
     UserProfileUpdateView, user_preferences_view)
 
@@ -90,6 +90,8 @@ urlpatterns = [
     path('projects/<int:pk>/export/pdf/', export_project_detail_pdf, name='export_project_pdf'),
     path('projects/export/control-check/', export_control_check_pdf, name='export_control_check_pdf'),
     path('<int:pk>/pdf-report/', export_final_report_pdf, name='pdf_final_report'),
+
+    path('update-milestone-status/<int:milestone_id>/', update_milestone_status, name='update_milestone_status'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

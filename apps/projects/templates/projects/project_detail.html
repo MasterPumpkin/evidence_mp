@@ -123,7 +123,14 @@
                 {% endif %}
               </td>
               <td>{{ ms.deadline|date:"j.n.Y" }}</td>
-              <td>{{ ms.get_status_display }}</td>
+              <!--<td>{{ ms.get_status_display }}</td>-->
+              <td>
+                <select class="form-select status-select" data-milestone-id="{{ ms.id }}">
+                  {% for status_value, status_label in milestone_status_choices %}
+                    <option value="{{ status_value }}" {% if ms.status == status_value %}selected{% endif %}>{{ status_label }}</option>
+                  {% endfor %}
+                </select>
+              </td>
               <td>
                 {% if ms.note|length > 15 %}
                   {{ ms.note|slice:":15" }} ...
@@ -403,6 +410,78 @@
       </div>
   </div>
 </div>
+
+
+<!-- JavaScript pro změnu stavu milníku -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const statusSelects = document.querySelectorAll('.status-select');
+
+  statusSelects.forEach(select => {
+    select.addEventListener('change', function() {
+      const milestoneId = this.getAttribute('data-milestone-id');
+      const newStatus = this.value;
+      // console.log(`Milestone ID: ${milestoneId}`);  // Debug výpis
+      // console.log(`New Status: ${newStatus}`);  // Debug výpis
+
+      fetch(`/projects/update-milestone-status/${milestoneId}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+          status: newStatus
+        })
+      })
+      .then(response => {
+        console.log("Response received:", response);  // Debug výpis
+        return response.json();
+      })
+      .then(data => {
+        console.log("Data received:", data);  // Debug výpis
+        if (data.success) {
+          // alert('Stav byl úspěšně aktualizován.');
+          const row = select.closest('tr');
+
+          // Získání aktuálního data a času
+          const currentDate = new Date();
+
+          // Získání deadline milníku
+          const deadlineCell = row.querySelector('td:nth-child(2)'); // Předpokládáme, že deadline je ve druhém sloupci
+          const deadlineText = deadlineCell.textContent.trim();
+          const deadlineParts = deadlineText.split('.');
+          const deadlineDate = new Date(deadlineParts[2], deadlineParts[1] - 1, deadlineParts[0]);
+
+          // Kontrola na overdue
+          const isOverdue = currentDate > deadlineDate;
+
+          // Aktualizace tříd řádku na základě stavu a overdue
+          if (newStatus === 'done') {
+            row.classList.add('table-success');
+            row.classList.remove('table-warning', 'table-danger');
+          } else if (isOverdue) {
+            row.classList.add('table-danger');
+            row.classList.remove('table-success', 'table-warning');
+          } else if (newStatus === 'in_progress') {
+            row.classList.add('table-warning');
+            row.classList.remove('table-success', 'table-danger');
+          } else {
+            row.classList.remove('table-success', 'table-warning', 'table-danger');
+          }
+        } else {
+          alert('Došlo k chybě při aktualizaci stavu.');
+        }
+      })
+      .catch(error => {
+        console.error('Chyba:', error);
+      });
+    });
+  });
+});
+
+
+  </script>
 
 
 {% endblock %}

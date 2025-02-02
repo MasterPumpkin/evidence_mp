@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from apps.profiles.models import UserProfile
-from ..models import Project, ControlCheck, ScoringScheme
+from ..models import Milestone, Project, ControlCheck, ScoringScheme
 from django.utils import timezone
 from django.utils.timezone import now
 from django.db.models import Q
@@ -19,7 +19,42 @@ from ..forms import (
 import csv
 from django.http import HttpResponseForbidden
 from django.urls import reverse
-from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.utils.decorators import method_decorator
+import json
+
+@login_required
+@require_POST
+def update_milestone_status(request, milestone_id):
+    try:
+        data = json.loads(request.body)
+        new_status = data.get('status')
+        # print(f"Milestone ID: {milestone_id}")  # Debug výpis
+        # print(f"New status: {new_status}")  # Debug výpis
+
+        if new_status not in dict(Milestone.STATUS_CHOICES).keys():
+            # print("Invalid status")  # Debug výpis
+            return JsonResponse({'success': False, 'error': 'Invalid status'})
+
+        milestone = Milestone.objects.get(id=milestone_id)
+        milestone.status = new_status
+        milestone.save()
+        # print("Status updated successfully")  # Debug výpis
+        return JsonResponse({'success': True})
+
+    except Milestone.DoesNotExist:
+        # print("Milestone not found")  # Debug výpis
+        return JsonResponse({'success': False, 'error': 'Milestone not found'})
+
+    except json.JSONDecodeError:
+        # print("Invalid JSON")  # Debug výpis
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'})
+
+    except Exception as e:
+        # print(f"Error: {e}")  # Debug výpis
+        return JsonResponse({'success': False, 'error': str(e)})
 
 
 
@@ -341,13 +376,17 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
             (user.groups.filter(name='Teacher').exists() and project.leader == user and project.status == 'approved')
         )
 
+        # Přidání možných stavů milníků do kontextu
+        context['milestone_status_choices'] = Milestone.STATUS_CHOICES
+
         # Připravíme milníky s atributem `short_note`
         milestones_with_short_notes = []
         for milestone in project.milestones.all():
             milestones_with_short_notes.append({
                 'title': milestone.title,
                 'deadline': milestone.deadline,
-                'status': milestone.get_status_display(),
+                # 'status': milestone.get_status_display(),
+                'status': milestone.status,
                 'short_note': milestone.note[:20] + '...' if len(milestone.note) > 20 else milestone.note,
             })
 
