@@ -224,7 +224,9 @@ def export_project_detail_pdf(request, pk):
 
 @login_required
 def export_control_check_pdf(request):
-    projects = Project.objects.all()
+    # projects = Project.objects.all()
+    # Filtrace: vybereme pouze projekty, kde je leader == přihlášený uživatel
+    projects = Project.objects.filter(leader=request.user)
 
     context = {
         'projects': projects,
@@ -305,7 +307,8 @@ def export_leader_eval(request, pk):
 
     doc.render(context)
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = f'attachment; filename="posudek_vedouciho_{pk}.docx"'
+    # response['Content-Disposition'] = f'attachment; filename="posudek_vedouciho_{pk}.docx"'
+    response['Content-Disposition'] = f'attachment; filename="posudek_vedouciho_{project.student.username}.docx"'
     doc.save(response)
     return response
 
@@ -352,7 +355,8 @@ def export_opponent_eval(request, pk):
 
     doc.render(context)
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = f'attachment; filename="posudek_oponenta_{pk}.docx"'
+    # response['Content-Disposition'] = f'attachment; filename="posudek_oponenta_{pk}.docx"'
+    response['Content-Disposition'] = f'attachment; filename="posudek_oponenta_{project.student.username}.docx"'
     doc.save(response)
     return response
 
@@ -481,6 +485,7 @@ def export_final_report_pdf(request, pk):
 
     # Odpověď do prohlížeče
     response = HttpResponse(pdf_file, content_type='application/pdf')
-    filename = f"zaverecny_posudek_{project.pk}.pdf"
+    # filename = f"zaverecny_posudek_{project.pk}.pdf"
+    filename = f"zaverecny_posudek_{project.student.username}.pdf"
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response

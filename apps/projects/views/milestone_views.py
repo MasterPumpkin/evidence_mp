@@ -45,7 +45,9 @@ class MilestoneCreateView(CreateView):
         user = self.request.user
         context['is_teacher'] = user.groups.filter(name='Teacher').exists()
         context['is_student'] = user.groups.filter(name='Student').exists()
-
+        project_id = self.kwargs['project_id']
+        project = get_object_or_404(Project, id=project_id)
+        context['project'] = project
         return context 
 
 class MilestoneUpdateView(UpdateView):
@@ -72,6 +74,9 @@ class MilestoneUpdateView(UpdateView):
         user = self.request.user
         context['is_teacher'] = user.groups.filter(name='Teacher').exists()
         context['is_student'] = user.groups.filter(name='Student').exists()
+        milestone = self.get_object()
+        project = get_object_or_404(Project, id=milestone.project.id)
+        context['project'] = project
 
         return context 
 

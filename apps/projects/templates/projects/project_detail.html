@@ -124,6 +124,7 @@
               </td>
               <td>{{ ms.deadline|date:"j.n.Y" }}</td>
               <!--<td>{{ ms.get_status_display }}</td>-->
+              {% if user.is_authenticated and project.leader == user %}
               <td>
                 <select class="form-select status-select" data-milestone-id="{{ ms.id }}">
                   {% for status_value, status_label in milestone_status_choices %}
@@ -131,6 +132,9 @@
                   {% endfor %}
                 </select>
               </td>
+              {% else %}
+              <td>{{ ms.get_status_display }}</td>
+              {% endif %}
               <td>
                 {% if ms.note|length > 15 %}
                   {{ ms.note|slice:":15" }} ...

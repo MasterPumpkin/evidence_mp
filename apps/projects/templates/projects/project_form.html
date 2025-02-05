@@ -19,7 +19,10 @@
         <p>Zbývá znaků (Zadání): <span id="assignment_counter">2000</span></p>
       </div>
       {% endif %}
-      <button type="submit" class="btn btn-success">Uložit</button>
+      <button type="submit" class="btn btn-success mt-3">Uložit</button>
+      {% if project %}
+      <a href="{% url 'projects:detail' project.pk %}" class="btn btn-secondary mt-3">Zpět</a>
+      {% endif %}
     </form>
 
     <script>

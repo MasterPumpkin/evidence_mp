@@ -9,8 +9,7 @@
   {{ u_form|crispy }}
   {{ p_form|crispy }}
 
-  <button type="submit" class="btn btn-primary">
-    Uložit změny
-  </button>
+  <button type="submit" class="btn btn-primary mt-3">Uložit změny</button>
+  <a href="{% url 'projects:list' %}" class="btn btn-secondary mt-3">Zpět</a>
 </form>
 {% endblock %}

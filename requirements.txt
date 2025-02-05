@@ -6,8 +6,10 @@ crispy-bootstrap5==2024.10
 cssselect2==0.7.0
 Django==5.1.4
 django-ckeditor==6.7.2
+django-ckeditor-5==0.2.15
 django-crispy-forms==2.3
 django-environ==0.11.2
+django-jazzmin==3.0.1
 django-js-asset==3.0.1
 docxcompose==1.4.0
 docxtpl==0.19.1

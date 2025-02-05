@@ -504,6 +504,8 @@ class ControlCheckCreateView(LoginRequiredMixin, CreateView):
         context['is_teacher'] = user.groups.filter(name='Teacher').exists()
         context['is_student'] = user.groups.filter(name='Student').exists()
 
+        context['project'] = self.project        
+
         return context 
 
 
@@ -532,6 +534,8 @@ class ControlCheckUpdateView(LoginRequiredMixin, UpdateView):
         user = self.request.user
         context['is_teacher'] = user.groups.filter(name='Teacher').exists()
         context['is_student'] = user.groups.filter(name='Student').exists()
+        check = self.get_object()
+        context['project'] = check.project
 
         return context 
 
@@ -558,6 +562,7 @@ class ProjectNotesUpdateView(LoginRequiredMixin, UpdateView):
         user = self.request.user
         context['is_teacher'] = user.groups.filter(name='Teacher').exists()
         context['is_student'] = user.groups.filter(name='Student').exists()
+        context['project'] = self.get_object()
 
         return context 
     
@@ -585,6 +590,7 @@ class ProjectAssignmentUpdateView(LoginRequiredMixin, UpdateView):
         user = self.request.user
         context['is_teacher'] = user.groups.filter(name='Teacher').exists()
         context['is_student'] = user.groups.filter(name='Student').exists()
+        context['project'] = self.project
 
         return context 
   
@@ -630,6 +636,7 @@ class ProjectOpponentUpdateView(LoginRequiredMixin, UpdateView):
         user = self.request.user
         context['is_teacher'] = user.groups.filter(name='Teacher').exists()
         context['is_student'] = user.groups.filter(name='Student').exists()
+        context['project'] = self.get_object()
 
         return context 
 
