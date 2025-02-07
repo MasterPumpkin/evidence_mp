@@ -687,3 +687,125 @@ def generate_consultations(request, pk):
             )
     messages.success(request, "Konzultace vygenerovány.")
     return redirect('projects:detail', pk=pk)
+
+
+@method_decorator(login_required, name='dispatch')
+class LeaderReviewView(DetailView):
+    model = Project
+    template_name = "projects/review_leader.html"
+    context_object_name = "project"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.get_object()
+
+        leader_eval = getattr(project, 'leader_eval', None)  # nebo LeaderEvaluation.objects.filter(project=project).first()
+        if leader_eval:
+            leader_area1_points = leader_eval.area1_points
+            leader_area2_points = leader_eval.area2_points
+            leader_area3_points = leader_eval.area3_points
+            leader_area1_text = leader_eval.area1_text
+            leader_area2_text = leader_eval.area2_text
+            leader_area3_text = leader_eval.area3_text
+        else:
+            leader_area1_points = 0
+            leader_area2_points = 0
+            leader_area3_points = 0
+            leader_area1_text = ""
+            leader_area2_text = ""
+            leader_area3_text = ""
+
+        max_leader_area1 = project.scheme.leader_area1_max
+        max_leader_area2 = project.scheme.leader_area2_max
+        max_leader_area3 = project.scheme.leader_area3_max
+
+        total_points = (leader_area1_points + leader_area2_points + leader_area3_points)
+        
+        max_points = (max_leader_area1 + max_leader_area2 + max_leader_area3)
+
+        context = {
+        "eval": leader_eval,  
+        "project": project,
+        "leader_area1_text": leader_area1_text,
+        "leader_area2_text": leader_area2_text,
+        "leader_area3_text": leader_area3_text,
+        "leader_area1_points": leader_area1_points,
+        "leader_area2_points": leader_area2_points,
+        "leader_area3_points": leader_area3_points,
+        "total_points": total_points,
+        "max_points": max_points,
+        "leader_max_1": max_leader_area1,
+        "leader_max_2": max_leader_area2,
+        "leader_max_3": max_leader_area3,
+        # ...
+    } 
+
+        # Oponentovo hodnocení
+        # context['opponent_review'] = project.opponent_review
+        # context['opponent_points'] = project.opponent_points
+
+        # Maximum z ScoringScheme
+        # context['max_points'] = project.scheme.total_points if project.scheme else 0
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class OpponentReviewView(DetailView):
+    model = Project
+    template_name = "projects/review_opponent.html"
+    context_object_name = "project"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.get_object()
+
+        opponent_eval = getattr(project, 'opponent_eval', None)  
+        if opponent_eval:
+            opponent_area1_points = opponent_eval.area1_points
+            opponent_area2_points = opponent_eval.area2_points
+            opponent_area1_text = opponent_eval.area1_text
+            opponent_area2_text = opponent_eval.area2_text
+        else:
+            opponent_area1_points = 0
+            opponent_area2_points = 0
+            opponent_area1_text = ""
+            opponent_area2_text = ""
+
+        max_opponent_area1 = project.scheme.opponent_area1_max
+        max_opponent_area2 = project.scheme.opponent_area2_max
+
+        total_points = (opponent_area1_points + opponent_area2_points)
+        
+        max_points = (max_opponent_area1 + max_opponent_area2)
+
+        context = {
+        "eval": opponent_eval,
+        "project": project,
+        "opponent_area1_text": opponent_area1_text,
+        "opponent_area2_text": opponent_area2_text,
+        "opponent_area1_points": opponent_area1_points,
+        "opponent_area2_points": opponent_area2_points,
+        "total_points": total_points,
+        "max_points": max_points,
+        "opponent_max_1": max_opponent_area1,
+        "opponent_max_2": max_opponent_area2,
+        # ...
+    } 
+
+        # Vedoucího hodnocení
+        # context['leader_review'] = project.leader_review
+        # context['leader_points'] = project.leader_points
+
+        # Maximum z ScoringScheme
+        # context['max_points'] = project.scheme.total_points if project.scheme else 0
+
+        user = self.request.user
+        context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+        context['is_student'] = user.groups.filter(name='Student').exists()
+
+        return context

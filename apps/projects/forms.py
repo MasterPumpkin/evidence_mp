@@ -55,7 +55,7 @@ class TeacherProjectForm(forms.ModelForm):
     student = forms.ModelChoiceField(
         queryset=User.objects.filter(groups__name='Student'),
         required=False,
-        label="Student",
+        label="Žák",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 

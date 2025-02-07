@@ -9,7 +9,7 @@
     <form method="post">
       {% csrf_token %}
       {% if form.instance.student %}
-        <p class="text-info">Student již přiřazen: {{ form.instance.student }}</p>
+        <p class="text-info">Žák již přiřazen: {{ form.instance.student }}</p>
       {% endif %}
       {{ form|crispy }}
 

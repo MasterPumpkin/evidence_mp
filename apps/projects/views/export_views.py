@@ -232,7 +232,7 @@ def export_project_detail_pdf(request, pk):
 def export_control_check_pdf(request):
     # projects = Project.objects.all()
     # Filtrace: vybereme pouze projekty, kde je leader == přihlášený uživatel
-    projects = Project.objects.filter(leader=request.user)
+    projects = Project.objects.filter(leader=request.user).order_by('student__last_name')
 
     context = {
         'projects': projects,

@@ -87,7 +87,7 @@ class Project(models.Model):
 
     title = models.CharField(max_length=200, verbose_name="Název")
     description = models.TextField(verbose_name="Popis")
-    assignment = models.TextField(blank=True, help_text="Oficiální zadání (needitovatelné studentem)", verbose_name="Zadání")
+    assignment = models.TextField(blank=True, help_text="Oficiální zadání (needitovatelné žákem)", verbose_name="Zadání")
 
     status = models.CharField(
         max_length=20, 
@@ -102,7 +102,7 @@ class Project(models.Model):
         on_delete=models.SET_NULL,
         null=True, blank=True,
         related_name='student_projects',
-        help_text="Student"
+        help_text="Žák"
     )
 
     # vedoucí projektu (po schválení):

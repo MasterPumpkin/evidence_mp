@@ -32,7 +32,7 @@
             <h2 class="accordion-header" id="headingDescription">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 data-bs-target="#collapseDescription" aria-expanded="false" aria-controls="collapseDescription">
-                Zobrazit studentův popis projektu
+                Zobrazit žákův popis projektu
               </button>
             </h2>
             <div id="collapseDescription" class="accordion-collapse collapse" aria-labelledby="headingDescription"
@@ -64,17 +64,26 @@
 
         <!-- Informace v jednom řádku -->
         <div class="d-flex justify-content-between align-items-center mt-3">
-          <p><strong>Student:</strong> 
+          <p><strong>Žák:</strong> 
             {% if project.student %}
               <span class="badge bg-primary">
                 {{ project.student.get_full_name }}
                 ({{ project.student.userprofile.class_name|default:"-" }})
               </span>
             {% else %}
-              <span class="text-danger">Není přiřazen žádný student</span>
+              <span class="text-danger">Není přiřazen žádný žák</span>
             {% endif %}
           </p>
           <p><strong>Vedoucí:</strong> {{ project.leader.userprofile.title }} {{ project.leader.first_name }} {{ project.leader.last_name }}</p>
+          <p><strong>Oponent:</strong> {{ project.opponent.userprofile.title }} {{ project.opponent.first_name }} {{ project.opponent.last_name }}</p>
+          <p><strong>Stav:</strong> {{ project.get_status_display }}</p>
+        </div>
+
+        <hr style="margin-bottom: 1.5em;">
+          <!-- Informace v jednom řádku -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          
+          <p><strong>Vedoucí:</strong></p>
           <p>
             {% if leader_total_points == "X" %}
             <span style="color: red; font-weight: bold;">
@@ -84,7 +93,12 @@
                 {{ leader_total_points }}
                 </span>
              / {{ max_leader_points }} bodů</p>
-          <p><strong>Oponent:</strong> {{ project.opponent.userprofile.title }} {{ project.opponent.first_name }} {{ project.opponent.last_name }}</p>
+             <p>               
+              <a href="{% url 'projects:review_leader' pk=project.pk %}" class="btn btn-sm btn btn-outline-dark {% if not project.leader_eval %}disabled{% endif %}">
+                Zobrazit posudek vedoucího
+            </a>
+          </p>
+          <p><strong>Oponent:</strong></p>
           <p>
             {% if opponent_total_points == "X" %}
             <span style="color: red; font-weight: bold;">
@@ -94,7 +108,11 @@
             {{ opponent_total_points }} 
           </span>
             / {{ max_opponent_points }} bodů</p>
-          <p><strong>Stav:</strong> {{ project.get_status_display }}</p>
+            <p>               
+              <a href="{% url 'projects:review_opponent' pk=project.pk %}" class="btn btn-sm btn btn-outline-dark {% if not project.opponent_eval %}disabled{% endif %}">
+                Zobrazit posudek oponenta
+            </a>
+          </p>
         </div>
         
         {% if user == project.leader and project.student is None %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2>Posudek oponenta projektu</h2>
+    <h3>{{ project.title }}</h3>
+    
+    {% if eval %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4>Kvalita výrobku (max {{ project.scheme.opponent_area1_max }} bodů)</h4>
+                <p>{{ eval.area1_text }}</p>
+                <p><strong>Body: {{ eval.area1_points }}</strong></p>
+
+                <h4>Dokumentace (max {{ project.scheme.opponent_area2_max }} bodů)</h4>
+                <p>{{ eval.area2_text }}</p>
+                <p><strong>Body: {{ eval.area2_points }}</strong></p>
+
+                <hr>
+                <h4>Celkem: {{ eval.area1_points|add:eval.area2_points }} / {{ max_points }} bodů</h4>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning">Posudek oponenta zatím nebyl vytvořen.</div>
+    {% endif %}
+
+    <a href="{% url 'projects:detail' pk=project.pk %}" class="btn btn-secondary">Zpět</a>
+</div>
+{% endblock %}
