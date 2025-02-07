@@ -116,8 +116,8 @@
               {% endif %}
             >
               <td>
-                {% if ms.title|length > 15 %}
-                  {{ ms.title|slice:":15" }} ...
+                {% if ms.title|length > 20 %}
+                  {{ ms.title|slice:":20" }} ...
                 {% else %}
                   {{ ms.title }}
                 {% endif %}
@@ -158,8 +158,6 @@
         </table>
         {% if user.is_authenticated and project.leader == user %}
         <a href="{% url 'projects:milestone_add' project.id %}" class="btn btn-sm btn-success">Přidat milník</a>
-        <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-sm btn-danger">Importovat CSV s
-          milníky</a>
         {% endif %}
         {% if user == project.student and project.status != 'approved' and now < project.scheme.student_edit_deadline %}
         <a href="{% url 'projects:student_milestone_add' project.id %}" class="btn btn-sm btn-success">Přidat milník</a>
@@ -338,6 +336,8 @@
         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmGenerateConsultationsModal">
           Přidat záznamy o klasifikovaných kontrolách
         </button>
+        <a href="{% url 'projects:milestone_import' project.id %}" class="btn btn-sm btn-danger">Importovat CSV s
+          milníky</a>
         <a href="{% url 'projects:opponent_update' project.pk %}" class="btn btn-sm btn-danger">Vybrat oponenta</a>
         <!--<a href="{% url 'projects:resign' project.pk %}" class="btn btn-sm btn-danger">Vzdát se vedení</a>-->
         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmResignLeaderModal">

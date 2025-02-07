@@ -11,7 +11,6 @@ from ..models import Project, Milestone, ScoringScheme
 import csv
 from datetime import datetime
 from django.contrib.auth.models import User
-import datetime
 import string
 import secrets
 
@@ -70,7 +69,8 @@ def import_milestones_csv(request, project_id):
             deadline = None
             if deadline_str:
                 try:
-                    deadline = datetime.strptime(deadline_str, '%Y-%m-%d').date()
+                    # deadline = datetime.strptime(deadline_str, '%Y-%m-%d').date()
+                    deadline = datetime.strptime(deadline_str, '%d.%m.%Y').date()  # Formát 10.4.2025
                 except ValueError:
                     messages.error(request, f"Neplatný formát datumu: {deadline_str}. Řádek přeskočen.")
                     continue  # Přeskočí špatně formátované řádky

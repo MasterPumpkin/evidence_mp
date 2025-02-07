@@ -184,6 +184,9 @@ def export_consultation_list(request, pk):
 def export_project_assignment(request, pk):
     project = get_object_or_404(Project, pk=pk)
 
+    leader = f'{project.leader.userprofile.title} {project.leader.first_name} {project.leader.last_name}' if project.leader else ""
+    student = project.student.username
+
     template = "templates/docx/assignment_IT.docx" if project.student.userprofile.study_branch == "IT" else "templates/docx/assignment_E.docx"
     
     context = {
@@ -192,13 +195,14 @@ def export_project_assignment(request, pk):
         'school_year': project.scheme.year if project.scheme else "N/A",
         'project_title': project.title,
         'assignment': project.assignment,
+        'leader': leader,
     }
 
     doc = DocxTemplate(template)
     doc.render(context)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = f'attachment; filename="zadani_prace_{pk}.docx"'
+    response['Content-Disposition'] = f'attachment; filename="zadani_prace_{student}.docx"'
     doc.save(response)
     return response
 

@@ -12,6 +12,22 @@
         <input type="file" name="file" id="id_file">
         <button type="submit" class="btn btn-primary">Importovat</button>
       </form>
+      <hr>
+      <h5 class="mt-4">Formát CSV souboru</h5>
+      <p>CSV soubor musí mít následující formát:</p>
+      <ul>
+        <li>V prvním sloupci uveďte popis milníku</li>
+        <li>Ve druhém sloupci uveďte datum splnění ve formátu DD.MM.RRRR</li>
+        <li>Jednotlivé sloupce oddělte středníkem</li>
+      </ul>
+      <p>Příklad:</p>
+      <pre>
+        Milník 1;01.01.2025
+        Milník 2;15.02.2025
+        Milník 3;15.03.2025
+      </pre>
+      <hr>
+      <a href="{% url 'projects:detail' project.pk %}" class="btn btn-secondary mt-3">Zpět</a>
   </div>
 </div>
 {% endblock %}
