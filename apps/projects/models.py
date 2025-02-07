@@ -152,6 +152,28 @@ class Project(models.Model):
     
     def get_absolute_url(self):
         return reverse('projects:detail', kwargs={'pk': self.pk})
+    
+    def leader_total_points(self):
+        if hasattr(self, 'leader_eval'):
+            return self.leader_eval.area1_points + self.leader_eval.area2_points + self.leader_eval.area3_points
+        return "X"
+
+    def max_leader_points(self):
+        """Získá maximální počet bodů pro vedoucího ze ScoringScheme."""
+        if self.scheme:
+            return self.scheme.leader_area1_max + self.scheme.leader_area2_max + self.scheme.leader_area3_max  # Pole v modelu ScoringScheme
+        return 0  # Pokud není přiřazený scheme
+
+    def opponent_total_points(self):
+        if hasattr(self, 'opponent_eval'):
+            return self.opponent_eval.area1_points + self.opponent_eval.area2_points
+        return "X"
+
+    def max_opponent_points(self):
+        """Získá maximální počet bodů pro oponenta ze ScoringScheme."""
+        if self.scheme:
+            return self.scheme.opponent_area1_max + self.scheme.opponent_area2_max  # Pole v modelu ScoringScheme
+        return 0  # Pokud není přiřazený scheme
 
 
 

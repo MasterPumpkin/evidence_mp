@@ -368,6 +368,11 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         context_object_name = 'project'
         project = context[context_object_name]
 
+        context["leader_total_points"] = project.leader_total_points()
+        context["max_leader_points"] = project.max_leader_points()
+        context["opponent_total_points"] = project.opponent_total_points()
+        context["max_opponent_points"] = project.max_opponent_points()
+
         # Přidání dat pro šablonu
         context['is_teacher'] = user.groups.filter(name='Teacher').exists()
         context['is_student'] = user.groups.filter(name='Student').exists()

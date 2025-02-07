@@ -75,7 +75,25 @@
             {% endif %}
           </p>
           <p><strong>Vedoucí:</strong> {{ project.leader.userprofile.title }} {{ project.leader.first_name }} {{ project.leader.last_name }}</p>
+          <p>
+            {% if leader_total_points == "X" %}
+            <span style="color: red; font-weight: bold;">
+              {% else %}
+              <span style="color: green; font-weight: bold;">
+                {% endif %}
+                {{ leader_total_points }}
+                </span>
+             / {{ max_leader_points }} bodů</p>
           <p><strong>Oponent:</strong> {{ project.opponent.userprofile.title }} {{ project.opponent.first_name }} {{ project.opponent.last_name }}</p>
+          <p>
+            {% if opponent_total_points == "X" %}
+            <span style="color: red; font-weight: bold;">
+              {% else %}
+              <span style="color: green; font-weight: bold;">
+                {% endif %}
+            {{ opponent_total_points }} 
+          </span>
+            / {{ max_opponent_points }} bodů</p>
           <p><strong>Stav:</strong> {{ project.get_status_display }}</p>
         </div>
         

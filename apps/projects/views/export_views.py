@@ -134,6 +134,8 @@ def export_consultation_list(request, pk):
         if form.is_valid():
             handover_date = form.cleaned_data['handover_date']
 
+            student = project.student.username
+
             doc = DocxTemplate("templates/docx/consultation_list.docx")
             controls = project.controls.all().order_by('date')[:3]  # První 3 kontroly
 
@@ -165,7 +167,7 @@ def export_consultation_list(request, pk):
 
             doc.render(context)
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-            response['Content-Disposition'] = f'attachment; filename="konzultacni_list_{pk}.docx"'
+            response['Content-Disposition'] = f'attachment; filename="konzultacni_list_{student}.docx"'
             doc.save(response)
             return response
     else:
