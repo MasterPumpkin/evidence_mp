@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from ..models import Project, LeaderEvaluation, UserPreferences
+from ..models import Project, LeaderEvaluation, UserPreferences, Milestone
 from ..forms import (
     DateInputForm
 )
@@ -15,6 +15,7 @@ import openpyxl
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from docx.shared import Cm
+from datetime import datetime
 
 @login_required
 def export_project_docx(request, pk):
@@ -494,4 +495,67 @@ def export_final_report_pdf(request, pk):
     # filename = f"zaverecny_posudek_{project.pk}.pdf"
     filename = f"zaverecny_posudek_{project.student.username}.pdf"
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+
+@login_required
+def export_milestones_pdf(request):
+    """
+    Exportuje všechny milníky pro projekty, kde je přihlášený uživatel vedoucím.
+    Milníky jsou seskupeny podle projektů a seřazeny podle data.
+    """
+    # Získání všech projektů, kde je přihlášený uživatel vedoucím
+    projects = Project.objects.filter(leader=request.user).order_by('student__last_name')
+
+    # Příprava dat pro šablonu
+    projects_data = []
+    for project in projects:
+        milestones = Milestone.objects.filter(project=project).order_by('deadline')
+        milestones_data = []
+        for milestone in milestones:
+            status = milestone.get_status_display()
+            if status == 'Dokončeno':
+                row_color = 'green'
+            elif status == 'Rozpracováno':
+                if milestone.deadline and milestone.deadline < datetime.now().date():  # if milestone.deadline
+                    row_color = 'red'
+                elif milestone.deadline:
+                    row_color = 'yellow'
+                else:
+                    row_color = 'white'
+            else:
+                if milestone.deadline and milestone.deadline < datetime.now().date():  # if milestone.deadline
+                    row_color = 'red'
+                else:
+                    row_color = 'white'
+            milestones_data.append({
+                'title': milestone.title,
+                'deadline': milestone.deadline.strftime('%d.%m.%Y') if milestone.deadline else "N/A",
+                'status': milestone.get_status_display(),
+                'note': milestone.note,
+                'row_color': row_color,
+                # 'is_overdue': milestone.deadline < datetime.now().date() if milestone.deadline else False
+            })
+        
+        projects_data.append({
+            'project_title': project.title,
+            'milestones': milestones_data,
+            'student_name': f"{project.student.first_name} {project.student.last_name}",
+        })
+
+    # Kontext pro šablonu
+    context = {
+        'projects': projects_data,
+        'current_date': datetime.now()
+    }
+
+    # Vyrenderování HTML šablony do řetězce
+    html_string = render_to_string('projects/pdf_milestones.html', context)
+
+    # Převod HTML na PDF pomocí WeasyPrint
+    pdf_file = HTML(string=html_string).write_pdf()
+
+    # Odpověď do prohlížeče
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="milestones_report.pdf"'
     return response

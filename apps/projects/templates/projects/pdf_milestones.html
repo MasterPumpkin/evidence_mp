@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Přehled milníků</title>
+    <style>
+        @page {
+            margin: 1.5cm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #2c3e50;
+            font-size: 12px;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .print-date {
+            color: #6c757d;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin: 0;
+            padding-top: 10px;
+            font-size: 20px;
+        }
+
+        .project {
+            break-inside: avoid-page;
+            -webkit-break-inside: avoid-page;
+            page-break-inside: avoid;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .project-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .student-name {
+            color: #6c757d;
+            font-size: 12px;
+        }
+
+        .milestones-container {
+            display: table;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .milestone {
+            display: table-row;
+        }
+
+        .milestone > div {
+            display: table-cell;
+            padding: 8px 10px;
+            vertical-align: middle;
+        }
+
+        .milestone-row-completed, .green {
+            background-color: #d4edda;
+        }
+
+        .milestone-row-in-progress-ok, .yellow {
+            background-color: #fff3cd;
+        }
+
+        .milestone-row-overdue, .red {
+            background-color: #f8d7da;
+        }
+
+        .white {
+            background-color: white;
+        }
+
+        .milestone-title {
+            width: 40%;
+            font-weight: bold;
+            font-size: 12px;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .milestone-deadline {
+            width: 30%;
+            color: #6c757d;
+            font-size: 12px;
+        }
+
+        .milestone-status {
+            width: 30%;
+            text-align: center;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            min-width: 80px;
+        }
+
+        .status-completed {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-in-progress {
+            background-color: #ffc107;
+            color: #856404;
+        }
+
+        .status-pending {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        @media print {
+            .project {
+                box-shadow: none;
+                border: 1px solid #e9ecef;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-header">
+        <h1>Přehled milníků - všechny projekty (vedoucí)</h1>
+        <div class="print-date">Datum exportu: {{ current_date|date:"j. n. Y" }}</div>
+    </div>
+    {% for project in projects %}
+        <div class="project">
+            <div class="project-header">
+                <div class="project-title">{{ project.project_title }}</div>
+                <div class="student-name">{{ project.student_name }}</div>
+            </div>
+            <div class="milestones-container">
+                {% for milestone in project.milestones %}
+
+                    <div class="milestone">
+                        <div class="milestone-title {{ milestone.row_color }}">{{ milestone.title }}</div>
+                        <div class="milestone-deadline {{ milestone.row_color }}">{{ milestone.deadline }}</div>
+                        <div class="milestone-status {{ milestone.row_color }}">
+                            <span class="status ">{{ milestone.status }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</body>
+</html>

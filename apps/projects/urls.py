@@ -8,7 +8,7 @@ from .views.export_views import (
     export_consultation_list, export_project_assignment,
     export_project_detail_pdf, export_control_check_pdf,
     export_leader_eval, export_opponent_eval,
-    export_final_report_pdf)
+    export_final_report_pdf, export_milestones_pdf)
 from .views.import_views import (
     import_milestones_csv, import_users_csv, 
     import_projects, import_result_view,
@@ -96,6 +96,8 @@ urlpatterns = [
 
     path('<int:pk>/review-leader/', LeaderReviewView.as_view(), name='review_leader'),
     path('<int:pk>/review-opponent/', OpponentReviewView.as_view(), name='review_opponent'),
+
+    path('export-milestones-pdf/', export_milestones_pdf, name='export_milestones_pdf'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

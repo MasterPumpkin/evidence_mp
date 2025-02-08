@@ -495,19 +495,34 @@
   <div class="col-md-12 mb-4">
     <div class="card">
       <div class="card-header">
-        <h3>Exporty</h3>
+        <h3>Exporty - aktuální projekt</h3>
       </div>
       <div class="card-body">
         {% if user.is_authenticated and project.leader == user %}
-        <a href="{% url 'projects:export_leader_eval' project.pk %}" class="btn btn-sm btn-info {% if not project.leader_eval %}disabled{% endif %}">Posudek vedoucího</a>
-        <a href="{% url 'projects:export_consultation_list' project.pk %}" class="btn btn-sm btn-info">Konzultační list</a>
-        <a href="{% url 'projects:export_project_assignment' project.pk %}" class="btn btn-sm btn-info">Zadání</a>
-        <a href="{% url 'projects:export_project_pdf' project.pk %}" class="btn btn-sm btn-info">Detaily pro studenta</a>
-        <a href="{% url 'projects:export_control_check_pdf' %}" class="btn btn-sm btn-info">Záznamy o kontrolách - všechny projekty</a>
-        <a href="{% url 'projects:pdf_final_report' project.pk %}" target="_blank" class="btn btn-sm btn-info">Závěrečný posudek k obhajobě</a>
+        <a href="{% url 'projects:export_leader_eval' project.pk %}" class="btn btn-sm btn-info {% if not project.leader_eval %}disabled{% endif %}">Posudek vedoucího (DOCX)</a>
+        <a href="{% url 'projects:export_consultation_list' project.pk %}" class="btn btn-sm btn-info">Konzultační list (DOCX)</a>
+        <a href="{% url 'projects:export_project_assignment' project.pk %}" class="btn btn-sm btn-info">Zadání (DOCX)</a>
+        <a href="{% url 'projects:export_project_pdf' project.pk %}" class="btn btn-sm btn-info">Detaily pro studenta (PDF)</a>
+        <a href="{% url 'projects:pdf_final_report' project.pk %}" target="_blank" class="btn btn-sm btn-info">Závěrečný posudek k obhajobě (PDF)</a>
         {% endif %}
         {% if user.is_authenticated and project.opponent == user %}
         <a href="{% url 'projects:export_opponent_eval' project.pk %}" class="btn btn-sm btn-info {% if not project.opponent_eval %}disabled{% endif %}">Posudek oponenta (DOCX)</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h3>Exporty - všechny projekty</h3>
+      </div>
+      <div class="card-body">
+        {% if user.is_authenticated and project.leader == user %}
+        <a href="{% url 'projects:export_control_check_pdf' %}" class="btn btn-sm btn-info">Záznamy o kontrolách (PDF)</a>
+        <a href="{% url 'projects:export_milestones_pdf' %}" class="btn btn-sm btn-info">Milníky (PDF)</a>
         {% endif %}
       </div>
     </div>
