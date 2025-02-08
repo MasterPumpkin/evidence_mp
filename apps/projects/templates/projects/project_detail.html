@@ -19,14 +19,15 @@
 -->
 
 <!-- Hlavní informace o projektu -->
+ <!--
 <div class="row">
   <div class="col-md-12 mb-4">
     <div class="card">
       <div class="card-body">
-        <!-- Název projektu -->
+
         <h1 class="card-title">{{ project.title }}</h1>
 
-        <!-- Accordion pro zobrazení zadání -->
+
         <div class="accordion" id="projectDescriptionAccordion">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingDescription">
@@ -44,7 +45,8 @@
           </div>
         </div>
 
-        <!-- Accordion pro zobrazení zadání -->
+
+
         <div class="accordion" id="projectAssignmentAccordion">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingDescription">
@@ -62,7 +64,8 @@
           </div>
         </div>
 
-        <!-- Informace v jednom řádku -->
+
+
         <div class="d-flex justify-content-between align-items-center mt-3">
           <p><strong>Žák:</strong> 
             {% if project.student %}
@@ -80,7 +83,8 @@
         </div>
 
         <hr style="margin-bottom: 1.5em;">
-          <!-- Informace v jednom řádku -->
+
+
         <div class="d-flex justify-content-between align-items-center mt-3">
           
           <p><strong>Vedoucí:</strong></p>
@@ -123,7 +127,164 @@
     </div>
   </div>
 </div>
+-->
+<div class="container">
+  <!-- Název projektu přes celou šířku -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <h2 class="card-title">{{ project.title }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="row">
+    <!-- Levý sloupec -->
+    <div class="col-md-6 mb-4 d-flex">
+      <div class="card w-100">
+        <div class="card-body">
+          <h4 class="card-title">Hodnocení</h4>
+  
+          <p><strong>Vedoucí:</strong> {{ project.leader.userprofile.title }} {{ project.leader.first_name }} {{ project.leader.last_name }}</p>
+          <p><strong>Oponent:</strong> {{ project.opponent.userprofile.title }} {{ project.opponent.first_name }} {{ project.opponent.last_name }}</p>
+  
+          <hr>
+  
+          <!-- Vedoucí -->
+          <div class="row align-items-center">
+            <div class="col-3 text-start">
+              <p class="mb-0"><strong>Vedoucí:</strong></p>
+            </div>
+            <div class="col-5 text-start">
+              {% if leader_total_points == "X" %}
+                <span class="text-danger fw-bold">
+              {% else %}
+                <span class="text-success fw-bold">
+              {% endif %}
+              {{ leader_total_points }}</span> / {{ max_leader_points }} bodů
+            </div>
+            <div class="col-4 text-end">
+              <a href="{% url 'projects:review_leader' pk=project.pk %}" class="btn btn-sm btn-outline-dark {% if not project.leader_eval %}disabled{% endif %}">
+                Zobrazit posudek
+              </a>
+            </div>
+          </div>
+  
+          <!-- Oponent -->
+          <div class="row align-items-center mt-2">
+            <div class="col-3 text-start">
+              <p class="mb-0"><strong>Oponent:</strong></p>
+            </div>
+            <div class="col-5 text-start">
+              {% if opponent_total_points == "X" %}
+                <span class="text-danger fw-bold">
+              {% else %}
+                <span class="text-success fw-bold">
+              {% endif %}
+              {{ opponent_total_points }}</span> / {{ max_opponent_points }} bodů
+            </div>
+            <div class="col-4 text-end">
+              <a href="{% url 'projects:review_opponent' pk=project.pk %}" class="btn btn-sm btn-outline-dark {% if not project.opponent_eval %}disabled{% endif %}">
+                Zobrazit posudek
+              </a>
+            </div>
+          </div>
+  
+          {% if user == project.leader and project.student is None %}
+            <a href="{% url 'projects:teacher_project_update' project.pk %}" class="btn btn-primary mt-3">Přiřadit žáka</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  
+    <!-- Pravý sloupec -->
+    <div class="col-md-6 mb-4 d-flex">
+      <div class="card w-100">
+        <div class="card-body">
+          <h4 class="card-title">Informace o projektu</h4>
+          <p><strong>Stav:</strong> {{ project.get_status_display }}</p>
+  
+          <p><strong>Žák:</strong> 
+            {% if project.student %}
+              <span class="badge bg-primary">
+                {{ project.student.get_full_name }} ({{ project.student.userprofile.class_name|default:"-" }})
+              </span>
+            {% else %}
+              <span class="text-danger">Není přiřazen žádný žák</span>
+            {% endif %}
+          </p>
+  
+          <!-- Accordion pro zobrazení popisu -->
+          <div class="accordion" id="projectDescriptionAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingDescription">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseDescription" aria-expanded="false" aria-controls="collapseDescription">
+                  Zobrazit žákův popis projektu
+                </button>
+              </h2>
+              <div id="collapseDescription" class="accordion-collapse collapse" aria-labelledby="headingDescription"
+                data-bs-parent="#projectDescriptionAccordion">
+                <div class="accordion-body">
+                  {{ project.description }}
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Accordion pro zobrazení zadání -->
+          <div class="accordion" id="projectAssignmentAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingAssignment">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseAssignment" aria-expanded="false" aria-controls="collapseAssignment">
+                  Zobrazit oficiální zadání projektu
+                </button>
+              </h2>
+              <div id="collapseAssignment" class="accordion-collapse collapse" aria-labelledby="headingAssignment"
+                data-bs-parent="#projectAssignmentAccordion">
+                <div class="accordion-body">
+                  {{ project.assignment }}
+                </div>
+              </div>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="d-flex justify-content-between mb-3">
+    <div>
+        {% if prev_project %}
+        <a href="{% url 'projects:detail' prev_project %}" class="btn btn-sm btn-outline-secondary">
+            ← Předchozí projekt
+        </a>
+        {% endif %}
+    </div>
+
+    <div>
+      <!-- Zobrazení aktuálního filtru -->
+      <span class="badge bg-success">
+          {% if request.session.project_filter %}
+              {{ request.session.project_filter }}
+          {% else %}
+              Všechny projekty
+          {% endif %}
+      </span>
+  </div>
+    
+    <div>
+        {% if next_project %}
+        <a href="{% url 'projects:detail' next_project %}" class="btn btn-sm btn-outline-secondary">
+            Další projekt →
+        </a>
+        {% endif %}
+    </div>
+  </div>
 
 <!-- Sekce milníků -->
 <div class="row">
@@ -298,7 +459,7 @@
 -->
 <!-- Sekce akcí -->
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-12 mb-4">
     <div class="card">
       <div class="card-header">
         <h3>Akce</h3>
@@ -385,6 +546,7 @@
   </div>
 </div>
 {% endif %}
+</div>
 
 <!-- Modální okno -->
 

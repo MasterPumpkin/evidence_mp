@@ -88,6 +88,17 @@ class ProjectListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         qs = Project.objects.all()
 
+        filter_type = self.request.GET.get('filter_type', 'all')
+
+        if filter_type == 'my_projects':
+            qs = qs.filter(Q(leader=self.request.user) | Q(opponent=self.request.user))
+        elif filter_type == 'my_leading':
+            qs = qs.filter(leader=self.request.user)
+        elif filter_type == 'my_opponent':
+            qs = qs.filter(opponent=self.request.user)
+        elif filter_type == 'no_leader':
+            qs = qs.filter(leader__isnull=True)
+
         # Zpracování parametru "Pouze moje projekty"
         my_projects = self.request.GET.get('my_projects', '0')
 
@@ -119,6 +130,21 @@ class ProjectListView(LoginRequiredMixin, ListView):
         if ordering := self.request.GET.get('ordering'):
             qs = qs.order_by(ordering)
 
+        self.request.session['filtered_projects'] = list(qs.values_list('id', flat=True))
+        
+        filter_name = ''
+        if filter_type == 'my_projects':
+            filter_name = 'Všechny moje projekty (vedoucí i oponent)'
+        elif filter_type == 'my_leading':
+            filter_name = 'Projekty, kde jsem vedoucí'
+        elif filter_type == 'my_opponent':
+            filter_name = 'Projekty, kde jsem oponent'
+        elif filter_type == 'no_leader':
+            filter_name = 'Projekty bez určeného vedoucího'
+
+        self.request.session['filter_name'] = filter_name      
+        self.request.session["project_filter"] = filter_name
+
         return qs
 
     def get_context_data(self, **kwargs):
@@ -139,6 +165,8 @@ class ProjectListView(LoginRequiredMixin, ListView):
         user = self.request.user
         context['is_teacher'] = user.groups.filter(name='Teacher').exists()
         context['is_student'] = user.groups.filter(name='Student').exists()
+
+        context['active_filter'] = self.request.GET.get('filter_type', 'all')
 
         return context
 
@@ -367,6 +395,17 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         user = self.request.user
         context_object_name = 'project'
         project = context[context_object_name]
+
+        project_ids = self.request.session.get('filtered_projects', [])
+        current_id = self.object.id
+
+        try:
+            current_index = project_ids.index(current_id)
+            context['prev_project'] = project_ids[current_index-1] if current_index > 0 else None
+            context['next_project'] = project_ids[current_index+1] if current_index < len(project_ids)-1 else None
+        except ValueError:
+            context['prev_project'] = None
+            context['next_project'] = None
 
         context["leader_total_points"] = project.leader_total_points()
         context["max_leader_points"] = project.max_leader_points()

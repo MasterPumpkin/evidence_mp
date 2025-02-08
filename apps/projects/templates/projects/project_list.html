@@ -65,6 +65,7 @@
   </div>
 
   <!-- ŘAZENÍ -->
+  <!--
   <div class="col-auto">
     <label for="ordering" class="form-label">Řadit dle</label>
     <select name="ordering" id="ordering" class="form-select">
@@ -75,7 +76,7 @@
       <option value="-created_at" {% if request.GET.ordering == "-created_at" %}selected{% endif %}>Datum (nové nahoře)</option>
     </select>
   </div>
-
+-->
   <div class="col-auto form-check">
     <input type="checkbox" class="form-check-input"
        name="my_projects" id="my_projects" value="1"
@@ -87,7 +88,19 @@
     <button type="submit" class="btn btn-primary">Filtrovat</button>
   </div>
 </form>
+
+<!-- Nad seznamem projektů přidat -->
+<div class="btn-group mb-3" role="group">
+  <a href="?filter_type=all" class="btn btn-outline-secondary {% if active_filter == 'all' %}active{% endif %}">Všechny projekty</a>
+  <a href="?filter_type=my_projects" class="btn btn-outline-secondary {% if active_filter == 'my_projects' %}active{% endif %}">Moje projekty</a>
+  <a href="?filter_type=my_leading" class="btn btn-outline-secondary {% if active_filter == 'my_leading' %}active{% endif %}">Kde jsem vedoucí</a>
+  <a href="?filter_type=my_opponent" class="btn btn-outline-secondary {% if active_filter == 'my_opponent' %}active{% endif %}">Kde jsem oponent</a>
+  <a href="?filter_type=no_leader" class="btn btn-outline-secondary {% if active_filter == 'no_leader' %}active{% endif %}">Bez vedoucího</a>
+</div>
+
 {% endif %}
+
+
 
 <!-- VÝPIS PROJEKTŮ -->
 <table class="table table-striped">
