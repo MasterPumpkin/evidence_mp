@@ -77,6 +77,20 @@
     </select>
   </div>
 -->
+
+  {% if available_years %}
+  <div class="col-auto">
+    <label for="year" class="form-label">Školní rok</label>
+    <select name="year" id="year" class="form-select">
+      <option value="">-- Aktivní --</option>
+      {% for year in available_years %}
+        <!--<option value="{{ year }}" {% if request.GET.year == year %}selected{% endif %}>{{ year }}</option>-->
+        <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>{{ year }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  {% endif %}
+
   <div class="col-auto form-check">
     <input type="checkbox" class="form-check-input"
        name="my_projects" id="my_projects" value="1"

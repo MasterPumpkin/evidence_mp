@@ -35,6 +35,12 @@ class UserPreferences(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='preferences')
 
     pref_myprojects_default = models.BooleanField(default=False, help_text="Zobrazovat rovnou moje projekty", verbose_name="Moje projekty")
+    default_year = models.CharField(
+        max_length=20,
+        default="2024/2025",  # nebo jiná výchozí hodnota
+        help_text="Výchozí školní rok, se kterým chcete pracovat (např. '2024/2025').",
+        verbose_name="Výchozí školní rok"
+    )
     email_notifications = models.BooleanField(default=True, help_text="Zasílat e-mail notifikace", verbose_name="E-mail notifikace")
     consultation_text1 = models.TextField(blank=True, help_text="Předdefinovaný text konzultace #1", verbose_name="Konzultace #1")
     consultation_text2 = models.TextField(blank=True, help_text="Předdefinovaný text konzultace #2", verbose_name="Konzultace #2")

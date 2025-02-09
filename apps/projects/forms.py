@@ -5,6 +5,7 @@ from django_ckeditor_5.widgets import CKEditor5Widget
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
 from datetime import date
+from apps.projects.models import ScoringScheme
 
 class MilestoneForm(forms.ModelForm):
     class Meta:
@@ -78,16 +79,30 @@ class TeacherProjectForm(forms.ModelForm):
         fields = ['title', 'student', 'description', 'assignment', 'delivery_work_date', 'delivery_documentation_date']
 
     def __init__(self, *args, **kwargs):
+        # Získáme extra parametr 'selected_year' a 'user' (přihlášený uživatel)
+        selected_year = kwargs.pop('selected_year', None)
+        user = kwargs.pop('user', None)
+        # Pokud selected_year není předán a je k dispozici předvolba, použijeme ji:
+        if not selected_year and user is not None:
+            if hasattr(user, 'preferences') and user.preferences.default_year:
+                selected_year = user.preferences.default_year
+        # Inicializujeme formulář standardním způsobem
         super().__init__(*args, **kwargs)
-
-        # Pouze studenti ve skupině 'Student'
-        self.fields['student'].queryset = User.objects.filter(groups__name='Student').order_by('username')
-
-        # Pokud je student již přiřazen, zobrazíme ho ve formuláři
+        # Pokud máme zvolený školní rok, omezíme queryset pro pole 'student'
+        if selected_year:
+            self.fields['student'].queryset = User.objects.filter(
+                groups__name='Student',
+                userprofile__school_year=selected_year
+            ).order_by('username')
+        else:
+            self.fields['student'].queryset = User.objects.filter(
+                groups__name='Student'
+            ).order_by('username')
+        # Pokud je již student přiřazen, nastavíme jeho počáteční hodnotu
         if self.instance and self.instance.student:
             self.fields['student'].initial = self.instance.student
 
-        # Přidání Bootstrap stylů
+        # Přidáme Bootstrap třídu
         self.fields['student'].widget.attrs.update({'class': 'form-control'})
 
 
@@ -228,6 +243,7 @@ class UserPreferencesForm(forms.ModelForm):
         model = UserPreferences
         fields = [
             'pref_myprojects_default',
+            'default_year',
             'email_notifications',
             'consultation_text1',
             'consultation_text2',
@@ -237,6 +253,16 @@ class UserPreferencesForm(forms.ModelForm):
         widgets = {
             'signature': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Načteme všechny dostupné ScoringScheme (školní roky), seřazené podle roku
+        schemes = ScoringScheme.objects.all().order_by('year')
+        # Vytvoříme seznam tuple ve formátu (year, year)
+        choices = [(scheme.year, scheme.year) for scheme in schemes]
+        # Nastavíme widget pro pole default_year jako Select s danými volbami
+        self.fields['default_year'].widget = forms.Select(choices=choices)
+        
 
 class DateInputForm(forms.Form):
     handover_date = forms.DateField(

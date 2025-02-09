@@ -4,7 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
     class_name = models.CharField(max_length=50, blank=True, null=True, help_text="Např. '3.A'")
 
     STUDY_BRANCH_CHOICES = [
@@ -25,6 +25,12 @@ class UserProfile(models.Model):
         help_text="Titul (např. Mgr., Ing., Ph.D. apod.)",
         verbose_name="Titul"
     )
+
+    school_year = models.CharField(
+        max_length=20, 
+        default="2024/2025",
+        help_text="Školní rok studenta (např. 2024/2025, 2025/2026)", 
+        verbose_name="Školní rok")
 
     def __str__(self):
         return f"{self.user.username} (třída: {self.class_name}, obor: {self.study_branch})"

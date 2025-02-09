@@ -204,8 +204,23 @@
       <div class="card w-100">
         <div class="card-body">
           <h4 class="card-title">Informace o projektu</h4>
-          <p><strong>Stav:</strong> {{ project.get_status_display }}</p>
-  
+          <div class="row">
+            <div class="col-6">
+              <p><strong>Školní rok:</strong> {{ year }}</p>
+            </div>
+            <div class="col-6">
+              <p>
+                <strong>Stav:</strong>
+                {% if project.get_status_display == "Čeká na schválení" %}
+                  <span class="badge bg-danger">{{ project.get_status_display }}</span>
+                {% elif project.get_status_display == "Schváleno" %}
+                  <span class="badge bg-success">{{ project.get_status_display }}</span>
+                {% else %}
+                  <span class="badge bg-secondary">{{ project.get_status_display }}</span>
+                {% endif %}
+              </p>
+            </div>
+          </div>
           <p><strong>Žák:</strong> 
             {% if project.student %}
               <span class="badge bg-primary">

@@ -145,6 +145,11 @@ def import_users_csv(request):
             if len(row) > 7:
                 title = row[7].strip()
 
+            # 9. sloupec: school_year (jen pro žáka)
+            school_year = ""
+            if len(row) > 8:
+                school_year = row[8].strip()
+
             # Vytvoření/upravení user
             user, created = User.objects.get_or_create(
                 username=username,
@@ -169,9 +174,10 @@ def import_users_csv(request):
                 else:
                     profile = user.userprofile
 
-                # Student -> class_name, branch
+                # Student -> class_name, branch, school_year
                 profile.class_name = class_name
                 profile.study_branch = branch
+                profile.school_year = school_year
                 # Student obvykle nemá title -> ponecháme prázdné
                 profile.save()
 
@@ -186,6 +192,7 @@ def import_users_csv(request):
                 # profile.class_name = class_name  # pokud to i pro učitele dává smysl
                 # profile.study_branch = branch
                 profile.title = title  # <--- klíčové pro nový sloupec
+                profile.school_year = ""  # Učitel nemá školní rok
                 profile.save()
 
             # Pokud user nově vznikl => generovat heslo

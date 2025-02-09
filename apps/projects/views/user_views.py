@@ -51,6 +51,8 @@ def user_preferences_view(request):
             form.save()
             messages.success(request, "Nastavení uloženo.")
             return redirect('projects:list')
+        else:
+            messages.error(request, "Prosím opravte chyby ve formuláři.")
     else:
         form = UserPreferencesForm(instance=prefs)
     # Přidání informací o roli uživatele do kontextu

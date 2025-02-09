@@ -99,6 +99,7 @@ def export_projects_xlsx(request):
     projects = Project.objects.all()  # nebo filtr, to je na tobě
 
     for proj in projects:
+        year = proj.scheme.year if proj.scheme else "N/A"
         student_name = f"{proj.student.first_name} {proj.student.last_name}" if proj.student else ""
         student_class = ""
         if proj.student and hasattr(proj.student, 'userprofile'):
@@ -231,9 +232,27 @@ def export_project_detail_pdf(request, pk):
 
 @login_required
 def export_control_check_pdf(request):
+    user = request.user
+    # Zkus získat default_year z předvoleb, pokud existuje
+    default_year = None
+    if hasattr(user, 'preferences'):
+        default_year = user.preferences.default_year
+
+    # Pokud není předán GET parametr "year", použijeme default_year
+    selected_year = request.GET.get('year', default_year)
+    
+    # Filtrujeme projekty podle ScoreBoardu (ScoringScheme.year) nebo případně podle studijního roku studenta
+    if selected_year:
+        # projects = Project.objects.filter(scheme__year=selected_year)
+        # projects = Project.objects.filter(leader=request.user).order_by('student__last_name')
+        projects = Project.objects.filter(scheme__year=selected_year, leader=request.user).order_by('student__last_name')
+        #projects = Project.objects.filter(Q(scheme__year=selected_year) & Q(leader=request.user)).order_by('student__last_name')
+    else:
+        # projects = Project.objects.all()
+        projects = Project.objects.filter(leader=request.user).order_by('student__last_name')
     # projects = Project.objects.all()
     # Filtrace: vybereme pouze projekty, kde je leader == přihlášený uživatel
-    projects = Project.objects.filter(leader=request.user).order_by('student__last_name')
+    # projects = Project.objects.filter(leader=request.user).order_by('student__last_name')
 
     context = {
         'projects': projects,
@@ -504,8 +523,29 @@ def export_milestones_pdf(request):
     Exportuje všechny milníky pro projekty, kde je přihlášený uživatel vedoucím.
     Milníky jsou seskupeny podle projektů a seřazeny podle data.
     """
+
+    user = request.user
+    # Zkus získat default_year z předvoleb, pokud existuje
+    default_year = None
+    if hasattr(user, 'preferences'):
+        default_year = user.preferences.default_year
+
+    # Pokud není předán GET parametr "year", použijeme default_year
+    selected_year = request.GET.get('year', default_year)
+    
+    # Filtrujeme projekty podle ScoreBoardu (ScoringScheme.year) nebo případně podle studijního roku studenta
+    if selected_year:
+        projects = Project.objects.filter(scheme__year=selected_year, leader=request.user).order_by('student__last_name')
+    else:
+        # projects = Project.objects.all()
+        projects = Project.objects.filter(leader=request.user).order_by('student__last_name')
+
+    context = {
+        'projects': projects,
+    }
+
     # Získání všech projektů, kde je přihlášený uživatel vedoucím
-    projects = Project.objects.filter(leader=request.user).order_by('student__last_name')
+    # projects = Project.objects.filter(leader=request.user).order_by('student__last_name')
 
     # Příprava dat pro šablonu
     projects_data = []

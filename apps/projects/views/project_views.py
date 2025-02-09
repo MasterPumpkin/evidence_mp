@@ -1,3 +1,4 @@
+from urllib import request
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -86,7 +87,7 @@ class ProjectListView(LoginRequiredMixin, ListView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        qs = Project.objects.all()
+        qs = Project.objects.all().order_by('student__userprofile__class_name', 'student__last_name')
 
         filter_type = self.request.GET.get('filter_type', 'all')
 
@@ -130,6 +131,24 @@ class ProjectListView(LoginRequiredMixin, ListView):
         if ordering := self.request.GET.get('ordering'):
             qs = qs.order_by(ordering)
 
+        user = self.request.user
+        # Pokud GET parametr "year" je předán, filtrovat projekty podle ScoreBoard.year
+        selected_year = self.request.GET.get('year')
+
+        if not selected_year and hasattr(user, 'preferences'):
+            selected_year = user.preferences.default_year
+        
+        if selected_year:
+            qs = qs.filter(scheme__year=selected_year)
+        else:
+            # Výchozí: pokud je uživatel učitel, můžeme defaultně filtrovat na aktivní ScoreBoard
+            if self.request.user.groups.filter(name='Teacher').exists() or self.request.user.is_superuser:
+                try:
+                    active_scheme = ScoringScheme.objects.get(active=True)
+                    qs = qs.filter(scheme=active_scheme)
+                except ScoringScheme.DoesNotExist:
+                    pass
+
         self.request.session['filtered_projects'] = list(qs.values_list('id', flat=True))
         
         filter_name = ''
@@ -149,6 +168,11 @@ class ProjectListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # Přidáme dostupné roky z ScoreBoardu
+        context['available_years'] = ScoringScheme.objects.values_list('year', flat=True).order_by('year')
+        # Uložení vybraného roku do kontextu, aby se mohl zobrazit v dropdownu
+        context['selected_year'] = self.request.GET.get('year') or (self.request.user.preferences.default_year if hasattr(self.request.user, 'preferences') else "")
 
         try:
             user_prefs = self.request.user.preferences
@@ -187,7 +211,9 @@ class TeacherProjectCreateView(CreateView):
     def form_valid(self, form):
         # Při uložení:
         # 1. Nastavíme scoreboard (active=True)
+        selected_year = self.request.GET.get('year') or request.user.userprofile.school_year
         try:
+            # scheme = ScoringScheme.objects.get(year=selected_year)
             scheme = ScoringScheme.objects.get(active=True)
             form.instance.scheme = scheme
         except ScoringScheme.DoesNotExist:
@@ -241,8 +267,16 @@ class TeacherProjectUpdateView(UpdateView):
             initial['delivery_documentation_date'] = project.delivery_documentation_date.strftime('%Y-%m-%d')
 
         return initial
+         
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Pokud by nebyl předán explicitně, použijeme default z UserPreferences
+        if hasattr(self.request.user, 'preferences'):
+            kwargs['selected_year'] = self.request.user.preferences.default_year
+        else:
+            kwargs['selected_year'] = None
+        return kwargs
     
-        
     def form_valid(self, form):
         project = self.get_object()
 
@@ -286,8 +320,10 @@ class StudentProjectCreateView(CreateView):
     
     def form_valid(self, form):
         # scoreboard
+        student_year = self.request.user.userprofile.school_year
         try:
-            scheme = ScoringScheme.objects.get(active=True)
+            # scheme = ScoringScheme.objects.get(active=True)
+            scheme = ScoringScheme.objects.get(year=student_year)
             form.instance.scheme = scheme
         except ScoringScheme.DoesNotExist:
             messages.error(self.request, "Není definován aktivní scoreboard.")
@@ -301,7 +337,10 @@ class StudentProjectCreateView(CreateView):
             messages.error(self.request, "Už máte jeden projekt založen.")
             return redirect('projects:list')
         
-        # Leader/opponent = None
+        # Leader a opponent zůstávají prázdné
+        form.instance.leader = None
+        form.instance.opponent = None
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -437,6 +476,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         # Přidání milníků do kontextu
         context['milestones'] = milestones_with_short_notes
         context['now'] = now()
+        context['year'] = project.scheme.year
 
         return context
 
