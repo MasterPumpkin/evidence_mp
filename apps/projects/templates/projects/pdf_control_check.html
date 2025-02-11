@@ -37,7 +37,7 @@
                     <td>{{ project.student.userprofile.class_name }}</td>
                     <td>{{ project.title|truncatechars:30 }}</td>
         
-                    {% with project.controls.all as checks %}
+                    {% with project.sorted_checks as checks %}
                         {% if checks|length >= 1 %}
                             <td>{{ checks.0.date|date:"d.m.Y" }}</td>
                             <td>{{ checks.0.evaluation|default_if_none:"" }}</td>

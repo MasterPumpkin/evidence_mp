@@ -399,7 +399,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for check in project.controls.all %}
+            {% for check in sorted_checks %}
             <tr>
               <td>{{ check.date|date:"j.n.Y" }}</td>
               <td>

@@ -254,6 +254,11 @@ def export_control_check_pdf(request):
     # Filtrace: vybereme pouze projekty, kde je leader == přihlášený uživatel
     # projects = Project.objects.filter(leader=request.user).order_by('student__last_name')
 
+    # Pro každý projekt předpřipravíme seřazené kontroly podle data
+    # (Předpokládáme, že kontrolní záznamy mají pole "date")
+    for project in projects:
+        project.sorted_checks = project.controls.order_by('date')
+    
     context = {
         'projects': projects,
     }

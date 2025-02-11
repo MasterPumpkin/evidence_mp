@@ -446,6 +446,9 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
             context['prev_project'] = None
             context['next_project'] = None
 
+        # Přidáme kontrolní záznamy seřazené podle data (nejstarší první)
+        context['sorted_checks'] = project.controls.order_by('date')
+
         context["leader_total_points"] = project.leader_total_points()
         context["max_leader_points"] = project.max_leader_points()
         context["opponent_total_points"] = project.opponent_total_points()
