@@ -285,14 +285,12 @@ class TeacherProjectUpdateView(UpdateView):
             # Aktualizujeme data předání z formuláře
             project.delivery_work_date = form.cleaned_data.get('delivery_work_date')
             project.delivery_documentation_date = form.cleaned_data.get('delivery_documentation_date')
-
             # Uložíme aktualizovaný projekt
             project.save()
-
             return super().form_valid(form)
         else:
             messages.error(self.request, "Studenta nelze změnit.")
-            return redirect('projects:detail', args=[self.object.pk])
+            return redirect('projects:detail', self.object.pk)
 
 
     def get_success_url(self):
