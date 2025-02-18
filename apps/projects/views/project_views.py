@@ -1,4 +1,4 @@
-from urllib import request
+# from urllib import request
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -211,7 +211,7 @@ class TeacherProjectCreateView(CreateView):
     def form_valid(self, form):
         # Při uložení:
         # 1. Nastavíme scoreboard (active=True)
-        selected_year = self.request.GET.get('year') or request.user.userprofile.school_year
+        selected_year = self.request.GET.get('year') or self.request.user.userprofile.school_year
         try:
             # scheme = ScoringScheme.objects.get(year=selected_year)
             scheme = ScoringScheme.objects.get(active=True)
