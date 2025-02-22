@@ -43,7 +43,7 @@
         <option value="{{ teacher.id }}"
           {% if request.GET.leader == teacher.id|stringformat:"s" %}selected{% endif %}
         >
-          {{ teacher.get_full_name|default:teacher.username }}
+          {{ teacher.last_name|default:teacher.username }} {{ teacher.first_name }}
         </option>
       {% endfor %}
     </select>
@@ -58,7 +58,7 @@
         <option value="{{ teacher.id }}"
           {% if request.GET.opponent == teacher.id|stringformat:"s" %}selected{% endif %}
         >
-          {{ teacher.get_full_name|default:teacher.username }}
+          {{ teacher.last_name|default:teacher.username }} {{ teacher.first_name }}
         </option>
       {% endfor %}
     </select>

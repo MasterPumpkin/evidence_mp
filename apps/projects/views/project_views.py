@@ -183,7 +183,7 @@ class ProjectListView(LoginRequiredMixin, ListView):
 
         # print(f"Uživatel: {self.request.user}, Preference: {context['default_my_projects']}")
 
-        context['all_teachers'] = User.objects.filter(groups__name='Teacher')
+        context['all_teachers'] = User.objects.filter(groups__name='Teacher').order_by('last_name')
         context['all_classes'] = UserProfile.objects.exclude(class_name='').values_list('class_name', flat=True).distinct().order_by('class_name')
 
         user = self.request.user
