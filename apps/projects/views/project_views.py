@@ -889,3 +889,36 @@ class OpponentReviewView(DetailView):
         context['is_student'] = user.groups.filter(name='Student').exists()
 
         return context
+
+
+"""
+class OpponentEvaluationUpdateView(LoginRequiredMixin, UpdateView):
+    model = OpponentEvaluation
+    form_class = OpponentEvaluationForm
+    template_name = 'projects/evaluation_form.html'
+
+    def get_object(self):
+        project_id = self.kwargs.get('pk')
+        project = get_object_or_404(Project, pk=project_id)
+        eval_object, _ = OpponentEvaluation.objects.get_or_create(project=project)
+        return eval_object
+
+    def dispatch(self, request, *args, **kwargs):
+        eval_object = self.get_object()
+        project = eval_object.project
+        if request.user.is_superuser:
+            return super().dispatch(request, *args, **kwargs)
+        # Pokud je nastaven externí oponent (neprázdný řetězec), umožnit pouze vedoucímu
+        if project.external_opponent:
+            if request.user == project.leader:
+                return super().dispatch(request, *args, **kwargs)
+        else:
+            # Pokud není nastaven externí oponent, umožnit pouze internímu oponentovi
+            if request.user == project.opponent:
+                return super().dispatch(request, *args, **kwargs)
+        messages.error(request, "Nemáte oprávnění vyplňovat hodnocení oponenta.")
+        return redirect('projects:detail', pk=project.pk)
+    
+    def get_success_url(self):
+        return reverse('projects:detail', args=[self.object.project.pk])
+"""

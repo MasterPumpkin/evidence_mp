@@ -74,9 +74,51 @@ class TeacherProjectForm(forms.ModelForm):
         help_text=Project._meta.get_field('delivery_documentation_date').help_text
     )
 
+    external_leader = forms.CharField(
+        required=False,
+        label=Project._meta.get_field('external_leader').verbose_name,
+        help_text=Project._meta.get_field('external_leader').help_text,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    external_leader_email = forms.EmailField(
+        required=False,
+        label=Project._meta.get_field('external_leader_email').verbose_name,
+        help_text=Project._meta.get_field('external_leader_email').help_text,
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+    external_leader_phone = forms.CharField(
+        required=False,
+        label=Project._meta.get_field('external_leader_phone').verbose_name,
+        help_text=Project._meta.get_field('external_leader_phone').help_text,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    external_opponent = forms.CharField(
+        required=False,
+        label=Project._meta.get_field('external_opponent').verbose_name,
+        help_text=Project._meta.get_field('external_opponent').help_text,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    external_opponent_email = forms.EmailField(
+        required=False,
+        label=Project._meta.get_field('external_opponent_email').verbose_name,
+        help_text=Project._meta.get_field('external_opponent_email').help_text,
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+    external_opponent_phone = forms.CharField(
+        required=False,
+        label=Project._meta.get_field('external_opponent_phone').verbose_name,
+        help_text=Project._meta.get_field('external_opponent_phone').help_text,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Project
-        fields = ['title', 'student', 'description', 'assignment', 'delivery_work_date', 'delivery_documentation_date']
+        fields = [
+            'title', 'student', 'description', 'assignment', 
+            'delivery_work_date', 'delivery_documentation_date',
+            'external_leader', 'external_leader_email', 'external_leader_phone',
+            'external_opponent', 'external_opponent_email', 'external_opponent_phone'
+        ]
 
     def __init__(self, *args, **kwargs):
         # Získáme extra parametr 'selected_year' a 'user' (přihlášený uživatel)

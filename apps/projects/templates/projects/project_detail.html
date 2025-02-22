@@ -147,8 +147,38 @@
         <div class="card-body">
           <h4 class="card-title">Hodnocení</h4>
   
-          <p><strong>Vedoucí:</strong> {{ project.leader.userprofile.title }} {{ project.leader.first_name }} {{ project.leader.last_name }}</p>
-          <p><strong>Oponent:</strong> {{ project.opponent.userprofile.title }} {{ project.opponent.first_name }} {{ project.opponent.last_name }}</p>
+          <p>
+            <strong>Vedoucí:</strong> 
+            {% if project.leader %}
+              {{ project.leader.userprofile.title }} {{ project.leader.first_name }} {{ project.leader.last_name }}
+            {% endif %}
+            {% if project.external_leader %}
+              <br>
+              <strong style="color: red;">Externí vedoucí:</strong> {{ project.external_leader }}
+              {% if project.external_leader_email or project.external_leader_phone %}
+                <small class="text-muted">
+                  {% if project.external_leader_email %}({{ project.external_leader_email }}){% endif %}
+                  {% if project.external_leader_phone %}({{ project.external_leader_phone }}){% endif %}
+                </small>
+              {% endif %}
+            {% endif %}
+          </p>
+
+          <p>
+            <strong>{% if project.external_opponent %}<span  style="color: red;">Externí oponent</span>{% else %}Oponent{% endif %}:</strong>
+            {% if project.opponent %}
+              {{ project.opponent.userprofile.title }} {{ project.opponent.first_name }} {{ project.opponent.last_name }}
+            {% endif %}
+            {% if project.external_opponent %}
+              {{ project.external_opponent }}
+              {% if project.external_opponent_email or project.external_opponent_phone %}
+                <small class="text-muted">
+                  {% if project.external_opponent_email %}({{ project.external_opponent_email }}){% endif %}
+                  {% if project.external_opponent_phone %}({{ project.external_opponent_phone }}){% endif %}
+                </small>
+              {% endif %}
+            {% endif %}
+          </p>
   
           <hr>
   
@@ -494,11 +524,14 @@
         <!--<a href="{% url 'projects:assignment_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit zadání</a>-->
         <a href="{% url 'projects:notes_edit' project.pk %}" class="btn btn-sm btn-primary">Upravit interní poznámky k projektu</a>
         <a href="{% url 'projects:leader_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek vedoucího</a>
+        {% if project.external_opponent %}
+            <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek externího oponenta</a>
         {% endif %}
-        {% if user.is_authenticated and project.opponent == user %}
-        <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek
-          oponenta</a>
-        {% endif %}   
+    {% endif %}
+    
+    {% if user.is_authenticated and project.opponent == user and not project.external_opponent %}
+        <a href="{% url 'projects:opponent_eval' project.pk %}" class="btn btn-sm btn-primary">Upravit posudek oponenta</a>
+    {% endif %}
       </div>
     </div>
   </div>
@@ -519,6 +552,9 @@
         <a href="{% url 'projects:export_project_assignment' project.pk %}" class="btn btn-sm btn-info">Zadání (DOCX)</a>
         <a href="{% url 'projects:export_project_pdf' project.pk %}" class="btn btn-sm btn-info">Detaily pro studenta (PDF)</a>
         <a href="{% url 'projects:pdf_final_report' project.pk %}" target="_blank" class="btn btn-sm btn-info">Závěrečný posudek k obhajobě (PDF)</a>
+        {% if project.external_opponent %}
+        <a href="{% url 'projects:export_opponent_eval' project.pk %}" class="btn btn-sm btn-info">Posudek externího oponenta (DOCX)</a>
+        {% endif %}
         {% endif %}
         {% if user.is_authenticated and project.opponent == user %}
         <a href="{% url 'projects:export_opponent_eval' project.pk %}" class="btn btn-sm btn-info {% if not project.opponent_eval %}disabled{% endif %}">Posudek oponenta (DOCX)</a>

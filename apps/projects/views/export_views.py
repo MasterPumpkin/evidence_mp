@@ -336,6 +336,22 @@ def export_leader_eval(request, pk):
     else:
         context["signature"] = ""  # Pokud není podpis, zůstane prázdný
 
+    # Determine which leader name to use
+    if project.external_leader:
+        leader_name = project.external_leader
+        # Don't include signature for external leader
+        context["signature"] = ""
+    else:
+        leader_name = f"{project.leader.userprofile.title} {project.leader.first_name} {project.leader.last_name}"
+        # Add signature only for internal leader
+        user_prefs = UserPreferences.objects.filter(user=request.user).first()
+        if user_prefs and user_prefs.signature and os.path.exists(user_prefs.signature.path):
+            context["signature"] = InlineImage(doc, user_prefs.signature.path, width=Cm(2.5))
+        else:
+            context["signature"] = ""
+
+    context['leader_name'] = leader_name
+
     doc.render(context)
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     # response['Content-Disposition'] = f'attachment; filename="posudek_vedouciho_{pk}.docx"'
@@ -347,17 +363,40 @@ def export_leader_eval(request, pk):
 @login_required
 def export_opponent_eval(request, pk):
     project = get_object_or_404(Project, pk=pk)
-    # opponent_eval = get_object_or_404(OpponentEvaluation, project=project)
+    # opponent_eval = getattr(project, 'opponent_eval', None)
+
+    # Allow export for project leader if there's an external opponent
+    if not (request.user == project.opponent or 
+            (project.external_opponent and request.user == project.leader) or 
+            request.user.is_superuser):
+        messages.error(request, "Nemáte oprávnění exportovat posudek oponenta.")
+        return redirect('projects:detail', pk=pk)
 
     doc = DocxTemplate("templates/docx/opponent_eval.docx")
     opponent_eval = getattr(project, 'opponent_eval', None)
 
-    # Načtení dat z modelu
+    # Determine which opponent name to use
+    if project.external_opponent:
+        opponent_name = project.external_opponent
+        # Don't use signature for external opponent
+        signature = ""
+    else:
+        opponent_name = f"{project.opponent.userprofile.title} {project.opponent.first_name} {project.opponent.last_name}"
+        # Add signature only for internal opponent
+        user_prefs = UserPreferences.objects.filter(user=request.user).first()
+        # user_prefs = UserPreferences.objects.filter(user=project.opponent).first()
+        if user_prefs and user_prefs.signature and os.path.exists(user_prefs.signature.path):
+            signature = InlineImage(doc, user_prefs.signature.path, width=Cm(2.5))
+        else:
+            signature = ""
+
+        # Načtení dat z modelu
     context = {
         'student_name': f"{project.student.first_name} {project.student.last_name}",
         'class_name': project.student.userprofile.class_name,
         'school_year': project.scheme.year if project.scheme else "N/A",
-        'opponent_name': f"{project.opponent.userprofile.title} {project.opponent.first_name} {project.opponent.last_name}",
+        'opponent_name': opponent_name,
+        'signature': signature,
         'project_title': project.title,
         'area1_text': opponent_eval.area1_text,
         'area1_points': opponent_eval.area1_points,
@@ -370,19 +409,6 @@ def export_opponent_eval(request, pk):
         ) if project.scheme else "N/A",
         'review_date': opponent_eval.export_date.strftime('%d.%m.%Y') if opponent_eval.export_date else '',
     }
-
-    # Cesta k šabloně
-    # template_path = os.path.join('static', 'templates', 'opponent_eval_template.docx')
-    # doc = DocxTemplate(template_path)
-
-    user_prefs = UserPreferences.objects.filter(user=request.user).first()
-
-    # Vložení podpisu, pokud existuje
-    if user_prefs and user_prefs.signature and os.path.exists(user_prefs.signature.path):
-        signature_img = InlineImage(doc, user_prefs.signature.path, width=Cm(2.5))  
-        context["signature"] = signature_img  # Odkazujeme se na ALT text v šabloně
-    else:
-        context["signature"] = ""  # Pokud není podpis, zůstane prázdný
 
     doc.render(context)
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')

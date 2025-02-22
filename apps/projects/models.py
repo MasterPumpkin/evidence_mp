@@ -121,7 +121,6 @@ class Project(models.Model):
         verbose_name="Vedoucí"
     )
 
-    # případný oponent
     opponent = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -129,6 +128,44 @@ class Project(models.Model):
         related_name='opponent_projects',
         help_text="Oponent projektu",
         verbose_name="Oponent"
+    )
+
+    # externí vedoucí a kontaktní údaje
+    external_leader = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Jméno externího vedoucího projektu (neregistrovaný uživatel)",
+        verbose_name="Externí vedoucí"
+    )
+    external_leader_email = models.EmailField(
+        blank=True,
+        help_text="E-mail externího vedoucího",
+        verbose_name="E-mail externího vedoucího"
+    )
+    external_leader_phone = models.CharField(
+        max_length=20,
+        blank=True,
+        help_text="Telefon externího vedoucího",
+        verbose_name="Telefon externího vedoucího"
+    )
+    
+    # externí oponent a kontaktní údaje
+    external_opponent = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Jméno externího oponenta projektu (neregistrovaný uživatel)", 
+        verbose_name="Externí oponent"
+    )
+    external_opponent_email = models.EmailField(
+        blank=True,
+        help_text="E-mail externího oponenta",
+        verbose_name="E-mail externího oponenta"
+    )
+    external_opponent_phone = models.CharField(
+        max_length=20,
+        blank=True,
+        help_text="Telefon externího oponenta",
+        verbose_name="Telefon externího oponenta"
     )
 
     scheme = models.ForeignKey(

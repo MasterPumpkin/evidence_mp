@@ -78,9 +78,17 @@ class OpponentEvalUpdateView(LoginRequiredMixin, UpdateView):
         obj = self.get_object()
         project = obj.project
         # Jen oponent nebo superuser
-        if not (request.user == project.opponent or request.user.is_superuser):
-            messages.error(request, "Nemáte oprávnění vyplňovat hodnocení oponenta.")
-            return redirect('projects:detail', pk=project.pk)
+        # if not (request.user == project.opponent or request.user.is_superuser):
+        #     messages.error(request, "Nemáte oprávnění vyplňovat hodnocení oponenta.")
+        #     return redirect('projects:detail', pk=project.pk)
+        # return super().dispatch(request, *args, **kwargs)
+    
+        # Allow export for project leader if there's an external opponent
+        if not (request.user == project.opponent or 
+            (project.external_opponent and request.user == project.leader) or 
+            request.user.is_superuser):
+            messages.error(request, "Nemáte oprávnění vyplňovat posudek oponenta.")
+            return redirect('projects:detail', pk=pk)
         return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
