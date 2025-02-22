@@ -1,57 +1,133 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}Maturitní Projekty{% endblock %}</title>
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <style>
     body {
-        padding-bottom: 30px;
+      padding-bottom: 30px;
+    }
+
+    /* Nastavení základního stylu pro select */
+    #projectStatus {
+      font-weight: bold;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.2rem;
+    }
+
+    /* Status colors - pro celý select podle vybrané hodnoty */
+    #projectStatus[data-value="pending_approval"] {
+      color: #dc3545 !important;
+      border-color: #dc3545;
+    }
+
+    #projectStatus[data-value="approved"] {
+      color: #198754 !important;
+      border-color: #198754;
+    }
+
+    #projectStatus[data-value="finished"] {
+      color: #0d6efd !important;
+      border-color: #0d6efd;
+    }
+
+    #projectStatus[data-value="rejected"] {
+      color: #6c757d !important;
+      border-color: #6c757d;
+    }
+
+    #projectStatus[data-value="cancelled"] {
+      color: #6c757d !important;
+      border-color: #6c757d;
+    }
+
+    /* Barvy pro jednotlivé options */
+    #projectStatus option[value="pending_approval"] {
+      color: #dc3545;
+      background-color: #fff;
+    }
+
+    #projectStatus option[value="approved"] {
+      color: #198754;
+      background-color: #fff;
+    }
+
+    #projectStatus option[value="finished"] {
+      color: #0d6efd;
+      background-color: #fff;
+    }
+
+    #projectStatus option[value="rejected"] {
+      color: #6c757d;
+      background-color: #fff;
+    }
+
+    #projectStatus option[value="cancelled"] {
+      color: #6c757d;
+      background-color: #fff;
+    }
+
+    /* Barvy pro badge */
+    .status-badge-pending_approval {
+      background-color: #dc3545;
+    }
+
+    .status-badge-approved {
+      background-color: #198754;
+    }
+
+    .status-badge-finished {
+      background-color: #0d6efd;
+    }
+
+    .status-badge-rejected {
+      background-color: #6c757d;
+    }
+
+    .status-badge-cancelled {
+      background-color: #6c757d;
     }
   </style>
   {% block header %}
   {% endblock %}
 </head>
+
 <body>
 
-<!-- Zprávy pro uživatele -->
-{% if messages %}
-<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="messageModalLabel">Upozornění</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
-      </div>
-      <div class="modal-body">
-        {% for message in messages %}
+  <!-- Zprávy pro uživatele -->
+  {% if messages %}
+  <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="messageModalLabel">Upozornění</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+        </div>
+        <div class="modal-body">
+          {% for message in messages %}
           <div class="alert alert-{{ message.tags }}" role="alert">
             {{ message }}
           </div>
-        {% endfor %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+          {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-{% endif %}
+  {% endif %}
 
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Maturitní projekty</a>
-      <button 
-        class="navbar-toggler" 
-        type="button" 
-        data-bs-toggle="collapse" 
-        data-bs-target="#navbarNav" 
-        aria-controls="navbarNav" 
-        aria-expanded="false" 
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -63,46 +139,46 @@
         </ul>
         <ul class="navbar-nav ms-auto d-flex align-items-center">
           {% if user.is_authenticated %}
-            <li class="nav-item">
-              <span class="navbar-text me-2">
-                Přihlášen: {{ user.username }}
-              </span>
-            </li>
-            {% if is_teacher %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'projects:teacher_project_create' %}">Založit nový projekt</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'profiles:user_profile_edit' user.pk %}">
-                Můj profil
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'projects:user_preferences' %}">
-                Předvolby
-              </a>
-            </li>
-            {% endif %}
-            {% if is_student %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'projects:student_project_create' %}">Založit nový projekt</a>
-            </li>
-            {% endif %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'password_change' %}">Změnit heslo</a>
-            </li>
-            <li class="nav-item">
-              <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-link nav-link" style="border: none; padding: 0; background: none;">
-                  Odhlásit se
-                </button>
-              </form>
-            </li>
+          <li class="nav-item">
+            <span class="navbar-text me-2">
+              Přihlášen: {{ user.username }}
+            </span>
+          </li>
+          {% if is_teacher %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'projects:teacher_project_create' %}">Založit nový projekt</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'profiles:user_profile_edit' user.pk %}">
+              Můj profil
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'projects:user_preferences' %}">
+              Předvolby
+            </a>
+          </li>
+          {% endif %}
+          {% if is_student %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'projects:student_project_create' %}">Založit nový projekt</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'password_change' %}">Změnit heslo</a>
+          </li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-link nav-link" style="border: none; padding: 0; background: none;">
+                Odhlásit se
+              </button>
+            </form>
+          </li>
           {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">Přihlásit se</a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Přihlásit se</a>
+          </li>
           {% endif %}
         </ul>
       </div>
@@ -115,9 +191,11 @@
   </div>
 
   <!-- Bootstrap JS + Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       var messageModal = document.getElementById('messageModal');
       if (messageModal) {
         var modal = new bootstrap.Modal(messageModal);
@@ -125,6 +203,7 @@
       }
     });
   </script>
-  
+
 </body>
+
 </html>

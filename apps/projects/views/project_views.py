@@ -58,6 +58,26 @@ def update_milestone_status(request, milestone_id):
         return JsonResponse({'success': False, 'error': str(e)})
 
 
+@login_required
+def update_project_status(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    
+    # Kontrola oprávnění - pouze vedoucí nebo superuser
+    if not (request.user == project.leader or request.user.is_superuser):
+        messages.error(request, "Nemáte oprávnění měnit stav projektu.")
+        return redirect('projects:detail', pk=pk)
+
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in dict(Project.STATUS_CHOICES):
+            project.status = new_status
+            project.save()
+            messages.success(request, f"Stav projektu byl změněn na: {project.get_status_display()}")
+        else:
+            messages.error(request, "Neplatný stav projektu.")
+    
+    return redirect('projects:detail', pk=pk)
+
 
 class ProjectListView(LoginRequiredMixin, ListView):
     model = Project

@@ -89,6 +89,8 @@ class Project(models.Model):
         ('pending_approval', 'Čeká na schválení'),
         ('approved', 'Schváleno'),
         ('finished', 'Dokončeno'),
+        ('rejected', 'Zamítnuto'),
+        ('cancelled', 'Zrušeno'),
     ]
 
     title = models.CharField(max_length=200, verbose_name="Název")

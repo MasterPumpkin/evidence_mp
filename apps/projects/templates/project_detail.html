@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Detail</title>
+</head>
+<body>
+    <!-- ...existing code... -->
+    <script>
+    function confirmStatusChange(selectElement) {
+      const newStatus = selectElement.value;
+      const currentStatus = '{{ project.status }}';
+      const newStatusText = selectElement.options[selectElement.selectedIndex].text;
+      
+      // Aktualizovat data-value atribut pro správné obarvení
+      selectElement.setAttribute('data-value', newStatus);
+      
+      if (newStatus !== currentStatus) {
+        if (confirm(`Opravdu chcete změnit stav projektu na "${newStatusText}"?`)) {
+          // Zbytek kódu zůstává stejný
+          const form = document.createElement('form');
+          // ...existing code...
+        } else {
+          // Reset to previous value
+          selectElement.value = currentStatus;
+          selectElement.setAttribute('data-value', currentStatus);
+        }
+      }
+    }
+
+    // Přidat inicializaci při načtení stránky
+    document.addEventListener('DOMContentLoaded', function() {
+      const statusSelect = document.getElementById('projectStatus');
+      if (statusSelect) {
+        statusSelect.setAttribute('data-value', statusSelect.value);
+      }
+    });
+    </script>
+    <!-- ...existing code... -->
+</body>
+</html>

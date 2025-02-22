@@ -239,14 +239,24 @@
               <p><strong>Školní rok:</strong> {{ year }}</p>
             </div>
             <div class="col-6">
-              <p>
-                <strong>Stav:</strong>
-                {% if project.get_status_display == "Čeká na schválení" %}
-                  <span class="badge bg-danger">{{ project.get_status_display }}</span>
-                {% elif project.get_status_display == "Schváleno" %}
-                  <span class="badge bg-success">{{ project.get_status_display }}</span>
+              <p class="d-flex align-items-center">
+                <strong class="me-2">Stav:</strong>
+                {% if user == project.leader or user.is_superuser %}
+                  <select name="status" class="form-select form-select-sm d-inline-block w-auto" id="projectStatus" 
+                    data-project-id="{{ project.pk }}"
+                    onchange="confirmStatusChange(this)">
+                    {% for status_code, status_label in project.STATUS_CHOICES %}
+                      <option value="{{ status_code }}" 
+                        {% if project.status == status_code %}selected{% endif %}
+                        class="status-{{ status_code }}">
+                        {{ status_label }}
+                      </option>
+                    {% endfor %}
+                  </select>
                 {% else %}
-                  <span class="badge bg-secondary">{{ project.get_status_display }}</span>
+                  <span class="badge status-badge-{{ project.status }}">
+                    {{ project.get_status_display }}
+                  </span>
                 {% endif %}
               </p>
             </div>
@@ -751,5 +761,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
   </script>
 
+<!-- Přidejte tento JavaScript na konec souboru -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Inicializace data-value atributu při načtení stránky
+  const statusSelect = document.getElementById('projectStatus');
+  if (statusSelect) {
+    statusSelect.setAttribute('data-value', statusSelect.value);
+  }
+});
+
+function confirmStatusChange(selectElement) {
+  const newStatus = selectElement.value;
+  const currentStatus = '{{ project.status }}';
+  const newStatusText = selectElement.options[selectElement.selectedIndex].text;
+  
+  // Okamžitě nastavit data-value pro vizuální změnu
+  selectElement.setAttribute('data-value', newStatus);
+  
+  if (newStatus !== currentStatus) {
+    if (confirm(`Opravdu chcete změnit stav projektu na "${newStatusText}"?`)) {
+      // Submit form
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = "{% url 'projects:update_status' project.pk %}";
+      
+      const csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = 'csrfmiddlewaretoken';
+      csrfInput.value = '{{ csrf_token }}';
+      form.appendChild(csrfInput);
+      
+      const statusInput = document.createElement('input');
+      statusInput.type = 'hidden';
+      statusInput.name = 'status';
+      statusInput.value = newStatus;
+      form.appendChild(statusInput);
+      
+      document.body.appendChild(form);
+      form.submit();
+    } else {
+      // Reset to previous value
+      selectElement.value = currentStatus;
+      selectElement.setAttribute('data-value', currentStatus);
+    }
+  }
+}
+</script>
 
 {% endblock %}
