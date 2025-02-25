@@ -911,34 +911,52 @@ class OpponentReviewView(DetailView):
         return context
 
 
-"""
-class OpponentEvaluationUpdateView(LoginRequiredMixin, UpdateView):
-    model = OpponentEvaluation
-    form_class = OpponentEvaluationForm
-    template_name = 'projects/evaluation_form.html'
-
-    def get_object(self):
-        project_id = self.kwargs.get('pk')
-        project = get_object_or_404(Project, pk=project_id)
-        eval_object, _ = OpponentEvaluation.objects.get_or_create(project=project)
-        return eval_object
+@method_decorator(login_required, name='dispatch')
+class LeaderQuestionsView(DetailView):
+    model = Project
+    template_name = "projects/questions_leader.html"
+    context_object_name = "project"
 
     def dispatch(self, request, *args, **kwargs):
-        eval_object = self.get_object()
-        project = eval_object.project
-        if request.user.is_superuser:
-            return super().dispatch(request, *args, **kwargs)
-        # Pokud je nastaven externí oponent (neprázdný řetězec), umožnit pouze vedoucímu
-        if project.external_opponent:
-            if request.user == project.leader:
-                return super().dispatch(request, *args, **kwargs)
-        else:
-            # Pokud není nastaven externí oponent, umožnit pouze internímu oponentovi
-            if request.user == project.opponent:
-                return super().dispatch(request, *args, **kwargs)
-        messages.error(request, "Nemáte oprávnění vyplňovat hodnocení oponenta.")
-        return redirect('projects:detail', pk=project.pk)
-    
-    def get_success_url(self):
-        return reverse('projects:detail', args=[self.object.project.pk])
-"""
+        project = self.get_object()
+        leader_eval = getattr(project, 'leader_eval', None)
+
+        # Kontrola oprávnění
+        if not (request.user == project.leader or 
+                request.user == project.opponent or 
+                request.user.is_superuser or
+                (request.user == project.student and leader_eval and leader_eval.show_questions)):
+            messages.error(request, "Nemáte oprávnění zobrazit tyto otázky.")
+            return redirect('projects:detail', pk=project.pk)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.get_object()
+        context['eval'] = getattr(project, 'leader_eval', None)
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class OpponentQuestionsView(DetailView):
+    model = Project
+    template_name = "projects/questions_opponent.html"
+    context_object_name = "project"
+
+    def dispatch(self, request, *args, **kwargs):
+        project = self.get_object()
+        opponent_eval = getattr(project, 'opponent_eval', None)
+
+        # Kontrola oprávnění
+        if not (request.user == project.opponent or 
+                request.user == project.leader or 
+                request.user.is_superuser or
+                (request.user == project.student and opponent_eval and opponent_eval.show_questions)):
+            messages.error(request, "Nemáte oprávnění zobrazit tyto otázky.")
+            return redirect('projects:detail', pk=project.pk)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.get_object()
+        context['eval'] = getattr(project, 'opponent_eval', None)
+        return context

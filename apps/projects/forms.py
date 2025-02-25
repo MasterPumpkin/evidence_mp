@@ -175,6 +175,17 @@ class ControlCheckForm(forms.ModelForm):
         }
 
 class LeaderEvaluationForm(forms.ModelForm):
+    questions_visible = forms.ChoiceField(
+        choices=[
+            (False, 'Nezobrazovat'),
+            (True, 'Zobrazit studentovi')
+        ],
+        widget=forms.RadioSelect,
+        initial=False,
+        label=LeaderEvaluation._meta.get_field('questions_visible').verbose_name,
+        help_text=LeaderEvaluation._meta.get_field('questions_visible').help_text
+    )
+
     export_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         required=False,
@@ -194,21 +205,34 @@ class LeaderEvaluationForm(forms.ModelForm):
             'area1_text', 'area1_points',
             'area2_text', 'area2_points',
             'area3_text', 'area3_points',
+            'defense_questions', 'questions_visible',
             'export_date', 'submission_status'
         ]
 
 class OpponentEvaluationForm(forms.ModelForm):
+    questions_visible = forms.ChoiceField(
+        choices=[
+            (False, 'Nezobrazovat'),
+            (True, 'Zobrazit studentovi')
+        ],
+        widget=forms.RadioSelect,
+        initial=False,
+        label=OpponentEvaluation._meta.get_field('questions_visible').verbose_name,
+        help_text=OpponentEvaluation._meta.get_field('questions_visible').help_text
+    )
+
     export_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         required=False,
-        label=LeaderEvaluation._meta.get_field('export_date').verbose_name,
-        help_text=LeaderEvaluation._meta.get_field('export_date').help_text
+        label=OpponentEvaluation._meta.get_field('export_date').verbose_name,
+        help_text=OpponentEvaluation._meta.get_field('export_date').help_text
     )
     class Meta:
         model = OpponentEvaluation
         fields = [
             'area1_text', 'area1_points',
             'area2_text', 'area2_points',
+            'defense_questions', 'questions_visible',
             'export_date'
         ]
 

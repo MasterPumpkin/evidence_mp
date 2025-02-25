@@ -288,6 +288,17 @@ class LeaderEvaluation(models.Model):
     area3_text = models.TextField(blank=True, help_text="Dodržování termínů konzultací, průběžné plnění zadaných úkolů, samostatnost, orientace v problematice", verbose_name="Průběžné kontroly plnění zadaných úkolů (počet bodů 0 - 18)")
     area3_points = models.PositiveIntegerField(default=0, verbose_name="Body")
 
+    defense_questions = models.TextField(
+        blank=True,
+        help_text="Otázky k obhajobě",
+        verbose_name="Otázky k obhajobě"
+    )
+    questions_visible = models.BooleanField(
+        default=False,
+        help_text="Zveřejnit otázky studentovi",
+        verbose_name="Zveřejnit otázky"
+    )
+
     export_date = models.DateField(blank=True, null=True, help_text="Datum exportu hodnocení", verbose_name="Datum exportu")
     submission_status = models.CharField(
         max_length=50,
@@ -326,6 +337,17 @@ class OpponentEvaluation(models.Model):
     
     area2_text = models.TextField(blank=True, help_text="Odborný obsah, přehledná a srozumitelná prezentace výsledků", verbose_name="Dokumentace (počet bodů 0 - 12)")
     area2_points = models.PositiveIntegerField(default=0, verbose_name="Body")
+
+    defense_questions = models.TextField(
+        blank=True,
+        help_text="Otázky k obhajobě",
+        verbose_name="Otázky k obhajobě"
+    )
+    questions_visible = models.BooleanField(
+        default=False,
+        help_text="Zveřejnit otázky studentovi",
+        verbose_name="Zveřejnit otázky"
+    )
 
     export_date = models.DateField(blank=True, null=True, help_text="Datum exportu hodnocení", verbose_name="Datum exportu")
 

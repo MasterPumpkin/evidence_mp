@@ -41,6 +41,19 @@
 
       <hr>
 
+      <!-- Otázky k obhajobě -->
+      <div class="mb-3">
+        {{ form.defense_questions|as_crispy_field }}
+        <p>Zbývá znaků: <span id="defense_counter">1000</span></p>
+      </div>
+
+      <!-- Zobrazení otázek -->
+      <div class="mb-3">
+        {{ form.questions_visible|as_crispy_field }}
+      </div>
+
+      <hr>
+
       <div class="row">
         <div class="col-md-6">
           {{ form.export_date|as_crispy_field }}
@@ -72,6 +85,7 @@
       // Nastavení odpočtů pro jednotlivá pole
       setupCharacterCounter("id_area1_text", "area1_counter", 1000);
       setupCharacterCounter("id_area2_text", "area2_counter", 1000);
+      setupCharacterCounter("id_defense_questions", "defense_counter", 1000);
     </script>
   </div>
 </div>

@@ -28,7 +28,9 @@ from .views.project_views import (
     ProjectNotesUpdateView, ProjectAssignmentUpdateView,
     take_opponent_role, ProjectOpponentUpdateView,
     generate_consultations, update_milestone_status,
-    LeaderReviewView, OpponentReviewView, update_project_status)
+    LeaderReviewView, OpponentReviewView, update_project_status,
+    LeaderQuestionsView, OpponentQuestionsView,  # add these
+)
 from .views.user_views import (
     UserProfileUpdateView, user_preferences_view)
 
@@ -100,6 +102,9 @@ urlpatterns = [
     path('export-milestones-pdf/', export_milestones_pdf, name='export_milestones_pdf'),
 
     path('update-status/<int:pk>/', update_project_status, name='update_status'),
+
+    path('<int:pk>/questions-leader/', LeaderQuestionsView.as_view(), name='questions_leader'),
+    path('<int:pk>/questions-opponent/', OpponentQuestionsView.as_view(), name='questions_opponent'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

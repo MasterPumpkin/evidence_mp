@@ -184,41 +184,67 @@
   
           <!-- Vedoucí -->
           <div class="row align-items-center">
-            <div class="col-3 text-start">
+            <div class="col-3">
               <p class="mb-0"><strong>Vedoucí:</strong></p>
             </div>
-            <div class="col-5 text-start">
+            <div class="col-3">
               {% if leader_total_points == "X" %}
                 <span class="text-danger fw-bold">
               {% else %}
                 <span class="text-success fw-bold">
               {% endif %}
-              {{ leader_total_points }}</span> / {{ max_leader_points }} bodů
+              {{ leader_total_points }}</span>/{{ max_leader_points }} bodů
             </div>
-            <div class="col-4 text-end">
+            <div class="col-6 text-end">
               <a href="{% url 'projects:review_leader' pk=project.pk %}" class="btn btn-sm btn-outline-dark {% if not project.leader_eval %}disabled{% endif %}">
                 Zobrazit posudek
               </a>
+              {% if project.leader_eval and project.leader_eval.defense_questions %}
+                {% if user == project.leader or user.is_superuser or user == project.opponent %}
+                  <a href="{% url 'projects:questions_leader' pk=project.pk %}" class="btn btn-sm btn-outline-dark">
+                    Otázky
+                  </a>
+                {% elif user == project.student and project.leader_eval.show_questions %}
+                  <a href="{% url 'projects:questions_leader' pk=project.pk %}" class="btn btn-sm btn-outline-dark">
+                    Otázky
+                  </a>
+                {% endif %}
+              {% else %}
+                <button class="btn btn-sm btn-outline-dark disabled">Otázky</button>
+              {% endif %}
             </div>
           </div>
   
           <!-- Oponent -->
           <div class="row align-items-center mt-2">
-            <div class="col-3 text-start">
+            <div class="col-3">
               <p class="mb-0"><strong>Oponent:</strong></p>
             </div>
-            <div class="col-5 text-start">
+            <div class="col-3">
               {% if opponent_total_points == "X" %}
                 <span class="text-danger fw-bold">
               {% else %}
                 <span class="text-success fw-bold">
               {% endif %}
-              {{ opponent_total_points }}</span> / {{ max_opponent_points }} bodů
+              {{ opponent_total_points }}</span>/{{ max_opponent_points }} bodů
             </div>
-            <div class="col-4 text-end">
+            <div class="col-6 text-end">
               <a href="{% url 'projects:review_opponent' pk=project.pk %}" class="btn btn-sm btn-outline-dark {% if not project.opponent_eval %}disabled{% endif %}">
                 Zobrazit posudek
               </a>
+              {% if project.opponent_eval and project.opponent_eval.defense_questions %}
+                {% if user == project.opponent or user.is_superuser or user == project.leader %}
+                  <a href="{% url 'projects:questions_opponent' pk=project.pk %}" class="btn btn-sm btn-outline-dark">
+                    Otázky
+                  </a>
+                {% elif user == project.student and project.opponent_eval.show_questions %}
+                  <a href="{% url 'projects:questions_opponent' pk=project.pk %}" class="btn btn-sm btn-outline-dark">
+                    Otázky
+                  </a>
+                {% endif %}
+              {% else %}
+                <button class="btn btn-sm btn-outline-dark disabled">Otázky</button>
+              {% endif %}
             </div>
           </div>
   

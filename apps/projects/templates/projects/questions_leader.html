@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2>Otázky vedoucího projektu</h2>
+    <h3>{{ project.title }}</h3>
+    
+    {% if eval %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4>Otázky k obhajobě</h4>
+                {% if user == project.student and not eval.show_questions %}
+                    <div class="alert alert-warning">
+                        Otázky nejsou zatím dostupné pro zobrazení.
+                    </div>
+                {% else %}
+                    <p>{{ eval.defense_questions }}</p>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning">Otázky vedoucího zatím nebyly vytvořeny.</div>
+    {% endif %}
+
+    <a href="{% url 'projects:detail' pk=project.pk %}" class="btn btn-secondary">Zpět</a>
+</div>
+{% endblock %}

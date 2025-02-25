@@ -31,6 +31,8 @@
       <option value="pending_approval" {% if request.GET.status == "pending_approval" %}selected{% endif %}>Čeká na schválení</option>
       <option value="approved" {% if request.GET.status == "approved" %}selected{% endif %}>Schváleno</option>
       <option value="finished" {% if request.GET.status == "finished" %}selected{% endif %}>Dokončeno</option>
+      <option value="rejected" {% if request.GET.status == "rejected" %}selected{% endif %}>Zamítnuto</option>
+      <option value="cancelled" {% if request.GET.status == "cancelled" %}selected{% endif %}>Zrušeno</option>
     </select>
   </div>
 
@@ -138,7 +140,13 @@
         </td>
         <td>{{ proj.get_status_display }}</td>
         <td>{{ proj.leader.last_name }}</td>
-        <td>{{ proj.opponent.last_name }}</td>
+        <td>
+          {% if proj.opponent %}
+            {{ proj.opponent.last_name }}
+          {% elif proj.external_opponent %}
+            Externí
+          {% endif %}
+        </td>
         <td>
           <a href="{% url 'projects:detail' proj.pk %}" class="btn btn-sm btn-success">Detail</a>
         </td>
