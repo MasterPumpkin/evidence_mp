@@ -8,6 +8,7 @@ Django==5.1.4
 django-ckeditor==6.7.2
 django-ckeditor-5==0.2.15
 django-crispy-forms==2.3
+django-dbbackup==4.2.1
 django-environ==0.11.2
 django-jazzmin==3.0.1
 django-js-asset==3.0.1
@@ -27,6 +28,7 @@ pycparser==2.22
 pydyf==0.11.0
 pyphen==0.17.2
 python-docx==1.1.2
+pytz==2025.1
 setuptools==75.8.0
 six==1.17.0
 sqlparse==0.5.3

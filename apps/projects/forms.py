@@ -178,7 +178,7 @@ class LeaderEvaluationForm(forms.ModelForm):
     questions_visible = forms.ChoiceField(
         choices=[
             (False, 'Nezobrazovat'),
-            (True, 'Zobrazit studentovi')
+            (True, 'Zobrazit žákovi')
         ],
         widget=forms.RadioSelect,
         initial=False,
@@ -213,7 +213,7 @@ class OpponentEvaluationForm(forms.ModelForm):
     questions_visible = forms.ChoiceField(
         choices=[
             (False, 'Nezobrazovat'),
-            (True, 'Zobrazit studentovi')
+            (True, 'Zobrazit žákovi')
         ],
         widget=forms.RadioSelect,
         initial=False,

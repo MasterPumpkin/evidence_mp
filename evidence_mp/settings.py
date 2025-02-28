@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dbbackup',
     # 'apps.users',
     'apps.projects',
     'apps.profiles',
@@ -138,6 +139,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR, 'backups')}
+DBBACKUP_CLEANUP_KEEP = 10  # number of backups to keep
+DBBACKUP_CLEANUP_KEEP_MEDIA = 5  # number of media backups to keep
+DBBACKUP_MEDIA_PATH = 'media'
 
 
 # Default primary key field type

@@ -295,7 +295,7 @@ class LeaderEvaluation(models.Model):
     )
     questions_visible = models.BooleanField(
         default=False,
-        help_text="Zveřejnit otázky studentovi",
+        help_text="Zveřejnit otázky žákovi",
         verbose_name="Zveřejnit otázky"
     )
 
@@ -345,7 +345,7 @@ class OpponentEvaluation(models.Model):
     )
     questions_visible = models.BooleanField(
         default=False,
-        help_text="Zveřejnit otázky studentovi",
+        help_text="Zveřejnit otázky žákovi",
         verbose_name="Zveřejnit otázky"
     )
 
