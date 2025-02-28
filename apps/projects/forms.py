@@ -154,7 +154,11 @@ class StudentProjectForm(forms.ModelForm):
     """Student zakládá projekt, nepotřebuje leader/opponent."""
     class Meta:
         model = Project
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'portfolio_url1', 'portfolio_url2']
+        widgets = {
+            'portfolio_url1': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://'}),
+            'portfolio_url2': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://'})
+        }
 
 
 class ProjectForm(forms.ModelForm):

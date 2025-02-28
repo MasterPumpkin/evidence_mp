@@ -40,6 +40,20 @@
               data-bs-parent="#projectDescriptionAccordion">
               <div class="accordion-body">
                 {{ project.description }}
+                {% if project.portfolio_url1 or project.portfolio_url2 %}
+                  <hr>
+                  <h6>Odkazy na portfolio:</h6>
+                  {% if project.portfolio_url1 %}
+                    <p><a href="{{ project.portfolio_url1 }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                      <i class="fas fa-external-link-alt"></i> Portfolio URL 1</a>
+                    </p>
+                  {% endif %}
+                  {% if project.portfolio_url2 %}
+                    <p><a href="{{ project.portfolio_url2 }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                      <i class="fas fa-external-link-alt"></i> Portfolio URL 2</a>
+                    </p>
+                  {% endif %}
+                {% endif %}
               </div>
             </div>
           </div>
@@ -297,7 +311,7 @@
             {% endif %}
           </p>
   
-          <!-- Accordion pro zobrazení popisu -->
+            <!-- Accordion pro zobrazení popisu -->
           <div class="accordion" id="projectDescriptionAccordion">
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingDescription">
@@ -310,10 +324,26 @@
                 data-bs-parent="#projectDescriptionAccordion">
                 <div class="accordion-body">
                   {{ project.description }}
+                    {% if project.portfolio_url1 or project.portfolio_url2 %}
+                    <hr>
+                    <h6>Odkazy na portfolio:</h6>
+                    <div class="d-flex"></div>
+                      {% if project.portfolio_url1 %}
+                      <a href="{{ project.portfolio_url1 }}" target="_blank" class="btn btn-sm btn-outline-primary me-2" title="{{ project.portfolio_url1 }}">
+                        <i class="fas fa-external-link-alt"></i> Portfolio URL 1
+                      </a>
+                      {% endif %}
+                      {% if project.portfolio_url2 %}
+                      <a href="{{ project.portfolio_url2 }}" target="_blank" class="btn btn-sm btn-outline-primary" title="{{ project.portfolio_url2 }}">
+                        <i class="fas fa-external-link-alt"></i> Portfolio URL 2
+                      </a>
+                      {% endif %}
+                    </div>
+                    {% endif %}
                 </div>
               </div>
             </div>
-          </div>
+
   
           <!-- Accordion pro zobrazení zadání -->
           <div class="accordion" id="projectAssignmentAccordion">

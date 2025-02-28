@@ -8,6 +8,8 @@ from PIL import Image
 from django.core.exceptions import ValidationError
 import os
 from django_ckeditor_5.fields import CKEditor5Field
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 
 def validate_image(image):
     # Kontrola velikosti souboru
@@ -29,6 +31,50 @@ def validate_image(image):
             raise ValidationError(f"Rozměry obrázku nesmí přesáhnout {max_width}x{max_height} px.")
     except IOError:
         raise ValidationError("Nepodařilo se otevřít soubor. Ujistěte se, že jde o platný obrázek.")
+
+
+def validate_safe_url(value):
+    url_validator = URLValidator()
+    try:
+        url_validator(value)
+    except ValidationError:
+        raise ValidationError("Zadejte platnou URL adresu.")
+    
+    # Seznam povolených domén
+    allowed_domains = [
+        # Verzovací systémy
+        'github.com', 'gitlab.com', 'bitbucket.org',
+        # Portfolio platformy
+        'behance.net', 'dribbble.com', 'artstation.com',
+        'deviantart.com', 'flickr.com', 'cargo.site',
+        # Profesní sítě
+        'linkedin.com',
+        # Dokumentační platformy
+        'notion.so', 'confluence.com', 'readthedocs.org',
+        # Blog/Web platformy
+        'wordpress.com', 'wix.com', 'medium.com', 'squarespace.com',
+        # Školní domény
+        'pslib.cz', 'edu.pslib.cz',
+        # Cloudová úložiště
+        'drive.google.com', 'docs.google.com', 'onedrive.live.com',
+        # Projektové platformy
+        'figma.com', 'miro.com', 'trello.com'
+    ]
+    
+    from urllib.parse import urlparse
+    parsed = urlparse(value)
+    domain = parsed.netloc.lower()
+    
+    # Kontrola HTTPS
+    if parsed.scheme != 'https':
+        raise ValidationError("URL musí používat HTTPS protokol.")
+    
+    # Kontrola domény
+    if not any(domain.endswith(d) for d in allowed_domains):
+        raise ValidationError(
+            "URL musí být z povolené domény. Povolené jsou například: "
+            "GitHub, GitLab, Behance, LinkedIn, Notion, školní doména."
+        )
 
 
 class UserPreferences(models.Model):
@@ -187,6 +233,21 @@ class Project(models.Model):
 
     delivery_work_date = models.DateField(blank=True, null=True, help_text="Datum předání výrobku", verbose_name="Datum předání výrobku")
     delivery_documentation_date = models.DateField(blank=True, null=True, help_text="Datum předání dokumentace", verbose_name="Datum předání dokumentace")
+
+    portfolio_url1 = models.URLField(
+        max_length=200,
+        blank=True,
+        validators=[validate_safe_url],
+        help_text="URL adresa portfolia nebo projektu (např. GitHub, Behance)",
+        verbose_name="Portfolio URL 1"
+    )
+    portfolio_url2 = models.URLField(
+        max_length=200,
+        blank=True,
+        validators=[validate_safe_url],
+        help_text="Další URL adresa portfolia nebo projektu",
+        verbose_name="Portfolio URL 2"
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

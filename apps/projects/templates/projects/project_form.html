@@ -13,22 +13,6 @@
       {% endif %}
       {{ form|crispy }}
 
-      <!--
-      <div class="row">
-        <div class="col-md-6">
-          <h4>Externí vedoucí</h4>
-          {{ form.external_leader|as_crispy_field }}
-          {{ form.external_leader_email|as_crispy_field }}
-          {{ form.external_leader_phone|as_crispy_field }}
-        </div>
-        <div class="col-md-6">
-          <h4>Externí oponent</h4>
-          {{ form.external_opponent|as_crispy_field }}
-          {{ form.external_opponent_email|as_crispy_field }}
-          {{ form.external_opponent_phone|as_crispy_field }}
-        </div>
-      </div>
-      -->
       
       <!-- Přidání odpočtu znaků pro pole assignment -->
       {% if is_teacher %}
