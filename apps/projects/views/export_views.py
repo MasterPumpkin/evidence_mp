@@ -531,6 +531,8 @@ def export_final_report_pdf(request, pk):
         "opponent_max_1": max_opponent_area1,
         "opponent_max_2": max_opponent_area2,
         "defence_points": 100 - max_points,
+        "leader_questions": leader_eval.defense_questions if leader_eval else "",
+        "opponent_questions": opponent_eval.defense_questions if opponent_eval else "",
         # ...
     }
 

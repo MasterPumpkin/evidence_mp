@@ -16,7 +16,7 @@
       line-height: 1.2;      /* o něco menší mezery mezi řádky */
     }
 
-    h1, h2 {
+    h1, h2, h3 {
       text-align: center;
       margin: 0.5em 0;       /* menší svislá mezera */
       page-break-after: avoid;
@@ -59,6 +59,27 @@
       border-top: 1px solid grey;
     }
 
+    .final-section {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1em;
+      page-break-inside: avoid;
+    }
+
+    .final-section .text-column {
+      flex: 2;
+      margin-right: 1em;
+      text-align: left;
+    }
+
+    .final-section .text-column h2, h3{
+      text-align: left;
+    }
+
+    .final-section .table-column {
+      flex: 1;
+    }
+
   </style>
 </head>
 <body>
@@ -95,26 +116,42 @@
   <li><hr></li>
 </ul>
 
-<h3>Celkem bodů oponent + vedoucí: {{ total_points }} (z {{ max_points }} max) || 
-Za obhajobu (max {{ defence_points }} bodů): .............</h3>
-<h3>CELKEM vedoucí + oponent + obhajoba (bodů): ............. Výsledná známka: .............</h3>
+<h2>Otázky k obhajobě</h2>
+<h3>Otázky vedoucího práce:</h3>
+<p>{{ leader_questions }}</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Rozmezí bodů</th>
-      <th>Známka</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for row in grade_table %}
-    <tr>
-      <td>{{ row.max }} - {{ row.min }}</td>
-      <td>{{ row.grade }}</td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+<h3>Otázky oponenta:</h3>
+<p>{{ opponent_questions }}</p>
+
+<hr>
+
+<div class="final-section">
+  <div class="text-column">
+    <h2>Celkové hodnocení</h2>
+    <h3>Celkem bodů oponent + vedoucí: {{ total_points }} (z {{ max_points }} max)</h3> 
+    <h3>Za obhajobu (max {{ defence_points }} bodů): .............</h3>
+    <h3>CELKEM vedoucí + oponent + obhajoba (bodů): .............</h3>
+    <h3>Výsledná známka: .............</h3>
+  </div>
+  <div class="table-column">
+    <table>
+      <thead>
+        <tr>
+          <th>Rozmezí bodů</th>
+          <th>Známka</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in grade_table %}
+        <tr>
+          <td>{{ row.max }} - {{ row.min }}</td>
+          <td>{{ row.grade }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 
 </body>
 </html>
