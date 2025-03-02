@@ -140,8 +140,8 @@ class Project(models.Model):
     ]
 
     title = models.CharField(max_length=200, verbose_name="Název")
-    description = models.TextField(verbose_name="Popis")
-    assignment = models.TextField(blank=True, help_text="Oficiální zadání (needitovatelné žákem)", verbose_name="Zadání")
+    description = models.TextField(verbose_name="Žákova vize", help_text="Žákův popis projektu, čeho chce dosáhnout")
+    assignment = models.TextField(blank=True, help_text="Oficiální zadání (needitovatelné žákem)", verbose_name="Oficiální zadání")
 
     status = models.CharField(
         max_length=20, 
