@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.urls import reverse
 from ..models import Project, LeaderEvaluation, UserPreferences, Milestone
 from ..forms import (
     DateInputForm
@@ -173,15 +174,58 @@ def export_consultation_list(request, pk):
             doc.save(response)
             return response
     else:
-        form = DateInputForm()
-        context = {
-        'form': form,
-        'project': project,
-        'is_teacher': request.user.groups.filter(name='Teacher').exists(),
-        'is_student': request.user.groups.filter(name='Student').exists(),
-    }
-        
-    return render(request, 'projects/export_form.html',context)
+        # Kontrola, zda existuje datum odevzdání projektu
+        if project.delivery_work_date:
+            form = DateInputForm(initial={'handover_date': project.delivery_work_date})
+            # Automaticky vyexportovat dokument
+            handover_date = project.delivery_work_date
+            student = project.student.username
+
+            doc = DocxTemplate("templates/docx/consultation_list.docx")
+            controls = project.controls.all().order_by('date')[:3]  # První 3 kontroly
+
+            context = {
+                'student_name': f"{project.student.first_name} {project.student.last_name}",
+                'class_name': project.student.userprofile.class_name,
+                'school_year': project.scheme.year if project.scheme else "N/A",
+                'project_title': project.title,
+                'control_1_date': controls[0].date.strftime('%d.%m.%Y') if len(controls) > 0 else "N/A",
+                'control_1_eval': controls[0].evaluation if len(controls) > 0 else "N/A",
+                'control_1_desc': controls[0].content if len(controls) > 0 else "N/A",
+                'control_2_date': controls[1].date.strftime('%d.%m.%Y') if len(controls) > 1 else "N/A",
+                'control_2_eval': controls[1].evaluation if len(controls) > 1 else "N/A",
+                'control_2_desc': controls[1].content if len(controls) > 1 else "N/A",
+                'control_3_date': controls[2].date.strftime('%d.%m.%Y') if len(controls) > 2 else "N/A",
+                'control_3_eval': controls[2].evaluation if len(controls) > 2 else "N/A",
+                'control_3_desc': controls[2].content if len(controls) > 2 else "N/A",
+                'handover_date': handover_date.strftime('%d.%m.%Y')
+            }
+
+            user_prefs = UserPreferences.objects.filter(user=request.user).first()
+
+            # Vložení podpisu, pokud existuje
+            if user_prefs and user_prefs.signature and os.path.exists(user_prefs.signature.path):
+                signature_img = InlineImage(doc, user_prefs.signature.path, width=Cm(2.5))  
+                context["signature"] = signature_img
+            else:
+                context["signature"] = ""
+
+            doc.render(context)
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            response['Content-Disposition'] = f'attachment; filename="konzultacni_list_{student}.docx"'
+            doc.save(response)
+            return response
+        else:
+            user = request.user
+            # context['is_teacher'] = user.groups.filter(name='Teacher').exists()
+            # context['is_student'] = user.groups.filter(name='Student').exists()
+            # Pokud není datum odevzdání, vracíme stránku s JavaScriptem pro zobrazení popup
+            return render(request, 'projects/export_error.html', {
+                'project': project,
+                'is_teacher': user.groups.filter(name='Teacher').exists(),
+                'error_message': 'Není vyplněno datum odevzdání projektu',
+                'redirect_url': reverse('projects:detail', kwargs={'pk': pk})
+            })
 
 
 @login_required

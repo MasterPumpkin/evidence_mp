@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card mt-5">
+        <div class="card-header bg-danger text-white">
+          <h4>Chyba při exportu</h4>
+        </div>
+        <div class="card-body">
+          <p class="lead">{{ error_message }}</p>
+          <p>Pro export konzultačního listu je nejprve nutné v detailu projektu vyplnit datum odevzdání výrobku.</p>
+          <a href="{% url 'projects:teacher_project_update' project.pk %}" class="btn btn-primary mt-3">Upravit datum odevzdání</a>
+          <a href="{% url 'projects:detail' project.pk %}" class="btn btn-secondary mt-3 ml-2">Zpět na detail projektu</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // document.addEventListener('DOMContentLoaded', function() {
+   //  alert('{{ error_message }} - Pro export konzultačního listu je nejprve nutné v detailu projektu vyplnit datum odevzdání výrobku.');
+    // Pokud by bylo potřeba přesměrovat po zavření popupu:
+    // window.location.href = "{{ redirect_url }}";
+  // });
+</script>
+{% endblock %}
