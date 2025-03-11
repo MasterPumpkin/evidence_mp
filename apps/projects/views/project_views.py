@@ -293,6 +293,10 @@ class TeacherProjectUpdateView(UpdateView):
         
         if project.delivery_documentation_date:
             initial['delivery_documentation_date'] = project.delivery_documentation_date.strftime('%Y-%m-%d')
+        
+        # Přidáno: Pokud existuje uložené datum odkladu, předvyplníme ho
+        if project.delayed_submission_date:
+            initial['delayed_submission_date'] = project.delayed_submission_date.strftime('%Y-%m-%d')
 
         return initial
          
