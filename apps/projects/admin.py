@@ -14,12 +14,14 @@ class UserPreferencesAdmin(admin.ModelAdmin):
 
 @admin.register(ScoringScheme)
 class ScoringSchemeAdmin(admin.ModelAdmin):
-    list_display = ('year', 'active', 'leader_area1_max', 'opponent_area1_max')
+    list_display = ('year', 'active', 'leader_area1_max', 'opponent_area1_max', 
+                   'delivery_work_deadline', 'delivery_documentation_deadline')
+    list_filter = ('active', 'year')
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'status', 'student', 'leader', 'opponent', 'scheme')
-    list_filter = ('status', 'scheme')
+    list_display = ('title', 'status', 'student', 'leader', 'opponent', 'scheme', 'delayed_submission_date')
+    list_filter = ('status', 'scheme', 'delayed_submission_date')
     search_fields = ('title', 'description')
 
 @admin.register(ControlCheck)

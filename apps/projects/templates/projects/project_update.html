@@ -1,0 +1,12 @@
+<!-- ...existing code... -->
+
+<!-- Sekce pro vedoucího projektu -->
+{% if user == project.leader %}
+<div class="form-group">
+    <label for="{{ form.delayed_submission_date.id_for_label }}">{{ form.delayed_submission_date.label }}</label>
+    {{ form.delayed_submission_date }}
+    <small class="form-text text-muted">{{ form.delayed_submission_date.help_text }}</small>
+</div>
+{% endif %}
+
+<!-- ...existing code... -->

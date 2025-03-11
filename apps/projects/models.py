@@ -124,6 +124,10 @@ class ScoringScheme(models.Model):
     control_deadline1 = models.DateField(null=True, blank=True, help_text="Termín kontroly #1", verbose_name="Kontrola #1")
     control_deadline2 = models.DateField(null=True, blank=True, help_text="Termín kontroly #2", verbose_name="Kontrola #2")
     control_deadline3 = models.DateField(null=True, blank=True, help_text="Termín kontroly #3", verbose_name="Kontrola #3")
+    
+    # Termíny předání
+    delivery_work_deadline = models.DateField(null=True, blank=True, help_text="Termín předání výrobku", verbose_name="Termín předání výrobku")
+    delivery_documentation_deadline = models.DateField(null=True, blank=True, help_text="Termín předání dokumentace", verbose_name="Termín předání dokumentace")
 
     def __str__(self):
         return f"ScoreBoard {self.year} (Aktivní: {self.active})"
@@ -231,6 +235,7 @@ class Project(models.Model):
         verbose_name="Interní poznámky"
     )
 
+    delayed_submission_date = models.DateField(blank=True, null=True, help_text="Datum odkladu odevzdání práce", verbose_name="Datum odkladu odevzdání práce")
     delivery_work_date = models.DateField(blank=True, null=True, help_text="Datum předání výrobku", verbose_name="Datum předání výrobku")
     delivery_documentation_date = models.DateField(blank=True, null=True, help_text="Datum předání dokumentace", verbose_name="Datum předání dokumentace")
 

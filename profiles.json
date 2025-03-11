@@ -1,0 +1,1520 @@
+[
+  {
+    "model": "profiles.userprofile",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 46,
+    "fields": {
+      "user": 46,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 47,
+    "fields": {
+      "user": 47,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 48,
+    "fields": {
+      "user": 48,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 49,
+    "fields": {
+      "user": 49,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 50,
+    "fields": {
+      "user": 50,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 51,
+    "fields": {
+      "user": 51,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 52,
+    "fields": {
+      "user": 52,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 53,
+    "fields": {
+      "user": 53,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 54,
+    "fields": {
+      "user": 54,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 55,
+    "fields": {
+      "user": 55,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 56,
+    "fields": {
+      "user": 56,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 57,
+    "fields": {
+      "user": 57,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 58,
+    "fields": {
+      "user": 58,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 59,
+    "fields": {
+      "user": 59,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 60,
+    "fields": {
+      "user": 60,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 61,
+    "fields": {
+      "user": 61,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 63,
+    "fields": {
+      "user": 63,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 64,
+    "fields": {
+      "user": 64,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 65,
+    "fields": {
+      "user": 65,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 66,
+    "fields": {
+      "user": 66,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 67,
+    "fields": {
+      "user": 67,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 68,
+    "fields": {
+      "user": 68,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 69,
+    "fields": {
+      "user": 69,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 70,
+    "fields": {
+      "user": 70,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 71,
+    "fields": {
+      "user": 71,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 72,
+    "fields": {
+      "user": 72,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 73,
+    "fields": {
+      "user": 73,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 74,
+    "fields": {
+      "user": 74,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 75,
+    "fields": {
+      "user": 75,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 76,
+    "fields": {
+      "user": 76,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 77,
+    "fields": {
+      "user": 77,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 78,
+    "fields": {
+      "user": 78,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 79,
+    "fields": {
+      "user": 79,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 80,
+    "fields": {
+      "user": 80,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 81,
+    "fields": {
+      "user": 81,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 82,
+    "fields": {
+      "user": 82,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 83,
+    "fields": {
+      "user": 83,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 84,
+    "fields": {
+      "user": 84,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 85,
+    "fields": {
+      "user": 85,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 86,
+    "fields": {
+      "user": 86,
+      "class_name": "E4E",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 87,
+    "fields": {
+      "user": 87,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 88,
+    "fields": {
+      "user": 88,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 89,
+    "fields": {
+      "user": 89,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 90,
+    "fields": {
+      "user": 90,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 91,
+    "fields": {
+      "user": 91,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 92,
+    "fields": {
+      "user": 92,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 93,
+    "fields": {
+      "user": 93,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 94,
+    "fields": {
+      "user": 94,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 95,
+    "fields": {
+      "user": 95,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 96,
+    "fields": {
+      "user": 96,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 97,
+    "fields": {
+      "user": 97,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 98,
+    "fields": {
+      "user": 98,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 99,
+    "fields": {
+      "user": 99,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 100,
+    "fields": {
+      "user": 100,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 101,
+    "fields": {
+      "user": 101,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 102,
+    "fields": {
+      "user": 102,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 103,
+    "fields": {
+      "user": 103,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 104,
+    "fields": {
+      "user": 104,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 105,
+    "fields": {
+      "user": 105,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 106,
+    "fields": {
+      "user": 106,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 107,
+    "fields": {
+      "user": 107,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 108,
+    "fields": {
+      "user": 108,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 109,
+    "fields": {
+      "user": 109,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 110,
+    "fields": {
+      "user": 110,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 111,
+    "fields": {
+      "user": 111,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 112,
+    "fields": {
+      "user": 112,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 113,
+    "fields": {
+      "user": 113,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 114,
+    "fields": {
+      "user": 114,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 115,
+    "fields": {
+      "user": 115,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 116,
+    "fields": {
+      "user": 116,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 117,
+    "fields": {
+      "user": 117,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 118,
+    "fields": {
+      "user": 118,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 119,
+    "fields": {
+      "user": 119,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 120,
+    "fields": {
+      "user": 120,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 121,
+    "fields": {
+      "user": 121,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 122,
+    "fields": {
+      "user": 122,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 123,
+    "fields": {
+      "user": 123,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 124,
+    "fields": {
+      "user": 124,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 125,
+    "fields": {
+      "user": 125,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 126,
+    "fields": {
+      "user": 126,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 127,
+    "fields": {
+      "user": 127,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 128,
+    "fields": {
+      "user": 128,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 129,
+    "fields": {
+      "user": 129,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 130,
+    "fields": {
+      "user": 130,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 131,
+    "fields": {
+      "user": 131,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 132,
+    "fields": {
+      "user": 132,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 133,
+    "fields": {
+      "user": 133,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 134,
+    "fields": {
+      "user": 134,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 135,
+    "fields": {
+      "user": 135,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 136,
+    "fields": {
+      "user": 136,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 137,
+    "fields": {
+      "user": 137,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 138,
+    "fields": {
+      "user": 138,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 139,
+    "fields": {
+      "user": 139,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 140,
+    "fields": {
+      "user": 140,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 141,
+    "fields": {
+      "user": 141,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 142,
+    "fields": {
+      "user": 142,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 143,
+    "fields": {
+      "user": 143,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 144,
+    "fields": {
+      "user": 144,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 145,
+    "fields": {
+      "user": 145,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 146,
+    "fields": {
+      "user": 146,
+      "class_name": "IT4",
+      "study_branch": "IT",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 147,
+    "fields": {
+      "user": 147,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 148,
+    "fields": {
+      "user": 148,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 149,
+    "fields": {
+      "user": 149,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 150,
+    "fields": {
+      "user": 150,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 151,
+    "fields": {
+      "user": 151,
+      "class_name": "E4S",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 152,
+    "fields": {
+      "user": 152,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 153,
+    "fields": {
+      "user": 153,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 154,
+    "fields": {
+      "user": 154,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 155,
+    "fields": {
+      "user": 155,
+      "class_name": "E4P",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 156,
+    "fields": {
+      "user": 156,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Bc.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 157,
+    "fields": {
+      "user": 157,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Bc.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 158,
+    "fields": {
+      "user": 158,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Bc.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 159,
+    "fields": {
+      "user": 159,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Bc.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 160,
+    "fields": {
+      "user": 160,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 161,
+    "fields": {
+      "user": 161,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 162,
+    "fields": {
+      "user": 162,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 163,
+    "fields": {
+      "user": 163,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 164,
+    "fields": {
+      "user": 164,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 165,
+    "fields": {
+      "user": 165,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 166,
+    "fields": {
+      "user": 166,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 167,
+    "fields": {
+      "user": 167,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 168,
+    "fields": {
+      "user": 168,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 169,
+    "fields": {
+      "user": 169,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 170,
+    "fields": {
+      "user": 170,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 171,
+    "fields": {
+      "user": 171,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing. Bc.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 172,
+    "fields": {
+      "user": 172,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 173,
+    "fields": {
+      "user": 173,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 174,
+    "fields": {
+      "user": 174,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 175,
+    "fields": {
+      "user": 175,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 176,
+    "fields": {
+      "user": 176,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 177,
+    "fields": {
+      "user": 177,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Mgr.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 178,
+    "fields": {
+      "user": 178,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Mgr.",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 179,
+    "fields": {
+      "user": 179,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 180,
+    "fields": {
+      "user": 180,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "",
+      "school_year": "2025/2026"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 181,
+    "fields": {
+      "user": 181,
+      "class_name": null,
+      "study_branch": "-",
+      "title": "Ing.",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 182,
+    "fields": {
+      "user": 182,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  },
+  {
+    "model": "profiles.userprofile",
+    "pk": 183,
+    "fields": {
+      "user": 183,
+      "class_name": "E4A",
+      "study_branch": "E",
+      "title": "",
+      "school_year": "2024/2025"
+    }
+  }
+]

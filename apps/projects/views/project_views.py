@@ -19,6 +19,7 @@ from ..forms import (
 )
 import csv
 from django.http import HttpResponseForbidden
+from django import forms
 from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -266,15 +267,22 @@ class TeacherProjectCreateView(CreateView):
 class TeacherProjectUpdateView(UpdateView):
     model = Project
     form_class = TeacherProjectForm
-    template_name = 'projects/project_form.html'
+    template_name = 'projects/project_form.html'  # upravte podle skutečného názvu šablony
 
     def dispatch(self, request, *args, **kwargs):
-        # jen teacher/superuser
-        if not (request.user.is_superuser or request.user.groups.filter(name='Teacher').exists()):
-            messages.error(request, "Nemáte oprávnění.")
-            return redirect('projects:list')
+        obj = self.get_object()
+        if obj.leader != request.user:
+            return HttpResponseForbidden("Nemáte oprávnění editovat tento projekt.")
         return super().dispatch(request, *args, **kwargs)
     
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if self.object.leader != self.request.user:
+            # Pokud uživatel není vedoucí, skrýt pole pro odklad
+            if 'delayed_submission_date' in form.fields:
+                form.fields['delayed_submission_date'].widget = forms.HiddenInput()
+        return form
+
     def get_initial(self):
         initial = super().get_initial()
         project = self.get_object()
@@ -498,8 +506,23 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         context['milestones'] = milestones_with_short_notes
         context['now'] = now()
         context['year'] = project.scheme.year
+        
+        # Výpočet informací o plnění milníků
+        milestones = project.milestones.all()
+        total_milestones = milestones.count()
+        completed_milestones = milestones.filter(status='done').count()
+        
+        # Výpočet procentuálního plnění (zabraňujeme dělení nulou)
+        completion_percentage = 0
+        if total_milestones > 0:
+            completion_percentage = int((completed_milestones / total_milestones) * 100)
+            
+        context['total_milestones'] = total_milestones
+        context['completed_milestones'] = completed_milestones
+        context['completion_percentage'] = completion_percentage
 
         return context
+
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
     model = Project

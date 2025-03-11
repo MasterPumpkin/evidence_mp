@@ -127,6 +127,7 @@
       <th>Status</th>
       <th>Vedoucí</th>
       <th>Oponent</th>
+      <th>Termín</th>
       <th>Akce</th>
     </tr>
   </thead>
@@ -145,6 +146,15 @@
             {{ proj.opponent.last_name }}
           {% elif proj.external_opponent %}
             Externí
+          {% endif %}
+        </td>
+        <td>
+          {% if proj.delayed_submission_date %}
+            <span class="text-danger">{{ proj.delayed_submission_date|date:"d.m.Y" }}</span>
+          {% elif proj.scheme.delivery_work_deadline %}
+            {{ proj.scheme.delivery_work_deadline|date:"d.m.Y" }}
+          {% else %}
+            -
           {% endif %}
         </td>
         <td>

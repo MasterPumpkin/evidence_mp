@@ -1,0 +1,2840 @@
+[
+  {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+      "name": "Student",
+      "permissions": [
+        1,
+        2,
+        3,
+        4,
+        17,
+        18,
+        19,
+        20,
+        29,
+        30,
+        32,
+        25,
+        26,
+        28,
+        21,
+        22,
+        23,
+        24
+      ]
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 2,
+    "fields": {
+      "name": "Teacher",
+      "permissions": [
+        1,
+        2,
+        3,
+        4,
+        17,
+        18,
+        19,
+        20,
+        53,
+        54,
+        55,
+        56,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        29,
+        30,
+        31,
+        32,
+        45,
+        46,
+        47,
+        48,
+        25,
+        26,
+        27,
+        28,
+        33,
+        34,
+        35,
+        36,
+        49,
+        50,
+        51,
+        52,
+        21,
+        22,
+        23,
+        24
+      ]
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$CshykAF2DQMmwUZyPpSZHo$f9tbzBxe4aUEMI/WRBbSBgirDr1EeQgH58hN0TM9z4U=",
+      "last_login": "2025-03-11T06:33:45.383Z",
+      "is_superuser": true,
+      "username": "MasterPumpkin",
+      "first_name": "",
+      "last_name": "",
+      "email": "josef.nuhlicek@gmail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2025-02-02T13:48:52.876Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 46,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$irVj5ZfEQDf82ZW85GvaHX$ZcCzWJR9TKV1OkHI9xoiUc1tSANWWbNjKhO4/ygPDbU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Hruby_Petr",
+      "first_name": "Petr",
+      "last_name": "Hrub\u00fd",
+      "email": "hrubypetr211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:21.844Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 47,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$lPScVZ2OqpTkgFjvq3TyBj$rLY0/pon7UrpEFpvuIeSt9H7jTxb0r1t7oFGM5FielE=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Duspiva_Jan",
+      "first_name": "Jan",
+      "last_name": "Duspiva",
+      "email": "duspivajan211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:23.404Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 48,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$tyIy3Ocw7g9sSwCBk44ans$GjVoXBGAWjRcXFvd/VWtcb7Ykh5ysRZu4q7aCDorHrI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Holecek_Samuel",
+      "first_name": "Samuel",
+      "last_name": "Hole\u010dek",
+      "email": "holeceksamuel213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:25.009Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 49,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$NdajfUiG9SeDTd8t07lz7U$5BAhPz20rtfAz63vIeMRrDP2M2rUgG1XBLHcR18dKGg=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Stursa_Adam",
+      "first_name": "Adam",
+      "last_name": "\u0160tursa",
+      "email": "stursaadam213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:26.384Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 50,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$NFh9RO1uZvl7dF9sKXMzZy$GJ2p8ImQVAjeWoFoRrLVkFugLKKVzWShv98f7sKrb+E=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Subotnik_Ondrej",
+      "first_name": "Ond\u0159ej",
+      "last_name": "\u0160ubotnik",
+      "email": "subotnikondrej213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:27.878Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 51,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$Lxlndh6s2CZbTe3xRdvC9k$2Zo2b3tqmU44DAjQ+3BkmwaQ2H12HLifTfYPxRVaDeY=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Vosecky_Vojtech",
+      "first_name": "Vojt\u011bch",
+      "last_name": "Voseck\u00fd",
+      "email": "voseckyvojtech213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:29.279Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 52,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$78mcx1s67AH88CZ3ThgdtL$6sJ4LQV8GWREQbYRX15W9iUajLRo6HXLmM6W9p60oG0=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Jaros_Stepan",
+      "first_name": "\u0160t\u011bp\u00e1n",
+      "last_name": "Jaro\u0161",
+      "email": "jarosstepan213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:30.993Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 53,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$lnt2STEJgFoht0apjqtVWe$uEB7Gf9UybXBe3420lPI/A9WgS84eLpvr7H1/OOdDeQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Kilian_Jan",
+      "first_name": "Jan",
+      "last_name": "Kili\u00e1n",
+      "email": "kilianjan211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:32.587Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 54,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$xSAKUgEoVxZIdWD0mQsb2T$TkNoyjg0DrKtqHlND+3Xft7iWfN4xO1u6FATZ2hUKVw=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Komarek_Josef",
+      "first_name": "Josef",
+      "last_name": "Kom\u00e1rek",
+      "email": "komarekjosef213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:34.091Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 55,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$iLyHbr6zfAlqiWZrCifRcG$NWpL0/iKrlPxG7edpyUj01VvqoAS6rLc21l8EjWXlS0=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Kankovsky_Martin",
+      "first_name": "Martin",
+      "last_name": "Ka\u0148kovsk\u00fd",
+      "email": "kankovskymartin212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:35.781Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 56,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$2HNu1D4hQWE1kW0KxSzD5v$YBOcK1WlRtWL3Lo6GEp9ezwFuQk8nRL0U/vha46+CI8=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Malina_Frantisek",
+      "first_name": "Franti\u0161ek",
+      "last_name": "Malina",
+      "email": "malinafrantisek211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:37.405Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 57,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$N201B4tJt0SFBL8CVGeRTY$hq6J+5EATD5GC25su2UtyIEn+J5WRaUGr5MObIng+uw=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Horacek_Adam",
+      "first_name": "Adam",
+      "last_name": "Hor\u00e1\u010dek",
+      "email": "horacekadam212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:38.880Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 58,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$sjSQA339G9LDlAIEP8pXJT$NdVL5vo63jHQ5+M8hWWHFxqyw1G0tYx4PxUuLBfzYFo=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Kudrna_Ondrej",
+      "first_name": "Ond\u0159ej",
+      "last_name": "Kudrna",
+      "email": "kudrnaondrej211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:40.376Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 59,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$4qYLOHqnGWALnA1xqU1QfL$hyeTb/Ow+MVYZbLhCVZCF+eRtq91kXDb3AbTF2W65ZM=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Kralik_Vaclav",
+      "first_name": "V\u00e1clav",
+      "last_name": "Kr\u00e1l\u00edk",
+      "email": "kralikvaclav213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:41.795Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 60,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$ddvTlTDPEMPah1WX9L8wNM$GCjA8o2aYQvslhf/QUmY/8kY/3T+1GnwqJ6BraIxp5g=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Chudoba_Tomas",
+      "first_name": "Tom\u00e1\u0161",
+      "last_name": "Chudoba",
+      "email": "chudobatomas212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:43.498Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 61,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$151VlAAedTaChUx7BFhL7j$TOuDPJem/lQP4/fdpY2d92l1SSYupAtN99qbx2dnARM=",
+      "last_login": "2025-02-02T18:39:42.975Z",
+      "is_superuser": false,
+      "username": "Cepelak_Petr",
+      "first_name": "Petr",
+      "last_name": "\u010cepel\u00e1k",
+      "email": "cepelakpetr213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:04:45.294Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 63,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$or3xT6dm7uTeqiOTHIcBSp$LP8ewecAWi6/6y5Th4fRB9AFlYRpMj3oeSDhrI0JWXQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Zilka_Jiri",
+      "first_name": "Ji\u0159\u00ed",
+      "last_name": "\u017dilka",
+      "email": "zilkajiri212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:06:48.185Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 64,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$8bLXiqkFUp8u9VcEt4Gk7u$2QZgXk/J2WKBdBL2aphc/98OUuXQ+xBrbYaqA5P0s24=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Patak_Patrik",
+      "first_name": "Patrik",
+      "last_name": "Pat\u00e1k",
+      "email": "patakpatrik214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:06:49.584Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 65,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$1kG230q2XikuGj3QjrMCjG$RhSLzz8rbEHVjL3Fr7HzFb/wxntvWGGJrrHuzK9IxGk=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Zeleny_Martin",
+      "first_name": "Martin",
+      "last_name": "Zelen\u00fd",
+      "email": "zelenymartin213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:06:51.082Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 66,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$znkZg4MY0C60Nj8SbYPW8I$vXaPcI8Y7FprPbeY2ug5N/WvG7SAF45q2ojnuZqqmrs=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Rygl_David",
+      "first_name": "David",
+      "last_name": "Rygl",
+      "email": "rygldavid211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:06:52.614Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 67,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$eykHXwAvjFKaE84BDuZDyL$VtaZ7Gru97Kq5a8QUNtAuYTbTzK3060T2ZK2G9fj6hQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Mozsi_Daniel",
+      "first_name": "Daniel",
+      "last_name": "Mozsi",
+      "email": "mozsidaniel211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:06:54.306Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 68,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$VeV8bXwsVqTJebrsX4Xxss$8OiR9AU9Y+A6mz/S5JGRcNe+WSqtZ3PXHiWnHTeALRY=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Sejkora_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Sejkora",
+      "email": "sejkorajakub211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:06:55.810Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 69,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$G3XnDlxD0OlGMlbU5GJkDM$kN7g/anZvpGrDDtxbbrF4iTGIOkUxE5Egdj/vNEGG6E=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Esner_Martin",
+      "first_name": "Martin",
+      "last_name": "E\u0161ner",
+      "email": "esnermartin211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:06:57.481Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 70,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$Jiwx7d9pEoYvUS5DIobhfA$gTJBeR0nUJbFaEsCqUy2eC2g1zlooMFHa0Q6WwS4Ye8=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Kavan_Josef",
+      "first_name": "Josef",
+      "last_name": "Kavan",
+      "email": "kavanjosef213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:06:59.090Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 71,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$NlLsFetraYOO4jRGwkYZrK$aGn2NdBnVyAb0EXYLGUhqAfuasFyiaXlCH0Zm6W1lAw=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Koska_Jan",
+      "first_name": "Jan",
+      "last_name": "Ko\u0161ka",
+      "email": "koskajan213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:07:00.771Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 72,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$B6yDkCxYtjOB9bWxqJTJsp$f+tT7meO8d2PZYydquu+D3rdGJhHqtRSYRa/m8g/lQ4=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Rybar_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Ryb\u00e1\u0159",
+      "email": "rybarjakub212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:07:02.575Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 73,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$pq9BkwA1Rx8KslAFSDnhIp$tydbFy90nRAwxctSahn/oUjne2u3ouo1U6Nuj5SeqRU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Rygl_Lukas",
+      "first_name": "Luk\u00e1\u0161",
+      "last_name": "Rygl",
+      "email": "rygllukas211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:07:03.984Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 74,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$c7gr91jjiSs7vu2ZrqPCqL$r/XlGA8HVIQN76MQaBBpCKRTF+j+vREs24wbGQ46eRU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Smutny_Leos",
+      "first_name": "Leo\u0161",
+      "last_name": "Smutn\u00fd",
+      "email": "smutnyleos212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:07:05.490Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 75,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$us5XQxwyCT7RXBtxaLe2sY$09KtCBGfvbVKtYqj17LTn33asL7apRx9/yqO/md7krg=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Reznicek_Jan",
+      "first_name": "Jan",
+      "last_name": "\u0158ezn\u00ed\u010dek",
+      "email": "reznicekjan212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:07:06.896Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 76,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$MzFiPOipQYtuVUQow7f84F$LML9b6Hf8h67sC5TdYZQpDy4dNaVsHDZc6WvZdH0/vk=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Lhotan_Michal",
+      "first_name": "Michal",
+      "last_name": "Lhotan",
+      "email": "lhotanmichal212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:07:08.204Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 77,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$GVHWdDyqIhejHjKPRbfYOq$vnCNJK62Su/SHmteBeAhf0U/RKhFJQo7hlr15lkdBJA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Habor_Nazar",
+      "first_name": "Nazar",
+      "last_name": "Habor",
+      "email": "habornazar214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:07:09.880Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 78,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$eC5UdVip9OnL6PkPSGl5T3$076ThhUHUu31l5RErCO5ErvZ1sSbuPb/YspSZWaJ6Gk=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Stehlik_Robert",
+      "first_name": "Robert",
+      "last_name": "Stehl\u00edk",
+      "email": "stehlikrobert211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:07:11.313Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 79,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$RFxcUAnjN2Gtj0rvoVaA6O$HV8T8vYlApoh2YzAzmpA+pw8SEilSe5bqeSpR4QD288=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Musil_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Musil",
+      "email": "musiljakub211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:14.184Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 80,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$jvLgF63EE4MuEUsFUs4EAF$MXM8GeEpwONne0bb4r5hEgHCeSl9F35OqrkTXzuqkUY=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Fiala_Ondrej",
+      "first_name": "Ond\u0159ej",
+      "last_name": "Fiala",
+      "email": "fialaondrej213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:15.594Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 81,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$M87dtIe8IwoQX0WO4aoFBa$UOFrDQp7znAN7TUEs9AFfqOA8ympYN51/aOtHEvBt1M=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Hovorka_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Hovorka",
+      "email": "hovorkajakub211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:17.214Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 82,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$d0nMXs3XNDHB8bj2GMYHFL$nMzRIHa5F2lzOcpfod4kFLK8SY4HvejFGjEyXrVCHNo=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Darius_Josef",
+      "first_name": "Josef",
+      "last_name": "Darius",
+      "email": "dariusjosef213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:18.801Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 83,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$ZoJW6tOMJu9hLHsdvp0AwJ$1FOW6po9IXwI/XZIw3jogzi5TVcMg75crsfOnpj4mwA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Paus_Martin",
+      "first_name": "Martin",
+      "last_name": "Pau\u0161",
+      "email": "pausmartin212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:20.309Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 84,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$sgNvACcbcKL0CSBz4WU0lY$4ygq5/hlMbcIhuMkEqu5whVLp01l7VatJzzbZmvuM1k=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Sklenicka_Matyas",
+      "first_name": "Maty\u00e1\u0161",
+      "last_name": "Skleni\u010dka",
+      "email": "sklenickamatyas212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:22.003Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 85,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$8CyTXWHhZ6J0zlnKS9cB1L$6bCqpApGSA4FRwQ59YdHDmm5SadQHmmOn7KSwe8FBL0=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Korinek_Martin",
+      "first_name": "Martin",
+      "last_name": "Ko\u0159\u00ednek",
+      "email": "korinekmartin211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:23.567Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 86,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$3ZM8cVd0odhftqmfpAJ9ec$ANuRRGliCfvghFaJSXOhj7jp3p6JNFxvW3U+cevWyvo=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Schneider_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Schneider",
+      "email": "schneiderjakub213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:25.085Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 87,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$axgqT56oFI7nfhGm0j0lQl$cqdCFhFTMgbHnMQdmZEDkUIzJvNJl8kNwkLZJ+YsOhw=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Benesova_Jana",
+      "first_name": "Jana",
+      "last_name": "Bene\u0161ov\u00e1",
+      "email": "benesovajana214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:26.573Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 88,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$LBzqBCtwjLFBpRUWjG4c0s$ZsDPn6kJg2aMwkkXDJ/qtnfopK3uVZ343FkteHMAp/8=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Ptacnik_Tomas",
+      "first_name": "Tom\u00e1\u0161",
+      "last_name": "Pt\u00e1\u010dn\u00edk",
+      "email": "ptacniktomas214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:27.970Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 89,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$JVpF8F7ZRZymHrBfDD3uRV$c3zZKN+Qd6ch/74RbXweBlTy9mGB6Hr0Bb0N17FlRAY=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Sluka_Ales",
+      "first_name": "Ale\u0161",
+      "last_name": "Sluka",
+      "email": "slukaales214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:29.365Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 90,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$uyTpp0vqLhLU483p1VA9tb$FBqxDIDHGG7XMg8TYClqRFF0Nry8EUS8rct4cjMnE54=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Mejstrik_Vojtech",
+      "first_name": "Vojt\u011bch",
+      "last_name": "Mejst\u0159\u00edk",
+      "email": "mejstrikvojtech214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:30.869Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 91,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$FdqFaK6OjcFXP6aMEBBIuP$iK5I3OL+9SvPpjjucAip7KnL973SaVSG4G8Qjddii/0=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Jelinek_Mikulas",
+      "first_name": "Mikul\u00e1\u0161",
+      "last_name": "Jel\u00ednek",
+      "email": "jelinekmikulas211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:32.514Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 92,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$QdUSetU68qTIB49cfP8hOo$SFyKIL0jLNHsrpRNOD16guor7eDAtlSduxEJIGetXcs=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Tvrdy_Tomas",
+      "first_name": "Tom\u00e1\u0161",
+      "last_name": "Tvrd\u00fd",
+      "email": "tvrdytomas212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:34.173Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 93,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$DAqHCdIXiHjLBbZsfnyOKZ$Td3d9SzUzYzBePZjAzeQfjVWPu8Ul3jwxEpraK0T/34=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Vorlicek_Jiri",
+      "first_name": "Ji\u0159\u00ed",
+      "last_name": "Vorl\u00ed\u010dek",
+      "email": "vorlicekjiri214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:35.692Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 94,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$s9MKEBTlvDXemAfyS0dQfZ$dEmctfNJQujCA4NjU3QB2JaG+0DbjYHUOBmBVeeU0ys=",
+      "last_login": "2025-02-03T06:17:23.670Z",
+      "is_superuser": false,
+      "username": "Nezavdal_Dominik",
+      "first_name": "Dominik",
+      "last_name": "Nezavdal",
+      "email": "nezavdaldominik214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:22:37.167Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 95,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$kH1Gmb1e5ZJFcPICjWCXnu$yxcEr6nzkz5f0kOCE7lW6s+5R0B9o9rPCeuOdeLldT8=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Zradicka_Filip",
+      "first_name": "Filip",
+      "last_name": "Zradi\u010dka",
+      "email": "zradickafilip214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:02.630Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 96,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$staH4vRn8OLBi38ZtQYDBP$NjmiTWWEFw1Y4WZYJBSilaz2sL9zgmOcmX071pGeenU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Projkovski_Marko",
+      "first_name": "Marko",
+      "last_name": "Projkovski",
+      "email": "projkovskimarko214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:04.108Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 97,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$nFUcdW6ehabefFhRzErbgA$vGl8e2VLq/JcdI9bdF9cl0lnRMTE1JjEI9q8YXYKYeQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Sanda_Adam",
+      "first_name": "Adam",
+      "last_name": "\u0160anda",
+      "email": "sandaadam211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:05.770Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 98,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$NcXXnlBhbuYdYKPiwPpcX9$SlYBAcGPokmASQqER9XX7kbPJBPz9IC1qFmNGmx9x2o=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Vokoun_Petr",
+      "first_name": "Petr",
+      "last_name": "Vokoun",
+      "email": "vokounpetr213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:07.477Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 99,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$Nxmsu6uDiGjfSpiYvT9glH$nz73oahAFdtiElzS1fOXBr7c2sYEQxBGU6OdCc4pWJc=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Kratochvil_Jan",
+      "first_name": "Jan",
+      "last_name": "Kratochv\u00edl",
+      "email": "kratochviljan214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:09.004Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 100,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$kr0ZF7pNhRdfImVU1TlDE0$czWpfu2l2XeSadE8P2v/6A8o0AHR7CRw0ryJA3uwxwI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Vorlicek_Jaroslav",
+      "first_name": "Jaroslav",
+      "last_name": "Vorl\u00ed\u010dek",
+      "email": "vorlicekjaroslav214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:10.586Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 101,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$8WadrWtnsGr06bWcBGfITQ$W98hjbPn4krcG+ui1mp7en8PZPaP0dM1L+5MgzcQMYg=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Fanta_Ondrej",
+      "first_name": "Ond\u0159ej",
+      "last_name": "Fanta",
+      "email": "fantaondrej213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:12.207Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 102,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$pq0JH14zj4jG9Nmu9gWEKv$2L/rAKpfiYM5hpBT4Lshzj5jeZc73z4qIaUZLLttq4s=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Hrabak_David",
+      "first_name": "David",
+      "last_name": "Hrab\u00e1k",
+      "email": "hrabakdavid211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:13.667Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 103,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$M05rHuiAuWYCDMSherpMA3$dVYkbkuaGgKCFWqKw5zH7+nzBQavckbhgndJo40gDO0=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Vokal_Matej",
+      "first_name": "Mat\u011bj",
+      "last_name": "Vok\u00e1l",
+      "email": "vokalmatej212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:15.091Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 104,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$j2fGQghqe0d8CLXxxBWfyp$fF/dCgmYaNvZ1DD48GW7cYud1orNLbTg4dzkhnSBmTA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Cernoch_Martin",
+      "first_name": "Martin",
+      "last_name": "\u010cernoch",
+      "email": "cernochmartin215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:16.802Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 105,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$mXfh0R6xJYk8AfyyBbOmk9$x4avi7diQuqbWRAj9k9V9StAprw3/CDe+6C86p6Ea1w=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Karban_Jan",
+      "first_name": "Jan",
+      "last_name": "Karban",
+      "email": "karbanjan215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:18.400Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 106,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$ax9JI7WsnEosjOgDtPvmuW$PTCjFlJ3uLIPvP+fwmIp+ViFSK+QvuY8zzZwIe54740=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Schovanec_Radim",
+      "first_name": "Radim",
+      "last_name": "Schovanec",
+      "email": "schovanecradim215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:20.008Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 107,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$M8USRo9comxkIYHVPxHC7M$BLMPgwl1tF8nwDcjdLnjl98Vx7s1p0H45RhD6i4lcas=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Moucka_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Mou\u010dka",
+      "email": "mouckajakub215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:21.705Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 108,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$sLjBepbA3wCIR577wgig57$hgJ+jfK1mMN0vSYnj/ZYqHE0aWz6/H3wkGWYHXszXow=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Valis_Ondrej",
+      "first_name": "Ond\u0159ej",
+      "last_name": "Vali\u0161",
+      "email": "valisondrej215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:23.182Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 109,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$jkxGmpM5vCjpFTfIJGBFDL$aziRANZtQyVoTschRPQidvFMkR5bw8JW33fujkv12ak=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Chromiak_Samuel",
+      "first_name": "Samuel",
+      "last_name": "Chromiak",
+      "email": "chromiaksamuel215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:24.893Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 110,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$rOf0YtCvc2xBOXw4tB2AVG$3f0ZfQBTTJ77T3ApblKTcHpn9ylnKhwqHxp5/fu26ks=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Nemec_Jonas",
+      "first_name": "Jon\u00e1\u0161",
+      "last_name": "N\u011bmec",
+      "email": "nemecjonas215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:26.680Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 111,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$y0xG9KA8VfdWmBH4cxpCNW$ZK+IunYTpBUb5MucbEKcwtl0mo4qNMwKpQrg874uTjQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Sticha_Albert",
+      "first_name": "Albert",
+      "last_name": "\u0160ticha",
+      "email": "stichaalbert215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:47.192Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 112,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$TaTYFtI2efitF4A4dhgS1K$DbtBXLS0XrpQr1KJBhvT4NTD7aP+CoAHDxuEc5P39CU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Volkman_Adam",
+      "first_name": "Adam",
+      "last_name": "Volkman",
+      "email": "volkmanadam215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:48.796Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 113,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$iWdy2eDbj7vvmZudqJnx5k$fjOLqb5ayn0yvIDJFFe8EkiABgGISbq+dqKDStsMhG8=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Vavricka_Stanislav",
+      "first_name": "Stanislav",
+      "last_name": "Vav\u0159i\u010dka",
+      "email": "vavrickastanislav215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:50.384Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 114,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$RvgTm399OlJfbxCzLvZuOx$xbm1ahhWzbolYvXugtqDyNgeTMtkKX8qdcbc++lRyZA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Brezina_Patrik",
+      "first_name": "Patrik",
+      "last_name": "B\u0159ezina",
+      "email": "brezinapatrik215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:51.911Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 115,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$8to1o0KQnDbygiTNDzpSvR$lhGP5p1k7CpsT9swb+ML2IL7LwHhaTD+aX9bQaDNM8c=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Janovska_Vanesa",
+      "first_name": "Vanesa",
+      "last_name": "Janovsk\u00e1",
+      "email": "janovskavanesa215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:53.398Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 116,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$KukhCHWHlkvvhzilOcbSzb$ed0jLHMTpSB/c9wZU+9ZUU4HhtUkdTc7kdGWGlzgXlg=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Hercog_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Hercog",
+      "email": "hercogjakub215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:54.989Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 117,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$Iqsvuh2XeKkCK4CzdISs7K$4punHpk4+W2R0nMu5hGlqVGkjre6hY+wbewVZGfhz7s=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Novak_Jan",
+      "first_name": "Jan",
+      "last_name": "Nov\u00e1k",
+      "email": "novakjan213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:56.682Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 118,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$xdOwiOEPHWBTnhG6Gq0QLN$4ThswTeqpxgXwbggODfl/0isqgQtho5hhuT8E+g4/fE=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Pilny_Jan",
+      "first_name": "Jan",
+      "last_name": "Piln\u00fd",
+      "email": "pilnyjan211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:58.391Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 119,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$dyyO63giZjMlEpZEDARrK0$e/+B3wz9swrBmuSaSACe+Dn8K1Glu9ZwiMyZQNZwNHI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Hruska_Jan",
+      "first_name": "Jan",
+      "last_name": "Hru\u0161ka",
+      "email": "hruskajan211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:23:59.897Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 120,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$4ROaMUktccYvViiX6kqSFC$ETwRwqbHugRxv7TSwTfqoxyxn8Xc6pJVFG1LYYXHyBM=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Protiva_Jan",
+      "first_name": "Jan",
+      "last_name": "Protiva",
+      "email": "protivajan212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:01.380Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 121,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$QSRQco7OGrnpOTyBbsqkvX$ffgptUf5rONorjwCgK/ZYJGiwOkjCe/DlMJwOpWb9uA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Krejcik_Tadeas",
+      "first_name": "Tade\u00e1\u0161",
+      "last_name": "Krej\u010d\u00edk",
+      "email": "krejciktadeas212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:02.776Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 122,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$wIp1v7PvEZRDnAUpw62PRi$QvCzDqnIr1zMfUUpBGnFu1ecq4CO1EQ8GVbErKl4aiQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Taran_Fedir",
+      "first_name": "Fedir",
+      "last_name": "Taran",
+      "email": "taranfedir212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:04.281Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 123,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$hT9gRdDXp47TyXWr6huvTv$HECIEOvTppYAaqbcWbvjp3umDFHeLDybUqdxPh0R8iY=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Polivka_Josef",
+      "first_name": "Josef",
+      "last_name": "Pol\u00edvka",
+      "email": "polivkajosef211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:05.888Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 124,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$IbxfbNp8gwPs7qcjsSfNTo$agCHhMHuQwtvxlfmzRonGcd44pz7rzPRV2QrraScVmA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Kropacek_Michal",
+      "first_name": "Michal",
+      "last_name": "Krop\u00e1\u010dek",
+      "email": "kropacekmichal213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:07.512Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 125,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$ZVQfWg9VXM3why8d0yKNVB$lJ9b78H8eO94N4S+1IJJZDqS5vFR91cwr0tnndKpx8I=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Zaloudek_Jan",
+      "first_name": "Jan",
+      "last_name": "\u017daloudek",
+      "email": "zaloudekjan211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:08.913Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 126,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$6ErddUH1ntO1gxB8Y3pYLK$y3hb6ltKNoONpYZo6qRqqVIyV1voh+pTXGbTf80Wkmc=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Zalabak_Marek",
+      "first_name": "Marek",
+      "last_name": "Zalab\u00e1k",
+      "email": "zalabakmarek212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:10.667Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 127,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$DVpPG0Y6MT1WD54oxwnPLH$EC82A4vLbbkuy2U1ZXHsWuv20YTCVG9xc3blk0O8jnU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Stanek_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Stan\u011bk",
+      "email": "stanekjakub212@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:33.196Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 128,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$W5NMZjrzza9lWXgUj7Alyw$3IWzYgPA5W3tevX7Y3s1wgOPjDQiaJcaq2VqMPaeewA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Svoboda_Adam",
+      "first_name": "Adam",
+      "last_name": "Svoboda",
+      "email": "svobodaadam215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:34.573Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 129,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$kEpD88KRt3ioUeMKDNMWZL$rKvJKcYmVqsfCp4A4N2B7q4mSd/0jQ22F3Ops+qmiuw=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Peterka_Martin",
+      "first_name": "Martin",
+      "last_name": "Peterka",
+      "email": "peterkamartin211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:36.183Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 130,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$bAcdyBvbPiE6xJDdv1FlML$5p0h2jWjI/BfyeONF9jeSIv+VZUJhQ+Ii3SlJXfdcf4=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Havlina_Filip",
+      "first_name": "Filip",
+      "last_name": "Havlina",
+      "email": "havlinafilip211@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:37.671Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 131,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$PndOvtLiGyx2XxM0ld4EHi$jpYHV45lhkiWbTnCkudIijZSXZZB657nEJJICsHvdO4=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Soukup_Lukas",
+      "first_name": "Luk\u00e1\u0161",
+      "last_name": "Soukup",
+      "email": "soukuplukas215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:39.065Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 132,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$89jIqx8BHIFoFq43gT4Z30$eEFnlmKF8z6eA4R0ABvfvYFZHRLDB8SlQ6N61E0XEz4=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Brtek_Matej",
+      "first_name": "Mat\u011bj",
+      "last_name": "Brtek",
+      "email": "brtekmatej215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:40.614Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 133,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$0zdOqBDFfBoYBDyO7xw00l$pNYencBUPu4mDoGzvV+8NRhIQJlKGcgCoXB4xKemFhs=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Calek_Michal",
+      "first_name": "Michal",
+      "last_name": "\u010c\u00e1lek",
+      "email": "calekmichal215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:42.167Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 134,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$rItSWuMsYE0TuH3lj0ge3T$tZNXsZI2IE/i6sFwjyYswFzrxXVuz4KSyv3mo/yJvE0=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Brtek_Lukas",
+      "first_name": "Luk\u00e1\u0161",
+      "last_name": "Brtek",
+      "email": "brteklukas215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:43.696Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 135,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$1i3fRn49cUlrG6vSyMO86c$sLoge/4JnU4gNEXZv7GDIw4/9PdioYc6O12SCgfLSkI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Cenker_Matyas",
+      "first_name": "Maty\u00e1\u0161",
+      "last_name": "Cenker",
+      "email": "cenkermatyas215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:45.299Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 136,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$RPYEf2fItg6UxQGYx2Ke0R$f674la2iFuUnsgeQVW2fDNmdsEwUf3o+wRMBz+pBG9s=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Frengl_Daniel",
+      "first_name": "Daniel",
+      "last_name": "Frengl",
+      "email": "frengldaniel215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:46.899Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 137,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$JAtpNC2vMxmN8igkNsuxMi$4gW18r0bWd7eAyFx9TE3nO008IP3lvsflKR4wYLIwXQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Charvat_Filip",
+      "first_name": "Filip",
+      "last_name": "Charv\u00e1t",
+      "email": "charvatfilip215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:48.487Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 138,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$SlXZNFy0wJ2BhI4rzWPcXv$zynxP6FvGIbXNJlhVJ1aE+beKLkP2ABqGC254BiXU64=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Jech_Pavel",
+      "first_name": "Pavel",
+      "last_name": "Jech",
+      "email": "jechpavel215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:50.012Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 139,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$FCJef7p4oIufCI4f1oPc8Q$Yv+FA6uZi/n4fbSftAwgcEVekFq4zruMNC8c4dT0z74=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Jindrak_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Jindr\u00e1k",
+      "email": "jindrakjakub215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:51.800Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 140,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$rm1ymIoDyZEtRDlQuU3jaO$aYTNSjxB8r9OgK4ptRdLNRIPOFogxVWQeufV+58cKQo=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Jirousek_Miroslav",
+      "first_name": "Miroslav",
+      "last_name": "Jirou\u0161ek",
+      "email": "jirousekmiroslav215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:53.177Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 141,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$fzudh7QtblqeHGc7ijj5kf$5d3AEixX4NnXTRTX9EyRiX0za15i+9X0U/QLsMzTmYU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Neumann_Martin",
+      "first_name": "Martin",
+      "last_name": "Neumann",
+      "email": "neumannmartin215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:54.800Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 142,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$ICHG1GBUauKlhLl7dxxSEh$d0uvbean9q15tRJHOnXKn/HRPFLah3gtPBWiUpxoMIk=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Nykl_Zdenek",
+      "first_name": "Zden\u011bk",
+      "last_name": "Nykl",
+      "email": "nyklzdenek215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:24:56.188Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 143,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$HsqbHSwFFi2GP6nKwGiVKQ$FVUty1Q9oAOCG1XLCP+HQ8FCnN85j+LVnoM49tZvNWY=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Rysavy_Daniel",
+      "first_name": "Daniel",
+      "last_name": "Ry\u0161av\u00fd",
+      "email": "rysavydaniel215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:19.207Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 144,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$lwFEeuhlicwvQ13sh5Qlvz$JjDs6SiHV1djM9l+V0Or2wJzJDbW/vrrVehQoaPya9w=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Tefr_Simon",
+      "first_name": "\u0160imon",
+      "last_name": "Tefr",
+      "email": "tefrsimon215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:20.682Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 145,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$q6uoOi2hJOKYTAtF6EeJt0$Buu5vMud+yR1w1wohI/d/10F6yZVHx+H7dHUdc9rEBg=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Trpisovsky_Simon",
+      "first_name": "\u0160imon",
+      "last_name": "Trpi\u0161ovsk\u00fd",
+      "email": "trpisovskysimon215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:21.905Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 146,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$EDorWtWXGUTvLClHxuPgBL$16hvWu6yZHs/MPEKj1XvqXA9V8PAoF2mWdMtFO1ja+o=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Urban_Tomas",
+      "first_name": "Tom\u00e1\u0161",
+      "last_name": "Urban",
+      "email": "urbantomas215@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:23.310Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 147,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$kqc30ZT1kHw3gdXGmXqCEi$czO0RAHnRheSjzISLaypGfupuHq1HMdwbv1EBBoqYEA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Martinek_Tomas",
+      "first_name": "Tom\u00e1\u0161",
+      "last_name": "Mart\u00ednek",
+      "email": "martinektomas213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:24.765Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 148,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$bRttORzSSrIrgXCVTQWN8H$aP2lj41TZRpXQFWzN2HV8SFwFNjvZOTz2zSpkmnEQBc=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Novotny_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Novotn\u00fd",
+      "email": "novotnyjakub213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:26.501Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 149,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$rNjIc9hDPlVEfsMQ6ez0A6$To7nw6TAHLzYJY5LjZnS//JRNM8oIDuIAz58s0/rLJ0=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Malek_Frantisek",
+      "first_name": "Franti\u0161ek",
+      "last_name": "M\u00e1lek",
+      "email": "malekfrantisek214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:28.082Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 150,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$QPfo2dLc5N2rtJcU1knLN3$dSx8rMkBm5e6m0PywsvCjRwqDYSZF/BKLkEHTlpWl1Y=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Opa_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Opa",
+      "email": "opajakub214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:29.607Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 151,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$50TaFRtQlj4X8pWYCLF36Z$H2yG51DTh1qNZ19K8zKg40Y9NyVj1DGopCHYx6k369o=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Opa_Tomas",
+      "first_name": "Tom\u00e1\u0161",
+      "last_name": "Opa",
+      "email": "opatomas214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:31.269Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 152,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$GaAbseoR0V732Nz1rzZFyi$4gqbcg+FDpIOq0qwGdm23CUkyLhcWXRHABtvWM/qPcY=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Hanuska_Filip",
+      "first_name": "Filip",
+      "last_name": "Hanu\u0161ka",
+      "email": "hanuskafilip213@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:32.871Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 153,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$raYlQEA0hDAlgg9eX7UktL$2MwMMCrTNfenA4NUOU4krGA3IehT7MkxfKu1BRBbJrY=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Linhart_Richard",
+      "first_name": "Richard",
+      "last_name": "Linhart",
+      "email": "linhartrichard214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:34.096Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 154,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$ecnRF6M6COvEhNdm9ygUJJ$+VDkPnCmv71lSgOCE7VzPmaBhgPqUjExLmvf39Z4hdE=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Mrtka_Vojtech",
+      "first_name": "Vojt\u011bch",
+      "last_name": "Mrtka",
+      "email": "mrtkavojtech214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:35.616Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 155,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$im77i7uvCClJqGJBDd0kH0$zVQ/osuXWEwFAN/c2WUk06WHTennbjbhN5hBEDDMSc8=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Zednik_Jakub",
+      "first_name": "Jakub",
+      "last_name": "Zedn\u00edk",
+      "email": "zednikjakub214@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:37.208Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 156,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$tAbvKuyUG5Lufk0OCHvNvW$3dMjSWgr2MbFqUAlWEJah9qvph7E1tuegXN1NSmqjYg=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Kviz_Jaroslav",
+      "first_name": "Jaroslav",
+      "last_name": "Kv\u00edz",
+      "email": "kviz@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:38.908Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 157,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$2n7wvBUm6Wvh828MAhD8Ep$EA2fV9+GAxwWUZnkMMOPR2YwZtw9Le7/6K/LeJO60iU=",
+      "last_login": "2025-03-11T06:44:00.668Z",
+      "is_superuser": false,
+      "username": "Nuhlicek_Josef",
+      "first_name": "Josef",
+      "last_name": "Nuhl\u00ed\u010dek",
+      "email": "nuhlicek@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:40.311Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 158,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$s32JDMNDQGh6ulFH6jSPRV$LS7b8N1NxXINUfDzYOT6xLcuuDQAuvs7LL0SSa391K4=",
+      "last_login": "2025-02-06T07:19:42.370Z",
+      "is_superuser": false,
+      "username": "Schneiderwind_Zdenek",
+      "first_name": "Zden\u011bk",
+      "last_name": "Schneiderwind",
+      "email": "schneiderwind@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:41.788Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 159,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$HUDOIWGbgCYiuS2hKDnKJc$XWOsB08c5+EsC0lUcvoPi78haULXUOCxMH3lb/pw1Lo=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Zatocil_Jaroslav",
+      "first_name": "Jaroslav",
+      "last_name": "Zato\u010dil",
+      "email": "zatocil@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:25:59.645Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 160,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$B6TGn3As2B5lV6BT0bB3KQ$NY7Cm5d/MzvelHmxLjzE0Rm6EywLgJX4QnAUwfRD4W4=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Broz_Vaclav",
+      "first_name": "V\u00e1clav",
+      "last_name": "Bro\u017e",
+      "email": "broz@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:01.077Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 161,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$wKQDcTepN37PONZBFCZPQp$uHWHnb+dUrK4d7V1ln2OzEk4lgg4QZDd1XnKoTgJT9s=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Hlavacek_Petr",
+      "first_name": "Petr",
+      "last_name": "Hlav\u00e1\u010dek",
+      "email": "hlavacek@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:02.401Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 162,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$DofnYTj0mRemz9tuDkUWyy$2fqUSUjWVoqmOCqrOht34OGpgfkzosnAeSi9ujk4pnE=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Horky_Pavel",
+      "first_name": "Pavel",
+      "last_name": "Hork\u00fd",
+      "email": "horky@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:03.802Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 163,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$fhZMJmieKu4zp0PUXObMBO$qd1NAC3SFDJBmD/mg4M4A1hyf4SHzc8J90DWE/DerNU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Jackovic_Jiri",
+      "first_name": "Ji\u0159\u00ed",
+      "last_name": "Jackovi\u010d",
+      "email": "jackovic@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:05.509Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 164,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$nQNodY0F1Y46oggVuDoXTG$0H4/N8scCCypL+V9rm/wuvTevHTBgiBrV2vnVuhXoOo=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Klecka_Michael",
+      "first_name": "Michael",
+      "last_name": "Kle\u010dka",
+      "email": "klecka@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:07.075Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 165,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$INGmp5pKTPKMoFK1S7YVwO$O1YPbHHVwxtVSkC7qZa6rxXG5jCtsRFah6dLbq1WuwQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Kohout_Ludek",
+      "first_name": "Lud\u011bk",
+      "last_name": "Kohout",
+      "email": "kohout@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:08.407Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 166,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$RlAeZAg0YE7jyq1CigFurl$bj8HLrsFryCTf1uyDH9dGC78ABqetwBmbnujUddhgfY=",
+      "last_login": "2025-02-07T09:27:55.514Z",
+      "is_superuser": false,
+      "username": "Kremenak_Josef",
+      "first_name": "Josef",
+      "last_name": "K\u0159emen\u00e1k",
+      "email": "kremenak@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:10.000Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 167,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$mzn5vS9qTApXtLI43QIOGv$L9Jr1qqpt5ROtQaBg2N7miR4DZw5dsNuQj+Lxn7KSKU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Masin_Vlastimil",
+      "first_name": "Vlastimil",
+      "last_name": "Ma\u0161\u00edn",
+      "email": "masin@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:11.489Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 168,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$b5RIVGCgc1L1yhlUCoeKSO$rBuNbX6R/6pElgeqPbbDzgJVoDY/eXxnJzJJewO1aSo=",
+      "last_login": "2025-02-21T08:03:41.074Z",
+      "is_superuser": false,
+      "username": "Moravec_Stanislav",
+      "first_name": "Stanislav",
+      "last_name": "Moravec",
+      "email": "moravec@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:12.803Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 169,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$K5X4WeD362YBbKZJVW17dm$4EMJL0z6q0HhvCFhaQFlf36ukSMz0zLndNxEwhHvKT4=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Parkan_Jaroslav",
+      "first_name": "Jaroslav",
+      "last_name": "Parkan",
+      "email": "parkan@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:14.514Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 170,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$kzZfoZEPgnZrPSU0sLQB1V$8UWdTG3PxcHo5S3359qSnD675ksLgcg7hIj8ABVv4yc=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Prochazka_Martin",
+      "first_name": "Martin",
+      "last_name": "Proch\u00e1zka",
+      "email": "prochazka@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:31.520Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 171,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$NVAIaM9wHa4ZAjzbPh8uvr$TGzsmJXzza2Ijhsw8/70RCgwCiT2WGS7fZHVlZaSMHw=",
+      "last_login": "2025-03-10T09:31:35.698Z",
+      "is_superuser": false,
+      "username": "Stejskal_Pavel",
+      "first_name": "Pavel",
+      "last_name": "Stejskal",
+      "email": "stejskal@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:33.095Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 172,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$c98UAoth9XSDcc8Epn9IAj$MWV49O4uZ5G52gqNeTVWqMPZ4O0gKnNV4y7SHAqTaFY=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Treml_Josef",
+      "first_name": "Josef",
+      "last_name": "Treml",
+      "email": "treml@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:34.604Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 173,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$H5Dwz2steiu3O2QnQqc4rb$j2FjV087GK2PQVzr2c5uW0ZKpjvd1vvLAagEZEegc8w=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Tesina_Petr",
+      "first_name": "Petr",
+      "last_name": "T\u011b\u0161ina",
+      "email": "tesina@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:36.365Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 174,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$CxNJ7xSoIUTQkxw3DjIhs6$/8M+JOLXOXkNcg9K01yzqJHhDG6E/PcxFHmH3AnxOko=",
+      "last_login": "2025-02-24T18:12:44.662Z",
+      "is_superuser": false,
+      "username": "Vele_Patrik",
+      "first_name": "Patrik",
+      "last_name": "Vele",
+      "email": "vele@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:37.981Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 175,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$42NSEkRBZL0V2RoD2xBHxv$uCGnoi+B8Xyj81pxIgFWkcG9SjsqqAJi+WKfHGGEr6c=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Vala_Zbynek",
+      "first_name": "Zbyn\u011bk",
+      "last_name": "V\u00e1la",
+      "email": "vala@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:39.677Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 176,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$VND9yDIjs09iaZD6AHh3zk$t/9cB2xTFV4yhmcORwdSK/iF+XUrxQQi8OnhrLYFs5k=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Zalesky_Frantisek",
+      "first_name": "Franti\u0161ek",
+      "last_name": "Z\u00e1lesk\u00fd",
+      "email": "zalesky@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:41.111Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 177,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$yY1ok8FflSRYaeYUK6JU39$jcbSXR++Bhuorx8kr+qWcjB4Q+dOGMuRlfMcdr4IiWU=",
+      "last_login": "2025-02-19T12:52:36.846Z",
+      "is_superuser": false,
+      "username": "Drachova_Lenka",
+      "first_name": "Lenka",
+      "last_name": "Drachov\u00e1",
+      "email": "drachova@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:42.607Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 178,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$OXFDaqdVuYHuIDkM0fPDBk$wLsx+8lQGaC+mI3nqvOq4QcXxoOy91bGpS6g7h669RE=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Simkova_Jitka",
+      "first_name": "Jitka",
+      "last_name": "\u0160imkov\u00e1",
+      "email": "simkova@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:44.390Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 179,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$Lws8qErQTUAB9uKSm25fwO$JVvtVo/ZA6hd55wPqgMyH9uHsIUBhJ2NoZNYvubZHK4=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Kaiser_Pavel",
+      "first_name": "Pavel",
+      "last_name": "Kaiser",
+      "email": "kaiser@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:45.787Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 180,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$Reg0yH2tjHKz4WuobWQDtg$+/cxrSETSybgkKy7EPucZVcZ0NX8rGQHf2pJdOriklI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Cerny_Jiri",
+      "first_name": "Ji\u0159\u00ed",
+      "last_name": "\u010cern\u00fd",
+      "email": "cerny@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-02T17:26:47.504Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 181,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$45vb9nvGIN0uVLYB2GSPkp$Aw6/Z43/ZxeShsdWrpT2kg5yq1ZiAQncAII9JlQfrt8=",
+      "last_login": "2025-02-28T08:38:32.961Z",
+      "is_superuser": false,
+      "username": "Polivka_Petr",
+      "first_name": "Petr",
+      "last_name": "Pol\u00edvka",
+      "email": "polivka@voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-17T11:01:43Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 182,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$Qzz56umjTJ2K4VBu97gKra$iPr0OUBWy/4U8ZcZEg4tJsn4vmeB/RvbkcE1foAzEYo=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Testovaci_Zak",
+      "first_name": "Testovac\u00ed",
+      "last_name": "\u017d\u00e1k",
+      "email": "testovaci_zak@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-17T12:02:45Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 183,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$8BpAhlWbHRUOVtkUmyGps9$MJpREkMgFiPnk6dk6WfWC70Ow9PSXCHQcSXeIHmyiG0=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "Perl_Jiri",
+      "first_name": "Ji\u0159\u00ed",
+      "last_name": "Perl",
+      "email": "perljiri@student.voskh.cz",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-02-26T09:48:04Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  }
+]

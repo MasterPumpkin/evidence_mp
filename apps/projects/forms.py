@@ -115,10 +115,15 @@ class TeacherProjectForm(forms.ModelForm):
         model = Project
         fields = [
             'title', 'student', 'description', 'assignment', 
-            'delivery_work_date', 'delivery_documentation_date',
+            'delayed_submission_date', 'delivery_work_date', 'delivery_documentation_date',
             'external_leader', 'external_leader_email', 'external_leader_phone',
-            'external_opponent', 'external_opponent_email', 'external_opponent_phone'
+            'external_opponent', 'external_opponent_email', 'external_opponent_phone'      
         ]
+        widgets = {
+            'delivery_work_date': forms.DateInput(attrs={'type': 'date'}),
+            'delivery_documentation_date': forms.DateInput(attrs={'type': 'date'}),
+            'delayed_submission_date': forms.DateInput(attrs={'type': 'date'})  # Přidán widget pro datum
+        }
 
     def __init__(self, *args, **kwargs):
         # Získáme extra parametr 'selected_year' a 'user' (přihlášený uživatel)
