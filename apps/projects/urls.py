@@ -8,7 +8,8 @@ from .views.export_views import (
     export_consultation_list, export_project_assignment,
     export_project_detail_pdf, export_control_check_pdf,
     export_leader_eval, export_opponent_eval,
-    export_final_report_pdf, export_milestones_pdf)
+    export_final_report_pdf, export_milestones_pdf,
+    project_details_overview, export_project_details_pdf)  # Add the new view import
 from .views.import_views import (
     import_milestones_csv, import_users_csv, 
     import_projects, import_result_view,
@@ -100,7 +101,8 @@ urlpatterns = [
     path('<int:pk>/review-opponent/', OpponentReviewView.as_view(), name='review_opponent'),
 
     path('export-milestones-pdf/', export_milestones_pdf, name='export_milestones_pdf'),
-
+    path('project-details-overview/', project_details_overview, name='project_details_overview'),
+    path('project-details-pdf/', export_project_details_pdf, name='project_details_pdf'),  # Add new URL
     path('update-status/<int:pk>/', update_project_status, name='update_status'),
 
     path('<int:pk>/questions-leader/', LeaderQuestionsView.as_view(), name='questions_leader'),

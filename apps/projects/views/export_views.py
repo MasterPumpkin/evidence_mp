@@ -4,7 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
-from ..models import Project, LeaderEvaluation, UserPreferences, Milestone
+from ..models import Project, LeaderEvaluation, UserPreferences, Milestone, ScoringScheme
 from ..forms import (
     DateInputForm
 )
@@ -675,4 +675,184 @@ def export_milestones_pdf(request):
     # Odpověď do prohlížeče
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="milestones_report.pdf"'
+    return response
+
+@login_required
+def project_details_overview(request):
+    """
+    Displays an overview of all projects where the current user is the leader.
+    Shows student details, project title, control checks, submission status, and evaluations.
+    """
+    user = request.user
+    
+    # Get default year from user preferences if available
+    default_year = None
+    if hasattr(user, 'preferences'):
+        default_year = user.preferences.default_year
+
+    # Get all available school years from ScoringScheme for the dropdown
+    available_years = ScoringScheme.objects.values_list('year', flat=True).distinct().order_by('-year')
+    
+    # Use year from GET parameter or default from preferences
+    selected_year = request.GET.get('year', default_year)
+    
+    # Get source project ID from URL parameters
+    source_project_id = request.GET.get('from_project', None)
+    
+    # Filter projects by year and leader
+    if selected_year:
+        projects = Project.objects.filter(scheme__year=selected_year, leader=user).order_by('student__last_name')
+    else:
+        projects = Project.objects.filter(leader=user).order_by('student__last_name')
+    
+    projects_data = []
+    for project in projects:
+        # Get control checks for this project
+        controls = project.controls.all().order_by('date')
+        
+        # Check if first three controls exist
+        control_1 = 'Ano' if len(controls) >= 1 else 'Ne'
+        control_2 = 'Ano' if len(controls) >= 2 else 'Ne'
+        control_3 = 'Ano' if len(controls) >= 3 else 'Ne'
+        
+        # Check if work and documentation were delivered
+        work_delivered = 'Ano' if project.delivery_work_date else 'Ne'
+        docs_delivered = 'Ano' if project.delivery_documentation_date else 'Ne'
+        
+        # Check if delay was granted
+        delay_granted = 'Ano' if project.delayed_submission_date else 'Ne'
+        
+        # Get leader evaluation points if available
+        leader_eval = getattr(project, 'leader_eval', None)
+        if leader_eval:
+            leader_points = leader_eval.area1_points + leader_eval.area2_points + leader_eval.area3_points
+        else:
+            leader_points = '-'
+            
+        # Get opponent evaluation points if available
+        opponent_eval = getattr(project, 'opponent_eval', None)
+        if opponent_eval:
+            opponent_points = opponent_eval.area1_points + opponent_eval.area2_points
+        else:
+            opponent_points = '-'
+            
+        # Get student details
+        student_name = f"{project.student.first_name} {project.student.last_name}" if project.student else "N/A"
+        class_name = project.student.userprofile.class_name if project.student and hasattr(project.student, 'userprofile') else "N/A"
+        
+        projects_data.append({
+            'id': project.id,
+            'student_name': student_name,
+            'class_name': class_name,
+            'title': project.title,
+            'control_1': control_1,
+            'control_2': control_2,
+            'control_3': control_3,
+            'work_delivered': work_delivered,
+            'docs_delivered': docs_delivered,
+            'delay_granted': delay_granted,
+            'leader_points': leader_points,
+            'opponent_points': opponent_points,
+        })
+    
+    context = {
+        'projects': projects_data,
+        'selected_year': selected_year,
+        'available_years': available_years,
+        'source_project_id': source_project_id,
+    }
+    
+    return render(request, 'projects/project_details_overview.html', context)
+
+@login_required
+def export_project_details_pdf(request):
+    """
+    Generates a PDF with project details and repeating table headers on each page.
+    """
+    user = request.user
+    
+    # Get default year from user preferences if available
+    default_year = None
+    if hasattr(user, 'preferences'):
+        default_year = user.preferences.default_year
+
+    # Use year from GET parameter or default from preferences
+    selected_year = request.GET.get('year', default_year)
+    
+    # Filter projects by year and leader
+    if selected_year:
+        projects = Project.objects.filter(scheme__year=selected_year, leader=user).order_by('student__last_name')
+    else:
+        projects = Project.objects.filter(leader=user).order_by('student__last_name')
+    
+    projects_data = []
+    for project in projects:
+        # Get control checks for this project
+        controls = project.controls.all().order_by('date')
+        
+        # Check if first three controls exist
+        control_1 = 'Ano' if len(controls) >= 1 else 'Ne'
+        control_2 = 'Ano' if len(controls) >= 2 else 'Ne'
+        control_3 = 'Ano' if len(controls) >= 3 else 'Ne'
+        
+        # Check if work and documentation were delivered
+        work_delivered = 'Ano' if project.delivery_work_date else 'Ne'
+        docs_delivered = 'Ano' if project.delivery_documentation_date else 'Ne'
+        
+        # Check if delay was granted
+        delay_granted = 'Ano' if project.delayed_submission_date else 'Ne'
+        
+        # Get leader evaluation points if available
+        leader_eval = getattr(project, 'leader_eval', None)
+        if leader_eval:
+            leader_points = leader_eval.area1_points + leader_eval.area2_points + leader_eval.area3_points
+        else:
+            leader_points = '-'
+            
+        # Get opponent evaluation points if available
+        opponent_eval = getattr(project, 'opponent_eval', None)
+        if opponent_eval:
+            opponent_points = opponent_eval.area1_points + opponent_eval.area2_points
+        else:
+            opponent_points = '-'
+            
+        # Get student details
+        student_name = f"{project.student.first_name} {project.student.last_name}" if project.student else "N/A"
+        class_name = project.student.userprofile.class_name if project.student and hasattr(project.student, 'userprofile') else "N/A"
+        
+        projects_data.append({
+            'id': project.id,
+            'student_name': student_name,
+            'class_name': class_name,
+            'title': project.title,
+            'control_1': control_1,
+            'control_2': control_2,
+            'control_3': control_3,
+            'work_delivered': work_delivered,
+            'docs_delivered': docs_delivered,
+            'delay_granted': delay_granted,
+            'leader_points': leader_points,
+            'opponent_points': opponent_points,
+        })
+    
+    context = {
+        'projects': projects_data,
+        'selected_year': selected_year,
+        'current_date': datetime.now(),
+        # 'username': user.username,
+        'username': f"{user.userprofile.title} {user.first_name} {user.last_name}",
+
+    }
+    
+    # Add specific HTML/CSS for WeasyPrint to properly handle page breaks and repeating headers
+    html_string = render_to_string('projects/pdf_project_details.html', context)
+    
+    # Generate PDF with WeasyPrint
+    pdf_file = HTML(string=html_string).write_pdf()
+    
+    # Prepare response
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    filename = f"projekty_prehled_{datetime.now().strftime('%Y-%m-%d')}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
     return response

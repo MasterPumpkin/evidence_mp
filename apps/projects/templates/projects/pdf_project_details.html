@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Přehled projektů</title>
+    <style>
+        @page {
+            size: landscape;
+            margin: 2cm;
+            @top-center {
+                content: "Přehled projektů vedoucího: {{ username }}";
+                font-weight: bold;
+            }
+            @bottom-right {
+                content: "Strana " counter(page) " z " counter(pages);
+            }
+            @bottom-left {
+                content: "Vygenerováno: {{ current_date|date:'d.m.Y H:i' }}";
+            }
+        }
+        
+        body {
+            font-family: 'DejaVu Sans', sans-serif;
+            font-size: 12px;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 4px;
+            text-align: left;
+        }
+        
+        /* Center align all cells except first three columns */
+        td:nth-child(n+4), th:nth-child(n+4) {
+            text-align: center;
+        }
+        
+        th {
+            background-color: #333;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .school-info {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        /* This is the key part that ensures headers repeat on every page */
+        thead {
+            display: table-header-group;
+        }
+        
+        tfoot {
+            display: table-footer-group;
+        }
+        
+        tr {
+            page-break-inside: avoid;
+        }
+    </style>
+</head>
+<body>
+    <!--
+    <div class="school-info">
+        <div>VOŠ, SPŠ a JŠ Kutná Hora</div>
+        <div>Evidence maturitních projektů</div>
+        {% if selected_year %}<div>Školní rok: {{ selected_year }}</div>{% endif %}
+    </div>
+
+    <h1>Přehled projektů vedoucího: {{ username }}</h1>
+    -->
+    <table>
+        <thead>
+            <tr>
+                <th>Jméno žáka</th>
+                <th>Třída</th>
+                <th>Název projektu</th>
+                <th>Kontrola 1</th>
+                <th>Kontrola 2</th>
+                <th>Kontrola 3</th>
+                <th>Výrobek odevzdal</th>
+                <th>Dokumentaci odevzdal</th>
+                <th>Povolen odklad</th>
+                <th>Body vedoucí</th>
+                <th>Body oponent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr>
+                <td>{{ project.student_name }}</td>
+                <td>{{ project.class_name }}</td>
+                <td>{{ project.title }}</td>
+                <td>{{ project.control_1 }}</td>
+                <td>{{ project.control_2 }}</td>
+                <td>{{ project.control_3 }}</td>
+                <td>{{ project.work_delivered }}</td>
+                <td>{{ project.docs_delivered }}</td>
+                <td>{{ project.delay_granted }}</td>
+                <td>{{ project.leader_points }}</td>
+                <td>{{ project.opponent_points }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11" style="text-align: center;">Žádné projekty k zobrazení</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

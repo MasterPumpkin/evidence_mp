@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Přehled projektů{% endblock %}
+
+{% block content %}
+<div class="container mt-4" id="project-overview">
+    <h1>Přehled projektů</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <form method="get" class="form-inline d-flex align-items-center">
+                <div class="form-group d-flex align-items-center">
+                    <label for="year" class="mr-2">Školní rok:</label>
+                    <select name="year" id="year" class="form-control form-control-sm" style="width: 150px; margin-left: 10px;">
+                        <option value="">-- Vyberte rok --</option>
+                        {% for year in available_years %}
+                            <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary mx-2">Filtrovat</button>
+                <button id="export-pdf" type="button" class="btn btn-sm btn-success">Exportovat jako PDF</button>
+                {% if source_project_id %}
+                    <a href="{% url 'projects:detail' source_project_id %}" class="btn btn-sm btn-secondary mx-2">Zpět</a>
+                {% else %}
+                    <a href="{% url 'projects:list' %}" class="btn btn-sm btn-secondary mx-2">Zpět na seznam</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="projects-table">
+            <thead class="table-dark">
+                <tr>
+                    <th>Jméno žáka</th>
+                    <th>Třída</th>
+                    <th>Název projektu</th>
+                    <th class="text-center">Kontrola 1</th>
+                    <th class="text-center">Kontrola 2</th>
+                    <th class="text-center">Kontrola 3</th>
+                    <th class="text-center">Výrobek odevzdal</th>
+                    <th class="text-center">Dokumentaci odevzdal</th>
+                    <th class="text-center">Povolen odklad</th>
+                    <th class="text-center">Body vedoucí</th>
+                    <th class="text-center">Body oponent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                <tr>
+                    <td>{{ project.student_name }}</td>
+                    <td>{{ project.class_name }}</td>
+                    <td>{{ project.title }}</td>
+                    <td class="text-center">{{ project.control_1 }}</td>
+                    <td class="text-center">{{ project.control_2 }}</td>
+                    <td class="text-center">{{ project.control_3 }}</td>
+                    <td class="text-center">{{ project.work_delivered }}</td>
+                    <td class="text-center">{{ project.docs_delivered }}</td>
+                    <td class="text-center">{{ project.delay_granted }}</td>
+                    <td class="text-center">{{ project.leader_points }}</td>
+                    <td class="text-center">{{ project.opponent_points }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="11" class="text-center">Žádné projekty k zobrazení</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.getElementById('export-pdf').addEventListener('click', function() {
+        // Get the selected year value
+        const selectedYear = document.getElementById('year').value || '';
+        // Correctly construct URL with complete path
+        window.location.href = "{% url 'projects:project_details_pdf' %}" + "?year=" + encodeURIComponent(selectedYear);
+    });
+</script>
+{% endblock %}
