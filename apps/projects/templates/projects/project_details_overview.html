@@ -44,6 +44,7 @@
                     <th>Jméno žáka</th>
                     <th>Třída</th>
                     <th>Název projektu</th>
+                    <th class="text-center">{% if view_type == 'opponent' %}Vedoucí{% else %}Oponent{% endif %}</th>
                     <th class="text-center">Kontrola&nbsp;1</th>
                     <th class="text-center">Kontrola&nbsp;2</th>
                     <th class="text-center">Kontrola&nbsp;3</th>
@@ -60,6 +61,7 @@
                     <td>{{ project.student_name }}</td>
                     <td>{{ project.class_name }}</td>
                     <td>{{ project.title }}</td>
+                    <td class="text-center" title="{{ project.teacher_fullname }}">{{ project.teacher_abbreviation }}</td>
                     <td class="text-center">{{ project.control_1 }}</td>
                     <td class="text-center">{{ project.control_2 }}</td>
                     <td class="text-center">{{ project.control_3 }}</td>
@@ -71,7 +73,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="11" class="text-center">Žádné projekty k zobrazení</td>
+                    <td colspan="12" class="text-center">Žádné projekty k zobrazení</td>
                 </tr>
                 {% endfor %}
             </tbody>

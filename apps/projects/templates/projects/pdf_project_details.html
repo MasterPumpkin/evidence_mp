@@ -74,27 +74,23 @@
         tr {
             page-break-inside: avoid;
         }
+        
+        /* We can add a footnote about the abbreviations */
+        .footnote {
+            font-size: 10px;
+            margin-top: 10px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
-    <!--
-    <div class="school-info">
-        <div>VOŠ, SPŠ a JŠ Kutná Hora</div>
-        <div>Evidence maturitních projektů</div>
-        {% if selected_year %}<div>Školní rok: {{ selected_year }}</div>{% endif %}
-    </div>
-
-    <h1>Přehled projektů vedoucího: {{ username }}</h1>
-    -->
-    <!-- Added a title showing role -->
-    <!--  <h1>Přehled projektů - {{ role }}: {{ username }}</h1> -->
-
     <table>
         <thead>
             <tr>
                 <th>Jméno žáka</th>
                 <th>Třída</th>
                 <th>Název projektu</th>
+                <th>{% if view_type == 'opponent' %}Vedoucí{% else %}Oponent{% endif %}</th>
                 <th>Kontrola&nbsp;1</th>
                 <th>Kontrola&nbsp;2</th>
                 <th>Kontrola&nbsp;3</th>
@@ -111,6 +107,7 @@
                 <td>{{ project.student_name }}</td>
                 <td>{{ project.class_name }}</td>
                 <td>{{ project.title }}</td>
+                <td>{{ project.teacher_abbreviation }}</td>
                 <td>{{ project.control_1 }}</td>
                 <td>{{ project.control_2 }}</td>
                 <td>{{ project.control_3 }}</td>
@@ -122,10 +119,20 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="11" style="text-align: center;">Žádné projekty k zobrazení</td>
+                <td colspan="12" style="text-align: center;">Žádné projekty k zobrazení</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    
+    <!-- Simplified version for the unique teachers list -->
+    <div class="footnote">
+        Zkratky učitelů:
+        <ul>
+            {% for teacher in unique_teachers %}
+                <li>{{ teacher.abbreviation }}: {{ teacher.fullname }}</li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>

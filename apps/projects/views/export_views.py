@@ -851,17 +851,17 @@ def project_details_overview(request):
     if view_type == 'opponent':
         if selected_year:
             projects = Project.objects.filter(scheme__year=selected_year, opponent=user).select_related(
-                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+                'student', 'student__userprofile', 'leader', 'leader__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
         else:
             projects = Project.objects.filter(opponent=user).select_related(
-                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+                'student', 'student__userprofile', 'leader', 'leader__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
     else:  # default to leader view
         if selected_year:
             projects = Project.objects.filter(scheme__year=selected_year, leader=user).select_related(
-                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+                'student', 'student__userprofile', 'opponent', 'opponent__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
         else:
             projects = Project.objects.filter(leader=user).select_related(
-                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+                'student', 'student__userprofile', 'opponent', 'opponent__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
     
     projects_data = []
     for project in projects:
@@ -916,11 +916,37 @@ def project_details_overview(request):
         student_name = f"{project.student.first_name} {project.student.last_name}" if project.student else "N/A"
         class_name = project.student.userprofile.class_name if project.student and hasattr(project.student, 'userprofile') else "N/A"
         
+        # Get teacher abbreviation based on view type
+        if view_type == 'opponent':
+            # When viewing as opponent, show leader abbreviation
+            if project.external_leader:
+                teacher_abbreviation = "Ext"
+                teacher_fullname = project.external_leader
+            elif project.leader and hasattr(project.leader, 'userprofile'):
+                teacher_abbreviation = project.leader.userprofile.abbreviation or project.leader.last_name[:3]
+                teacher_fullname = f"{project.leader.userprofile.title} {project.leader.first_name} {project.leader.last_name}".strip()
+            else:
+                teacher_abbreviation = "-"
+                teacher_fullname = ""
+        else:
+            # When viewing as leader, show opponent abbreviation
+            if project.external_opponent:
+                teacher_abbreviation = "Ext"
+                teacher_fullname = project.external_opponent
+            elif project.opponent and hasattr(project.opponent, 'userprofile'):
+                teacher_abbreviation = project.opponent.userprofile.abbreviation or project.opponent.last_name[:3]
+                teacher_fullname = f"{project.opponent.userprofile.title} {project.opponent.first_name} {project.opponent.last_name}".strip()
+            else:
+                teacher_abbreviation = "-"
+                teacher_fullname = ""
+        
         projects_data.append({
             'id': project.id,
             'student_name': student_name,
             'class_name': class_name,
             'title': project.title,
+            'teacher_abbreviation': teacher_abbreviation,
+            'teacher_fullname': teacher_fullname,
             'control_1': control_1,
             'control_2': control_2,
             'control_3': control_3,
@@ -965,19 +991,21 @@ def export_project_details_pdf(request):
     if view_type == 'opponent':
         if selected_year:
             projects = Project.objects.filter(scheme__year=selected_year, opponent=user).select_related(
-                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+                'student', 'student__userprofile', 'leader', 'leader__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
         else:
             projects = Project.objects.filter(opponent=user).select_related(
-                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+                'student', 'student__userprofile', 'leader', 'leader__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
     else:  # default to leader view
         if selected_year:
             projects = Project.objects.filter(scheme__year=selected_year, leader=user).select_related(
-                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+                'student', 'student__userprofile', 'opponent', 'opponent__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
         else:
             projects = Project.objects.filter(leader=user).select_related(
-                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+                'student', 'student__userprofile', 'opponent', 'opponent__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
     
     projects_data = []
+    unique_teachers = {}  # Dictionary to store unique teacher abbreviations and full names
+    
     for project in projects:
         # Get control checks for this project
         controls = project.controls.all().order_by('date')
@@ -1030,11 +1058,41 @@ def export_project_details_pdf(request):
         student_name = f"{project.student.first_name} {project.student.last_name}" if project.student else "N/A"
         class_name = project.student.userprofile.class_name if project.student and hasattr(project.student, 'userprofile') else "N/A"
         
+        # Get teacher abbreviation based on view type
+        if view_type == 'opponent':
+            # When viewing as opponent, show leader abbreviation
+            if project.external_leader:
+                teacher_abbreviation = "Ext"
+                teacher_fullname = project.external_leader
+            elif project.leader and hasattr(project.leader, 'userprofile'):
+                teacher_abbreviation = project.leader.userprofile.abbreviation or project.leader.last_name[:3]
+                teacher_fullname = f"{project.leader.userprofile.title} {project.leader.first_name} {project.leader.last_name}".strip()
+            else:
+                teacher_abbreviation = "-"
+                teacher_fullname = ""
+        else:
+            # When viewing as leader, show opponent abbreviation
+            if project.external_opponent:
+                teacher_abbreviation = "Ext"
+                teacher_fullname = project.external_opponent
+            elif project.opponent and hasattr(project.opponent, 'userprofile'):
+                teacher_abbreviation = project.opponent.userprofile.abbreviation or project.opponent.last_name[:3]
+                teacher_fullname = f"{project.opponent.userprofile.title} {project.opponent.first_name} {project.opponent.last_name}".strip()
+            else:
+                teacher_abbreviation = "-"
+                teacher_fullname = ""
+        
+        # Store unique teacher information
+        if teacher_abbreviation and teacher_abbreviation != "-" and teacher_fullname:
+            unique_teachers[teacher_abbreviation] = teacher_fullname
+            
         projects_data.append({
             'id': project.id,
             'student_name': student_name,
             'class_name': class_name,
             'title': project.title,
+            'teacher_abbreviation': teacher_abbreviation,
+            'teacher_fullname': teacher_fullname,
             'control_1': control_1,
             'control_2': control_2,
             'control_3': control_3,
@@ -1045,13 +1103,17 @@ def export_project_details_pdf(request):
             'opponent_points': opponent_points,
         })
     
+    # Convert unique teachers dictionary to a list of dictionaries
+    unique_teacher_list = [{'abbreviation': abbr, 'fullname': name} for abbr, name in unique_teachers.items()]
+    
     context = {
         'projects': projects_data,
         'selected_year': selected_year,
         'current_date': datetime.now(),
         'username': f"{user.userprofile.title} {user.first_name} {user.last_name}",
-        'view_type': view_type,  # Add view type to context
-        'role': "Oponent" if view_type == 'opponent' else "Vedoucí"  # Add role title
+        'view_type': view_type,
+        'role': "Oponent" if view_type == 'opponent' else "Vedoucí",
+        'unique_teachers': unique_teacher_list  # Add unique teachers list to context
     }
     
     # Add specific HTML/CSS for WeasyPrint to properly handle page breaks and repeating headers
