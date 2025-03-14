@@ -701,26 +701,46 @@ def project_details_overview(request):
     
     # Filter projects by year and leader
     if selected_year:
-        projects = Project.objects.filter(scheme__year=selected_year, leader=user).order_by('student__last_name')
+        projects = Project.objects.filter(scheme__year=selected_year, leader=user).select_related(
+            'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
     else:
-        projects = Project.objects.filter(leader=user).order_by('student__last_name')
+        projects = Project.objects.filter(leader=user).select_related(
+            'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
     
     projects_data = []
     for project in projects:
         # Get control checks for this project
         controls = project.controls.all().order_by('date')
         
-        # Check if first three controls exist
-        control_1 = 'Ano' if len(controls) >= 1 else 'Ne'
-        control_2 = 'Ano' if len(controls) >= 2 else 'Ne'
-        control_3 = 'Ano' if len(controls) >= 3 else 'Ne'
+        # Check controls and format display values appropriately
+        control_1 = 'Ne'
+        control_2 = 'Ne'
+        control_3 = 'Ne'
         
-        # Check if work and documentation were delivered
-        work_delivered = 'Ano' if project.delivery_work_date else 'Ne'
-        docs_delivered = 'Ano' if project.delivery_documentation_date else 'Ne'
+        if len(controls) >= 1:
+            if controls[0].evaluation:
+                control_1 = controls[0].evaluation
+            else:
+                control_1 = controls[0].date.strftime('%d.%m.%Y') if controls[0].date else 'Ano'
+                
+        if len(controls) >= 2:
+            if controls[1].evaluation:
+                control_2 = controls[1].evaluation
+            else:
+                control_2 = controls[1].date.strftime('%d.%m.%Y') if controls[1].date else 'Ano'
+                
+        if len(controls) >= 3:
+            if controls[2].evaluation:
+                control_3 = controls[2].evaluation
+            else:
+                control_3 = controls[2].date.strftime('%d.%m.%Y') if controls[2].date else 'Ano'
         
-        # Check if delay was granted
-        delay_granted = 'Ano' if project.delayed_submission_date else 'Ne'
+        # Check if work and documentation were delivered - show dates if available
+        work_delivered = project.delivery_work_date.strftime('%d.%m.%Y') if project.delivery_work_date else 'Ne'
+        docs_delivered = project.delivery_documentation_date.strftime('%d.%m.%Y') if project.delivery_documentation_date else 'Ne'
+        
+        # Check if delay was granted - show date if available
+        delay_granted = project.delayed_submission_date.strftime('%d.%m.%Y') if project.delayed_submission_date else 'Ne'
         
         # Get leader evaluation points if available
         leader_eval = getattr(project, 'leader_eval', None)
@@ -760,6 +780,7 @@ def project_details_overview(request):
         'selected_year': selected_year,
         'available_years': available_years,
         'source_project_id': source_project_id,
+        'is_teacher': user.groups.filter(name='Teacher').exists(),
     }
     
     return render(request, 'projects/project_details_overview.html', context)
@@ -781,26 +802,46 @@ def export_project_details_pdf(request):
     
     # Filter projects by year and leader
     if selected_year:
-        projects = Project.objects.filter(scheme__year=selected_year, leader=user).order_by('student__last_name')
+        projects = Project.objects.filter(scheme__year=selected_year, leader=user).select_related(
+            'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
     else:
-        projects = Project.objects.filter(leader=user).order_by('student__last_name')
+        projects = Project.objects.filter(leader=user).select_related(
+            'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
     
     projects_data = []
     for project in projects:
         # Get control checks for this project
         controls = project.controls.all().order_by('date')
         
-        # Check if first three controls exist
-        control_1 = 'Ano' if len(controls) >= 1 else 'Ne'
-        control_2 = 'Ano' if len(controls) >= 2 else 'Ne'
-        control_3 = 'Ano' if len(controls) >= 3 else 'Ne'
+        # Check controls and format display values appropriately
+        control_1 = 'Ne'
+        control_2 = 'Ne'
+        control_3 = 'Ne'
         
-        # Check if work and documentation were delivered
-        work_delivered = 'Ano' if project.delivery_work_date else 'Ne'
-        docs_delivered = 'Ano' if project.delivery_documentation_date else 'Ne'
+        if len(controls) >= 1:
+            if controls[0].evaluation:
+                control_1 = controls[0].evaluation
+            else:
+                control_1 = controls[0].date.strftime('%d.%m.%Y') if controls[0].date else 'Ano'
+                
+        if len(controls) >= 2:
+            if controls[1].evaluation:
+                control_2 = controls[1].evaluation
+            else:
+                control_2 = controls[1].date.strftime('%d.%m.%Y') if controls[1].date else 'Ano'
+                
+        if len(controls) >= 3:
+            if controls[2].evaluation:
+                control_3 = controls[2].evaluation
+            else:
+                control_3 = controls[2].date.strftime('%d.%m.%Y') if controls[2].date else 'Ano'
         
-        # Check if delay was granted
-        delay_granted = 'Ano' if project.delayed_submission_date else 'Ne'
+        # Check if work and documentation were delivered - show dates if available
+        work_delivered = project.delivery_work_date.strftime('%d.%m.%Y') if project.delivery_work_date else 'Ne'
+        docs_delivered = project.delivery_documentation_date.strftime('%d.%m.%Y') if project.delivery_documentation_date else 'Ne'
+        
+        # Check if delay was granted - show date if available
+        delay_granted = project.delayed_submission_date.strftime('%d.%m.%Y') if project.delayed_submission_date else 'Ne'
         
         # Get leader evaluation points if available
         leader_eval = getattr(project, 'leader_eval', None)
