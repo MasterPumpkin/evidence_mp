@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="container mt-4" id="project-overview">
-    <h1>Přehled projektů</h1>
+    <h1>Přehled projektů - {% if view_type == 'opponent' %}Oponent{% else %}Vedoucí{% endif %}</h1>
     
     <div class="row mb-4">
         <div class="col-md-12">
@@ -17,6 +17,13 @@
                         {% for year in available_years %}
                             <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
                         {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group d-flex align-items-center ms-3">
+                    <label for="view_type" class="mr-2">Zobrazit jako:</label>
+                    <select name="view_type" id="view_type" class="form-control form-control-sm" style="width: 120px; margin-left: 10px;">
+                        <option value="leader" {% if view_type == 'leader' %}selected{% endif %}>Vedoucí</option>
+                        <option value="opponent" {% if view_type == 'opponent' %}selected{% endif %}>Oponent</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-sm btn-primary mx-2">Filtrovat</button>
@@ -74,10 +81,13 @@
 
 <script>
     document.getElementById('export-pdf').addEventListener('click', function() {
-        // Get the selected year value
+        // Get the selected year value and view type
         const selectedYear = document.getElementById('year').value || '';
-        // Correctly construct URL with complete path
-        window.location.href = "{% url 'projects:project_details_pdf' %}" + "?year=" + encodeURIComponent(selectedYear);
+        const viewType = document.getElementById('view_type').value || 'leader';
+        // Correctly construct URL with complete path and all parameters
+        window.location.href = "{% url 'projects:project_details_pdf' %}" + 
+                               "?year=" + encodeURIComponent(selectedYear) +
+                               "&view_type=" + encodeURIComponent(viewType);
     });
 </script>
 {% endblock %}

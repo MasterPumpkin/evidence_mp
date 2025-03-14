@@ -680,7 +680,7 @@ def export_milestones_pdf(request):
 @login_required
 def project_details_overview(request):
     """
-    Displays an overview of all projects where the current user is the leader.
+    Displays an overview of all projects where the current user is the leader or opponent.
     Shows student details, project title, control checks, submission status, and evaluations.
     """
     user = request.user
@@ -699,13 +699,24 @@ def project_details_overview(request):
     # Get source project ID from URL parameters
     source_project_id = request.GET.get('from_project', None)
     
-    # Filter projects by year and leader
-    if selected_year:
-        projects = Project.objects.filter(scheme__year=selected_year, leader=user).select_related(
-            'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
-    else:
-        projects = Project.objects.filter(leader=user).select_related(
-            'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+    # Determine if we want to see leader's projects or opponent's projects
+    view_type = request.GET.get('view_type', 'leader')
+    
+    # Filter projects by year and leader/opponent role
+    if view_type == 'opponent':
+        if selected_year:
+            projects = Project.objects.filter(scheme__year=selected_year, opponent=user).select_related(
+                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+        else:
+            projects = Project.objects.filter(opponent=user).select_related(
+                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+    else:  # default to leader view
+        if selected_year:
+            projects = Project.objects.filter(scheme__year=selected_year, leader=user).select_related(
+                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+        else:
+            projects = Project.objects.filter(leader=user).select_related(
+                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
     
     projects_data = []
     for project in projects:
@@ -781,6 +792,8 @@ def project_details_overview(request):
         'available_years': available_years,
         'source_project_id': source_project_id,
         'is_teacher': user.groups.filter(name='Teacher').exists(),
+        'view_type': view_type,  # Add view type to context
+        'username': f"{user.userprofile.title} {user.first_name} {user.last_name}",
     }
     
     return render(request, 'projects/project_details_overview.html', context)
@@ -800,13 +813,24 @@ def export_project_details_pdf(request):
     # Use year from GET parameter or default from preferences
     selected_year = request.GET.get('year', default_year)
     
-    # Filter projects by year and leader
-    if selected_year:
-        projects = Project.objects.filter(scheme__year=selected_year, leader=user).select_related(
-            'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
-    else:
-        projects = Project.objects.filter(leader=user).select_related(
-            'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+    # Determine if we want to see leader's projects or opponent's projects
+    view_type = request.GET.get('view_type', 'leader')
+    
+    # Filter projects by year and leader/opponent role
+    if view_type == 'opponent':
+        if selected_year:
+            projects = Project.objects.filter(scheme__year=selected_year, opponent=user).select_related(
+                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+        else:
+            projects = Project.objects.filter(opponent=user).select_related(
+                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+    else:  # default to leader view
+        if selected_year:
+            projects = Project.objects.filter(scheme__year=selected_year, leader=user).select_related(
+                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
+        else:
+            projects = Project.objects.filter(leader=user).select_related(
+                'student', 'student__userprofile').order_by('student__userprofile__class_name', 'student__last_name')
     
     projects_data = []
     for project in projects:
@@ -880,9 +904,9 @@ def export_project_details_pdf(request):
         'projects': projects_data,
         'selected_year': selected_year,
         'current_date': datetime.now(),
-        # 'username': user.username,
         'username': f"{user.userprofile.title} {user.first_name} {user.last_name}",
-
+        'view_type': view_type,  # Add view type to context
+        'role': "Oponent" if view_type == 'opponent' else "Vedoucí"  # Add role title
     }
     
     # Add specific HTML/CSS for WeasyPrint to properly handle page breaks and repeating headers
@@ -893,7 +917,10 @@ def export_project_details_pdf(request):
     
     # Prepare response
     response = HttpResponse(pdf_file, content_type='application/pdf')
-    filename = f"projekty_prehled_{datetime.now().strftime('%Y-%m-%d')}.pdf"
+    role_text = "oponent" if view_type == 'opponent' else "vedouci"
+    filename = f"projekty_prehled_{role_text}_{datetime.now().strftime('%Y-%m-%d')}.pdf"
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
     return response
+
+# 'is_teacher': user.groups.filter(name='Teacher').exists(),

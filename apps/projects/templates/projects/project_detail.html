@@ -694,7 +694,10 @@
         {% if user.is_authenticated and project.leader == user %}
         <a href="{% url 'projects:export_control_check_pdf' %}" class="btn btn-sm btn-info">Záznamy o kontrolách (PDF)</a>
         <a href="{% url 'projects:export_milestones_pdf' %}" class="btn btn-sm btn-info">Milníky (PDF)</a>
-        <a href="{% url 'projects:project_details_overview' %}?from_project={{ project.pk }}" class="btn btn-sm btn-info">Přehled stavu projektů (HTML/PDF)</a>
+        <a href="{% url 'projects:project_details_overview' %}?from_project={{ project.pk }}&view_type=leader" class="btn btn-sm btn-info">Přehled projektů - vedoucí (HTML/PDF)</a>
+        {% endif %}
+        {% if user.is_authenticated and project.opponent == user %}
+        <a href="{% url 'projects:project_details_overview' %}?from_project={{ project.pk }}&view_type=opponent" class="btn btn-sm btn-info">Přehled projektů - oponent (HTML/PDF)</a>
         {% endif %}
       </div>
     </div>
