@@ -93,7 +93,7 @@ def export_projects_xlsx(request):
     ws = wb.active
     ws.title = "Projekty"
 
-    # Rozšířená hlavička s více sloupci
+    # Rozšířená hlavička s více sloupci včetně kontrol
     headers = [
         "Student", "Třída", "Název projektu", "Popis", "Zadání", 
         "Vedoucí", "Interní / Externí", "E-mail vedoucího", "Telefon vedoucího",
@@ -101,6 +101,10 @@ def export_projects_xlsx(request):
         "Stav", "Školní rok", 
         "Datum vytvoření", "Poslední aktualizace",
         "Termín odkladu", "Datum předání výrobku", "Datum předání dokumentace",
+        # Kontroly - pro každou kontrolu datum a hodnocení
+        "Kontrola 1 - Datum", "Kontrola 1 - Hodnocení",
+        "Kontrola 2 - Datum", "Kontrola 2 - Hodnocení",
+        "Kontrola 3 - Datum", "Kontrola 3 - Hodnocení",
         "URL 1", "URL 2",
         "Body vedoucího (oblast 1)", "Body vedoucího (oblast 2)", "Body vedoucího (oblast 3)",
         "Body oponenta (oblast 1)", "Body oponenta (oblast 2)",
@@ -170,6 +174,19 @@ def export_projects_xlsx(request):
         # Celkový počet bodů
         total_points = leader_total + opponent_total
         
+        # Získání kontrolních záznamů pro projekt seřazených podle data
+        controls = list(proj.controls.all().order_by('date'))
+        
+        # Připravíme data pro kontroly - pro každou kontrolu datum a hodnocení
+        control1_date = controls[0].date.strftime('%d.%m.%Y') if len(controls) > 0 and controls[0].date else ""
+        control1_eval = controls[0].evaluation if len(controls) > 0 else ""
+        
+        control2_date = controls[1].date.strftime('%d.%m.%Y') if len(controls) > 1 and controls[1].date else ""
+        control2_eval = controls[1].evaluation if len(controls) > 1 else ""
+        
+        control3_date = controls[2].date.strftime('%d.%m.%Y') if len(controls) > 2 and controls[2].date else ""
+        control3_eval = controls[2].evaluation if len(controls) > 2 else ""
+        
         row = [
             student_name,
             student_class,
@@ -201,6 +218,11 @@ def export_projects_xlsx(request):
             proj.delayed_submission_date.strftime('%d.%m.%Y') if proj.delayed_submission_date else "",
             proj.delivery_work_date.strftime('%d.%m.%Y') if proj.delivery_work_date else "",
             proj.delivery_documentation_date.strftime('%d.%m.%Y') if proj.delivery_documentation_date else "",
+            
+            # Kontroly
+            control1_date, control1_eval,
+            control2_date, control2_eval,
+            control3_date, control3_eval,
             
             # Portfolio URL
             proj.portfolio_url1,
