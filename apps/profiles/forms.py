@@ -17,4 +17,4 @@ class UserForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['title']  # plus cokoliv jiného (class_name, obor…)
+        fields = ['title', 'abbreviation']  # plus cokoliv jiného (class_name, obor…)

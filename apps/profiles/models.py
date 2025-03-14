@@ -26,6 +26,13 @@ class UserProfile(models.Model):
         verbose_name="Titul"
     )
 
+    abbreviation = models.CharField(
+        max_length=10,
+        blank=True,
+        help_text="Zkratka příjmení",
+        verbose_name="Zkratka příjmení"
+    )
+
     school_year = models.CharField(
         max_length=20, 
         default="2024/2025",
