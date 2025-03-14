@@ -912,8 +912,8 @@ def project_details_overview(request):
         else:
             opponent_points = '-'
             
-        # Get student details
-        student_name = f"{project.student.first_name} {project.student.last_name}" if project.student else "N/A"
+        # Get student details - MODIFIED: Changed to Příjmení Jméno format
+        student_name = f"{project.student.last_name} {project.student.first_name}" if project.student else "N/A"
         class_name = project.student.userprofile.class_name if project.student and hasattr(project.student, 'userprofile') else "N/A"
         
         # Get teacher abbreviation based on view type
@@ -1054,8 +1054,8 @@ def export_project_details_pdf(request):
         else:
             opponent_points = '-'
             
-        # Get student details
-        student_name = f"{project.student.first_name} {project.student.last_name}" if project.student else "N/A"
+        # Get student details - MODIFIED: Changed to Příjmení Jméno format
+        student_name = f"{project.student.last_name} {project.student.first_name}" if project.student else "N/A"
         class_name = project.student.userprofile.class_name if project.student and hasattr(project.student, 'userprofile') else "N/A"
         
         # Get teacher abbreviation based on view type

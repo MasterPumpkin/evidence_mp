@@ -60,7 +60,7 @@
                 <tr>
                     <td>{{ project.student_name }}</td>
                     <td>{{ project.class_name }}</td>
-                    <td>{{ project.title }}</td>
+                    <td><a href="{% url 'projects:detail' project.id %}">{{ project.title }}</a></td>
                     <td class="text-center" title="{{ project.teacher_fullname }}">{{ project.teacher_abbreviation }}</td>
                     <td class="text-center">{{ project.control_1 }}</td>
                     <td class="text-center">{{ project.control_2 }}</td>
