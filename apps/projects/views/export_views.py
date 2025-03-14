@@ -87,45 +87,168 @@ def export_project_docx(request, pk):
 def export_projects_xlsx(request):
     """
     Exportuje seznam projektů do XLSX.
-    Sloupce: Student, Třída, Název, Vedoucí, Oponent, Stav.
-    Případně můžeme přidat filtry.
+    Obsahuje všechny dostupné informace o projektech.
     """
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Projekty"
 
-    # Hlavička
-    ws.append(["Student", "Třída", "Název projektu", "Vedoucí", "Oponent", "Stav"])
+    # Rozšířená hlavička s více sloupci
+    headers = [
+        "Student", "Třída", "Název projektu", "Popis", "Zadání", 
+        "Vedoucí", "Interní / Externí", "E-mail vedoucího", "Telefon vedoucího",
+        "Oponent", "Interní / Externí", "E-mail oponenta", "Telefon oponenta",
+        "Stav", "Školní rok", 
+        "Datum vytvoření", "Poslední aktualizace",
+        "Termín odkladu", "Datum předání výrobku", "Datum předání dokumentace",
+        "URL 1", "URL 2",
+        "Body vedoucího (oblast 1)", "Body vedoucího (oblast 2)", "Body vedoucího (oblast 3)",
+        "Body oponenta (oblast 1)", "Body oponenta (oblast 2)",
+        "Celkem bodů vedoucího", "Celkem bodů oponenta", "Celkem bodů",
+        "Otázky vedoucího", "Otázky oponenta"
+    ]
+    ws.append(headers)
 
-    projects = Project.objects.all()  # nebo filtr, to je na tobě
+    projects = Project.objects.all().select_related('student', 'leader', 'opponent', 'scheme')
 
     for proj in projects:
-        year = proj.scheme.year if proj.scheme else "N/A"
+        # Základní informace o studentovi
         student_name = f"{proj.student.first_name} {proj.student.last_name}" if proj.student else ""
         student_class = ""
         if proj.student and hasattr(proj.student, 'userprofile'):
             student_class = proj.student.userprofile.class_name or ""
         
-        leader_name = proj.leader.username if proj.leader else ""
-        opponent_name = proj.opponent.username if proj.opponent else ""
+        # Informace o vedoucím
+        if proj.leader:
+            leader_name = f"{proj.leader.first_name} {proj.leader.last_name}"
+            leader_type = "Interní"
+            leader_email = proj.leader.email
+            leader_phone = getattr(proj.leader.userprofile, 'phone', '') if hasattr(proj.leader, 'userprofile') else ""
+        elif proj.external_leader:
+            leader_name = proj.external_leader
+            leader_type = "Externí"
+            leader_email = proj.external_leader_email
+            leader_phone = proj.external_leader_phone
+        else:
+            leader_name = ""
+            leader_type = ""
+            leader_email = ""
+            leader_phone = ""
+        
+        # Informace o oponentovi
+        if proj.opponent:
+            opponent_name = f"{proj.opponent.first_name} {proj.opponent.last_name}"
+            opponent_type = "Interní"
+            opponent_email = proj.opponent.email
+            opponent_phone = getattr(proj.opponent.userprofile, 'phone', '') if hasattr(proj.opponent, 'userprofile') else ""
+        elif proj.external_opponent:
+            opponent_name = proj.external_opponent
+            opponent_type = "Externí"
+            opponent_email = proj.external_opponent_email
+            opponent_phone = proj.external_opponent_phone
+        else:
+            opponent_name = ""
+            opponent_type = ""
+            opponent_email = ""
+            opponent_phone = ""
+        
+        # Získání hodnocení vedoucího
+        leader_eval = getattr(proj, 'leader_eval', None)
+        leader_points_1 = leader_eval.area1_points if leader_eval else 0
+        leader_points_2 = leader_eval.area2_points if leader_eval else 0
+        leader_points_3 = leader_eval.area3_points if leader_eval else 0
+        leader_total = leader_points_1 + leader_points_2 + leader_points_3
+        leader_questions = leader_eval.defense_questions if leader_eval else ""
+        
+        # Získání hodnocení oponenta
+        opponent_eval = getattr(proj, 'opponent_eval', None)
+        opponent_points_1 = opponent_eval.area1_points if opponent_eval else 0
+        opponent_points_2 = opponent_eval.area2_points if opponent_eval else 0
+        opponent_total = opponent_points_1 + opponent_points_2
+        opponent_questions = opponent_eval.defense_questions if opponent_eval else ""
+        
+        # Celkový počet bodů
+        total_points = leader_total + opponent_total
+        
         row = [
             student_name,
             student_class,
             proj.title,
+            proj.description[:500] if proj.description else "",  # Omezení délky pro přehlednost
+            proj.assignment[:500] if proj.assignment else "",  # Omezení délky pro přehlednost
+            
+            # Vedoucí
             leader_name,
+            leader_type,
+            leader_email,
+            leader_phone,
+            
+            # Oponent
             opponent_name,
+            opponent_type,
+            opponent_email,
+            opponent_phone,
+            
+            # Obecné informace
             proj.get_status_display(),
+            proj.scheme.year if proj.scheme else "N/A",
+            
+            # Časové údaje
+            proj.created_at.strftime('%d.%m.%Y %H:%M') if proj.created_at else "",
+            proj.updated_at.strftime('%d.%m.%Y %H:%M') if proj.updated_at else "",
+            
+            # Termíny
+            proj.delayed_submission_date.strftime('%d.%m.%Y') if proj.delayed_submission_date else "",
+            proj.delivery_work_date.strftime('%d.%m.%Y') if proj.delivery_work_date else "",
+            proj.delivery_documentation_date.strftime('%d.%m.%Y') if proj.delivery_documentation_date else "",
+            
+            # Portfolio URL
+            proj.portfolio_url1,
+            proj.portfolio_url2,
+            
+            # Body vedoucího
+            leader_points_1,
+            leader_points_2,
+            leader_points_3,
+            
+            # Body oponenta
+            opponent_points_1,
+            opponent_points_2,
+            
+            # Celkem bodů
+            leader_total,
+            opponent_total,
+            total_points,
+            
+            # Otázky k obhajobě
+            leader_questions,
+            opponent_questions,
+            
+            # Interní poznámky
+            # proj.internal_notes
         ]
         ws.append(row)
+    
+    # Automatické nastavení šířky sloupců
+    for column in ws.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = min(len(str(cell.value)), 50)  # Max šířka 50 znaků
+            except:
+                pass
+        adjusted_width = max_length + 2
+        ws.column_dimensions[column_letter].width = adjusted_width
 
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
-    response['Content-Disposition'] = 'attachment; filename="projekty.xlsx"'
+    response['Content-Disposition'] = f'attachment; filename="projekty_{datetime.now().strftime("%Y%m%d_%H%M")}.xlsx"'
 
     wb.save(response)
     return response
-
 
 
 @login_required
