@@ -525,6 +525,36 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         context['completed_milestones'] = completed_milestones
         context['completion_percentage'] = completion_percentage
 
+        # Přidání informací o stavu kontrol
+        controls = project.controls.order_by('date')
+        current_date = timezone.now().date()
+        
+        # Informace o první kontrole
+        context['control1_status'] = 'none'  # výchozí stav - kontrola neexistuje
+        context['control2_status'] = 'none'
+        context['control3_status'] = 'none'
+        
+        # Zpracování jednotlivých kontrol podle pořadí
+        if controls:
+            for i, control in enumerate(controls[:3], start=1):
+                status_key = f'control{i}_status'
+                
+                # Kontrola existuje
+                context[status_key] = 'exists'
+                
+                # Získáme datum kontroly - může být datetime nebo date
+                control_date = control.date
+                if hasattr(control_date, 'date'):  # pokud je to datetime objekt
+                    control_date = control_date.date()
+                
+                # Kontrola již měla proběhnout, ale nemá hodnocení
+                if control_date < current_date and not control.evaluation:
+                    context[status_key] = 'overdue'
+                
+                # Kontrola má hodnocení
+                elif control.evaluation:
+                    context[status_key] = 'evaluated'
+
         return context
 
 
